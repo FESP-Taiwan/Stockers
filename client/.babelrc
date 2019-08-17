@@ -1,0 +1,14 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": "cover 99.5%, not dead"
+    }],
+    "@babel/react",
+    "@babel/flow"
+  ],
+  "plugins": [
+    "react-hot-loader/babel",
+    "@babel/transform-runtime",
+    "@babel/plugin-proposal-class-properties"
+  ],
+}
