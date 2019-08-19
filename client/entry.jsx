@@ -4,10 +4,13 @@
 import React from 'react';
 import { render } from 'react-dom';
 import debug from 'debug';
+import moment from 'moment';
+import 'moment/locale/zh-tw';
+import ApolloClient from 'apollo-boost';
 import App from './App';
 import './static/main.css';
 
-debug.enable('Sportholic:*');
+debug.enable('Stockers:*');
 
 declare var module: {
   hot: {
@@ -15,17 +18,29 @@ declare var module: {
   },
 }
 
-function renderPage() {
-  render(
-    <App />,
-    document.body,
-  );
+moment.locale('zh-tw');
+
+function renderPage(client) {
+  const root = document.getElementById('root');
+
+  if (root) {
+    render(
+      <App client={client} />,
+      root,
+    );
+  }
 }
 
-renderPage();
-
-if (module.hot) {
-  module.hot.accept('./App', () => {
-    renderPage();
+async function init() {
+  const client = new ApolloClient({
+    uri: 'https://48p1r2roz4.sse.codesandbox.io', // gql server
   });
+
+  if (module.hot) {
+    module.hot.accept('./App', () => {
+      renderPage(client);
+    });
+  }
 }
+
+init();
