@@ -14,6 +14,7 @@ import { withRouter } from 'react-router';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { FORM_REGISTER } from '../../Constant/form';
+import TextInput from '../../Form/TextInput';
 
 const debugRegister = debug('Stocekers:Register');
 
@@ -28,7 +29,7 @@ const styles = {
 };
 
 function RegisterPage({
-  handleSubmit
+  handleSubmit,
 }: FormProps ) {
   const [register, { loading }] = useMutation();
 
