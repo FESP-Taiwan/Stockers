@@ -20,7 +20,11 @@ declare var module: {
 
 moment.locale('zh-tw');
 
-function renderPage(client) {
+const client = new ApolloClient({
+  uri: 'https://48p1r2roz4.sse.codesandbox.io', // gql server
+});
+
+function renderPage() {
   const root = document.getElementById('root');
 
   if (root) {
@@ -31,11 +35,11 @@ function renderPage(client) {
   }
 }
 
-async function init() {
-  const client = new ApolloClient({
-    uri: 'https://48p1r2roz4.sse.codesandbox.io', // gql server
-  });
+// Initialize rendering
+renderPage(client);
 
+// Hot reload for development
+async function init() {
   if (module.hot) {
     module.hot.accept('./App', () => {
       renderPage(client);

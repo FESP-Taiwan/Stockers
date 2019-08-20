@@ -14,13 +14,24 @@ import store, { history } from './store';
 // Root Pages
 import RegisterPage from './Pages/Auth/RegisterPage';
 
+const styles = {
+  wrapper: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+  },
+};
+
 function App({
   client,
 }: {
   client: ApolloClient,
 }) {
   return (
-    <div>
+    <div style={styles.wrapper}>
       <Provider store={store}>
         <ApolloProvider client={client}>
           <ConnectedRouter history={history}>
@@ -31,7 +42,6 @@ function App({
           </ConnectedRouter>
         </ApolloProvider>
       </Provider>
-      App
     </div>
   );
 }

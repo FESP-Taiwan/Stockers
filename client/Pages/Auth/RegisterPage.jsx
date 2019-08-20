@@ -10,8 +10,8 @@ import {
   Form,
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
-import { withRouter } from 'react-router';
-import gql from 'graphql-tag';
+// import { withRouter } from 'react-router';
+// import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { FORM_REGISTER } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
@@ -30,32 +30,34 @@ const styles = {
 
 function RegisterPage({
   handleSubmit,
-}: FormProps ) {
-  const [register, { loading }] = useMutation();
+}: FormProps) {
+  // const [register, { loading }] = useMutation();
 
-  const onSubmit = useCallback(() => {}, []);
+  const onSubmit = useCallback(() => console.log('hi'), []);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
       <div css={styles.main}>
         <Field
+          label="姓"
           name="firstName"
-          compoennt={TextInput} />
+          component={TextInput} />
         <Field
+          label="名"
           name="lastName"
-          compoennt={TextInput} />
+          component={TextInput} />
         <Field
+          label="電子信箱"
           name="email"
-          compoennt={TextInput} />
+          component={TextInput} />
         <Field
+          label="密碼"
           name="password"
-          compoennt={TextInput} />
+          component={TextInput} />
         <Field
+          label="確認密碼"
           name="checkPassword"
-          compoennt={TextInput} />
-        <Field
-          name="checkPassword"
-          compoennt={TextInput} />
+          component={TextInput} />
       </div>
     </Form>
   );
