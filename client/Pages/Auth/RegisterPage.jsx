@@ -4,6 +4,7 @@
 import { useCallback } from 'react';
 import { jsx, css } from '@emotion/core';
 import debug from 'debug';
+import isEmail from 'validator/lib/isEmail';
 import {
   reduxForm,
   Field,
@@ -48,7 +49,7 @@ function RegisterPage({
           component={TextInput} />
         <Field
           label="電子信箱"
-          name="email"
+          name="accountEmail"
           component={TextInput} />
         <Field
           label="密碼"
@@ -56,7 +57,7 @@ function RegisterPage({
           component={TextInput} />
         <Field
           label="確認密碼"
-          name="checkPassword"
+          name="confirmPassword"
           component={TextInput} />
       </div>
     </Form>
@@ -65,6 +66,51 @@ function RegisterPage({
 
 const formHook = reduxForm({
   form: FORM_REGISTER,
+  validate: (values) => {
+    const errors = {};
+
+    if (!values.firstName) {
+      errors.firstName = '必填';
+    }
+
+    if (!values.lastName) {
+      errors.lastName = '必填';
+    }
+
+    if (!values.accountEmail) {
+      errors.accountEmail = '必填';
+    }
+
+    if (values.accountEmail && !isEmail(values.accountEmail)) {
+      errors.accountEmail = '信箱格式不正確';
+    }
+
+    if (!values.password) {
+      errors.password = '必填';
+    }
+
+    if (values.password) {
+      if (values.password.length < 8) {
+        errors.password = '請輸入至少八個字的密碼';
+      }
+
+      if (!values.password.match(/[A-Z]/)) {
+        errors.password = '密碼須包含至少一個大寫字母';
+      }
+
+      if (!values.password.match(/[a-z]/)) {
+        errors.password = '密碼須包含至少一個小寫字母';
+      }
+
+      if (!values.password.match(/[0-9]/)) {
+        errors.password = '密碼須包含至少一個數字';
+      }
+
+      if (values.password !== values.confirmPassword) {
+        errors.confirmPassword = '確認密碼不相符';
+      }
+    }
+  },
 });
 
 export default formHook(RegisterPage);
