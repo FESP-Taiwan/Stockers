@@ -145,6 +145,7 @@ function LoginPage({
         <div css={styles.block}>
           <Field
             inline
+            type="password"
             name="password"
             placeholder="密碼"
             component={TextInput} />
