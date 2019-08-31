@@ -13,6 +13,7 @@ import store, { history } from './store';
 
 // Root Pages
 import RegisterPage from './Pages/Auth/RegisterPage';
+import LoginPage from './Pages/Auth/LoginPage';
 
 const styles = {
   wrapper: {
@@ -22,6 +23,7 @@ const styles = {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column',
+    backgroundColor: '#000',
   },
 };
 
@@ -37,6 +39,7 @@ function App({
           <ConnectedRouter history={history}>
             <Switch>
               <Route exact path="/register" component={RegisterPage} />
+              <Route exact path="/login" component={LoginPage} />
               <Route render={() => <div>Stockers</div>} />
             </Switch>
           </ConnectedRouter>

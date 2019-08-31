@@ -1,80 +1,125 @@
-// // @flow
-// /* eslint no-restricted-globals: 0 */
+// @flow
+/* eslint no-restricted-globals: 0 */
 
-// import EventEmitter from 'events';
-// import debug from 'debug';
+import EventEmitter from 'events';
+import decode from 'jwt-decode';
+import qs from 'querystring';
+import debug from 'debug';
 
-// const debugAuth = debug('NTCH:Auth');
+const debugAuth = debug('NTCH:Auth');
 
-// export const AuthState = {
-//   INIT: 'AUTH/INIT',
-//   GUEST: 'AUTH/GUEST',
-//   LOGINED: 'AUTH/LOGINED',
-// };
+export const AuthState = {
+  INIT: 'AUTH/INIT',
+  GUEST: 'AUTH/GUEST',
+  LOGINED: 'AUTH/LOGINED',
+};
 
-// export const AuthEvents = {
-//   STATE_CHANGED: 'AE/STATE_CHANGED',
-//   ACCESS_TOKEN_UPDATED: 'AE/ACCESS_TOKEN_UPDATED',
-// };
+export const AuthEvents = {
+  STATE_CHANGED: 'AE/STATE_CHANGED',
+  ACCESS_TOKEN_UPDATED: 'AE/ACCESS_TOKEN_UPDATED',
+};
 
-// type AuthStateType = typeof AuthState.GUEST | typeof AuthState.LOGINED;
+type AuthStateType = typeof AuthState.GUEST | typeof AuthState.LOGINED;
 
-// class AuthStore extends EventEmitter {
-//   static REFRESH_FREQUENCY = 1000 * 60 * 60 * 24
+class AuthStore extends EventEmitter {
+  static REFRESH_FREQUENCY = 1000 * 60 * 60 * 24
 
-//   privateState: AuthStateType = AuthState.INIT
+  privateState: AuthStateType = AuthState.INIT
 
-//   privateAccessTokem: ?string = null
+  privateAccessTokem: ?string = null
 
-//   refreshTokenInterval: ?IntervalID = null
+  refreshTokenInterval: ?IntervalID = null
 
-//   constructor() {
-//     super();
+  constructor() {
+    super();
 
-//     this.on(AuthEvents.STATE_CHANGED, () => {
-//       if (this.state === AuthState.LOGINED) {
+    this.initializeAccessToken();
+  }
 
-//       }
-//     });
+  set state(newState: AuthStateType) {
+    this.privateState = newState;
 
-//   }
+    this.emit(AuthEvents.STATE_CHANGE, newState);
 
-//   set state(newState: AuthStateType) {
-//     this.privateState = newState;
+    debugAuth(`Auth State Changed ${newState}`);
+  }
 
-//     this.emit(AuthEvents.STATE_CHANGE, newState);
+  get state() {
+    return this.privateState;
+  }
 
-//     debugAuth(`Auth State Changed ${newState}`);
-//   }
+  set accessToken(newToken: ?string) {
+    this.privateAccessTokem = newToken;
 
-//   get state() {
-//     return this.privateState;
-//   }
+    this.emit(AuthEvents.ACCESS_TOKEN_UPDATED, newToken);
 
-//   startRefreshToken() {
-//     const refreshToken = localStorage.getItem('refreshToken');
+    debugAuth('Access Token Updated.');
 
-//     if (refreshToken) {
-//       this.refreshTokenInterval = setInterval(
-//         () => this.Pag(refreshToken),
-//         AuthStore.REFRESH_FREQUENCY,
-//       );
-//     }
-//   }
+    if (newToken && this.state !== AuthState.LOGINED) {
+      this.state = AuthState.LOGINED;
+    } else if (!newToken && this.state === AuthState.LOGINED) {
+      this.state = AuthState.GUEST;
+    }
+  }
 
-//   stopRefreshToken() {
-//     if (this.refreshTokenInterval) {
-//       clearInterval(this.refreshTokenInterval);
-//     }
-//   }
+  get accessToken() {
+    if (!this.privateAccessTokem) return null;
 
-//   bindClient(client) {
-//     this.client = client;
-//   }
-// }
+    const { exp } = decode(this.privateAccessToken);
 
-// const authStore = new AuthStore();
+    if (Math.floor(Date.now() / 1000) > exp) {
+      this.privateAccessToken = null;
 
-// authStore.setMaxListeners(300);
+      return null;
+    }
 
-// export default authStore;
+    return this.privateAccessToken;
+  }
+
+  bindClient(client) {
+    this.client = client;
+  }
+
+  logout() {
+    localStorage.removItem('refreshToken');
+
+    this.accessToken = null;
+
+    this.state = AuthState.GUEST;
+  }
+
+  async initializeAccessToken() {
+    const {
+      token,
+      supportToken,
+    } = qs.parse(location.search.replace(/^\?/, ''));
+
+    const refreshToken = token || localStorage.getItem('refreshToken') || supportToken;
+
+    if (refreshToken) {
+      const { exp } = decode(refreshToken);
+
+      localStorage.setItem('refreshToken', refreshToken);
+
+      if (exp * 1000 > Date.now()) {
+        await this.updateAccessToken(refreshToken);
+      }
+    } else {
+      this.state = AuthState.GUEST;
+    }
+  }
+
+  getPermissions() {
+    if (this.state !== AuthState.LOGINED || !this.accessToken) return {};
+
+    const { permissions } = decode(this.accessToken);
+
+    return permissions;
+  }
+}
+
+const authStore = new AuthStore();
+
+authStore.setMaxListeners(300);
+
+export default authStore;
