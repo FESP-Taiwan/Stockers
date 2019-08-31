@@ -1,5 +1,7 @@
 // @flow
 
+export const NOTIFICATION_INDEX = 999;
+
 export const FLOAT_TEXT_INDEX = 4;
 
 export const SITE_TITLE_INDEX = 3;
