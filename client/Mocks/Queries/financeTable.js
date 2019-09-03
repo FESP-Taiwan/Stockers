@@ -2,7 +2,7 @@
 
 // type: chip
 
-export const headerData = [{ // query: chips
+export const headerChipData = [{ // query: chips
   id: 1,
   name: '資產',
   layerNumber: 1,
@@ -122,6 +122,36 @@ export const headerData = [{ // query: chips
   name: '權益總額',
   layerNumber: 1,
   childNodes: [],
+}];
+
+export const moduleChosenChipData = [{ // type: [chip]
+  id: 2,
+  name: '現金及約當現金',
+  layerNumber: 2,
+}, {
+  id: 3,
+  name: '短期投資',
+  layerNumber: 2,
+}, {
+  id: 7,
+  name: '長期投資',
+  layerNumber: 2,
+}, {
+  id: 9,
+  name: '其他資產',
+  layerNumber: 2,
+}, {
+  id: 10,
+  name: '非流動資產',
+  layerNumber: 1,
+}, {
+  id: 13,
+  name: '短期借款',
+  layerNumber: 2,
+}, {
+  id: 16,
+  name: '長期負債',
+  layerNumber: 2,
 }];
 
 export default null;
