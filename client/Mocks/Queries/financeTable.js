@@ -1,5 +1,7 @@
 // @flow
 
+import moment from 'moment';
+
 // type: chip
 
 export const headerChipData = [{ // query: chips
@@ -124,34 +126,181 @@ export const headerChipData = [{ // query: chips
   childNodes: [],
 }];
 
-export const moduleChosenChipData = [{ // type: [chip]
+export const moduleDataMock = [{ // type: [chip]
   id: 2,
   name: '現金及約當現金',
   layerNumber: 2,
+  chipData: [{
+    id: 1,
+    value: 1000,
+    timeStamp: moment('2019-09-04'),
+  }, {
+    id: 2,
+    value: 1000,
+    timeStamp: moment('2019-09-03'),
+  }, {
+    id: 3,
+    value: 1000,
+    timeStamp: moment('2019-09-02'),
+  }, {
+    id: 4,
+    value: 1000,
+    timeStamp: moment('2019-09-01'),
+  }, {
+    id: 5,
+    value: 1000,
+    timeStamp: moment('2019-08-31'),
+  }],
 }, {
   id: 3,
   name: '短期投資',
   layerNumber: 2,
+  chipData: [{
+    id: 1,
+    value: 1000,
+    timeStamp: moment('2019-09-04'),
+  }, {
+    id: 2,
+    value: 1000,
+    timeStamp: moment('2019-09-03'),
+  }, {
+    id: 3,
+    value: 1000,
+    timeStamp: moment('2019-09-02'),
+  }, {
+    id: 4,
+    value: 1000,
+    timeStamp: moment('2019-09-01'),
+  }, {
+    id: 5,
+    value: 1000,
+    timeStamp: moment('2019-08-31'),
+  }],
 }, {
   id: 7,
   name: '長期投資',
   layerNumber: 2,
+  chipData: [{
+    id: 1,
+    value: 1000,
+    timeStamp: moment('2019-09-04'),
+  }, {
+    id: 2,
+    value: 1000,
+    timeStamp: moment('2019-09-03'),
+  }, {
+    id: 3,
+    value: 1000,
+    timeStamp: moment('2019-09-02'),
+  }, {
+    id: 4,
+    value: 1000,
+    timeStamp: moment('2019-09-01'),
+  }, {
+    id: 5,
+    value: 1000,
+    timeStamp: moment('2019-08-31'),
+  }],
 }, {
   id: 9,
   name: '其他資產',
   layerNumber: 2,
+  chipData: [{
+    id: 1,
+    value: 1000,
+    timeStamp: moment('2019-09-04'),
+  }, {
+    id: 2,
+    value: 1000,
+    timeStamp: moment('2019-09-03'),
+  }, {
+    id: 3,
+    value: 1000,
+    timeStamp: moment('2019-09-02'),
+  }, {
+    id: 4,
+    value: 1000,
+    timeStamp: moment('2019-09-01'),
+  }, {
+    id: 5,
+    value: 1000,
+    timeStamp: moment('2019-08-31'),
+  }],
 }, {
   id: 10,
   name: '非流動資產',
   layerNumber: 1,
+  chipData: [{
+    id: 1,
+    value: 1000,
+    timeStamp: moment('2019-09-04'),
+  }, {
+    id: 2,
+    value: 1000,
+    timeStamp: moment('2019-09-03'),
+  }, {
+    id: 3,
+    value: 1000,
+    timeStamp: moment('2019-09-02'),
+  }, {
+    id: 4,
+    value: 1000,
+    timeStamp: moment('2019-09-01'),
+  }, {
+    id: 5,
+    value: 1000,
+    timeStamp: moment('2019-08-31'),
+  }],
 }, {
   id: 13,
   name: '短期借款',
   layerNumber: 2,
+  chipData: [{
+    id: 1,
+    value: 1000,
+    timeStamp: moment('2019-09-04'),
+  }, {
+    id: 2,
+    value: 1000,
+    timeStamp: moment('2019-09-03'),
+  }, {
+    id: 3,
+    value: 1000,
+    timeStamp: moment('2019-09-02'),
+  }, {
+    id: 4,
+    value: 1000,
+    timeStamp: moment('2019-09-01'),
+  }, {
+    id: 5,
+    value: 1000,
+    timeStamp: moment('2019-08-31'),
+  }],
 }, {
   id: 16,
   name: '長期負債',
   layerNumber: 2,
+  chipData: [{
+    id: 1,
+    value: 1000,
+    timeStamp: moment('2019-09-04'),
+  }, {
+    id: 2,
+    value: 1000,
+    timeStamp: moment('2019-09-03'),
+  }, {
+    id: 3,
+    value: 1000,
+    timeStamp: moment('2019-09-02'),
+  }, {
+    id: 4,
+    value: 1000,
+    timeStamp: moment('2019-09-01'),
+  }, {
+    id: 5,
+    value: 1000,
+    timeStamp: moment('2019-08-31'),
+  }],
 }];
 
 export default null;

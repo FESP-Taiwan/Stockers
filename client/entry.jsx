@@ -18,7 +18,7 @@ declare var module: {
 function renderPage() {
   render(
     <App />,
-    document.body,
+    document.getElementById('root'),
   );
 }
 

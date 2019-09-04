@@ -1,9 +1,14 @@
 // @flow
 
 import React from 'react';
+import {
+  Switch,
+  Route,
+} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import store, { history } from './store';
+import ModuleTableWrapper from './Elements/FinanceTable/ModuleTableWrapper';
 
 const styles = {
   wrapper: {
@@ -21,7 +26,7 @@ function App() {
     <div style={styles.wrapper}>
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <div>aa</div>
+          <ModuleTableWrapper />
         </ConnectedRouter>
       </Provider>
     </div>
