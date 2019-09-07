@@ -10,7 +10,7 @@ import ModuleTableColumnBoard from './ModuleTableColumnBoard';
 const styles = {
   wrapper: {
     padding: 16,
-    backgroundColor: '#DDD',
+    backgroundColor: Colors.LAYER_FIRST,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -27,6 +27,8 @@ function ModuleTable() {
 
   const moduleMainBlock = useMemo(() => {
     if (!moduleData) return null;
+
+    console.log(moduleData);
 
     return (
       <>

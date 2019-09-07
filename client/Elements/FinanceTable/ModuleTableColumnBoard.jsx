@@ -3,25 +3,33 @@
 import React, {
   useState,
   useEffect,
+  useMemo,
 } from 'react';
 import moment from 'moment';
+import ModuleGridUnit from './ModuleGridUnit';
 
 type Props = {
   elem: {
+    name: string,
     chipData: Array,
   },
 }
 
 const styles = {
-
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 };
 
 function ModuleTableColumnBoard({
   elem: {
     chipData,
+    name,
   },
 }: Props) {
   const [sortedData, setSortedData] = useState([]);
+  const [isHeaderHovered, setHeaderHovered] = useState(false);
 
   useEffect(() => {
     if (!Array.isArray(chipData)) return () => {};
@@ -33,10 +41,29 @@ function ModuleTableColumnBoard({
     return () => {};
   }, [chipData, setSortedData]);
 
-  console.log(sortedData);
+  const moduleMainBoard = useMemo(() => {
+    if (!sortedData.length) return null;
+
+    return (
+      <>
+        {sortedData.map(({ value }) => (
+          <ModuleGridUnit
+            isHeaderHovered={isHeaderHovered}
+            label={value} />
+        ))}
+      </>
+    );
+  }, [sortedData, isHeaderHovered]);
 
   return (
-    <div></div>
+    <div style={styles.wrapper}>
+      <ModuleGridUnit
+        isHeaderHovered={isHeaderHovered}
+        label={name}
+        setHeaderHovered={setHeaderHovered}
+        isHeader />
+      {moduleMainBoard}
+    </div>
   );
 }
 
