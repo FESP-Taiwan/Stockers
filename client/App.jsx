@@ -10,6 +10,8 @@ import type { ApolloClient } from 'apollo-client';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import store, { history } from './store';
+import MessageHandler from './Elements/MessageHandler';
+import ErrorHandler from './Elements/ErrorHandler';
 
 // Root Pages
 import RegisterPage from './Pages/Auth/RegisterPage';
@@ -37,11 +39,13 @@ function App({
       <Provider store={store}>
         <ApolloProvider client={client}>
           <ConnectedRouter history={history}>
-            <Switch>
-              <Route exact path="/register" component={RegisterPage} />
-              <Route exact path="/login" component={LoginPage} />
-              <Route render={() => <div>Stockers</div>} />
-            </Switch>
+            <MessageHandler>
+              <Switch>
+                <Route exact path="/register" component={RegisterPage} />
+                <Route exact path="/login" component={LoginPage} />
+                <Route render={() => <div>Stockers</div>} />
+              </Switch>
+            </MessageHandler>
           </ConnectedRouter>
         </ApolloProvider>
       </Provider>

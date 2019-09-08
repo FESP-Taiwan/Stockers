@@ -1,9 +1,12 @@
 // @flow
+/* eslint react-hooks/exhaustive-deps: 0 */
+/** @jsx jsx */
 
-import React, {
+import {
   useMemo,
   useCallback,
 } from 'react';
+import { jsx, css } from '@emotion/core';
 import { extendMoment } from 'moment-range';
 import Moment from 'moment';
 import type MomentType from 'moment';
@@ -11,34 +14,49 @@ import type MomentType from 'moment';
 const moment = extendMoment(Moment);
 
 const styles = {
-  dateBtn: {
-    width: 36,
-    height: 26,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    flexShrink: 0,
-    fontSize: 14,
-    color: '#000',
-    lineHeight: 1,
-    fontWeight: 400,
-    border: '2px solid transparent',
-    borderRadius: 13,
-    ':hover': {
-      border: `2px solid ${Colors.PRIMARY.NORMAL}`,
-    },
-  },
-  dateFade: {
-    color: 'rgba(0, 0, 0, 0.3)',
-  },
-  dateDisabled: {
-    color: 'rgba(0, 0, 0, 0.3)',
-    pointerEvents: 'none',
-    ':hover': {
-      border: `2px solid ${Colors.PRIMARY.NORMAL}`,
-    },
-  },
+  dateBtn: css`
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-shrink: 0;
+    font-size: 18px;
+    color: #000;
+    line-height: 1;
+    font-weight: 400;
+    border: 2px solid transparent;
+    background-color: #E3E3E3;
+    &:hover {
+      border: 2px solid ${Colors.PRIMARY.NORMAL};
+    }
+  `,
+  dateFade: css`
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-shrink: 0;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.3);
+    line-height: 1;
+    font-weight: 400;
+    border: 2px solid transparent;
+    background-color: #E3E3E3;
+    &:hover {
+      border: 2px solid ${Colors.PRIMARY.NORMAL};
+    }
+  `,
+  dateDisabled: css`
+    color: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    &:hover {
+      border: 2px solid ${Colors.PRIMARY.NORMAL},
+    }
+  `,
   dateSelected: {
     border: `2px solid ${Colors.PRIMARY.NORMAL}`,
   },
@@ -102,7 +120,6 @@ function InputCalendarDateBlock({
     selectedDateEnd,
   ]);
 
-
   const disabled = useMemo(() => {
     if (availableDates && !~availableDates.indexOf(dateStr)) return true;
 
@@ -133,7 +150,7 @@ function InputCalendarDateBlock({
     <button
       onClick={onClick}
       disabled={disabled}
-      style={btnStyles}
+      css={btnStyles}
       type="button">
       {onlyDate}
     </button>

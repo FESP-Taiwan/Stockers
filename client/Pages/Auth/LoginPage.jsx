@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { jsx, css } from '@emotion/core';
 import debug from 'debug';
 import isEmail from 'validator/lib/isEmail';
@@ -12,8 +12,9 @@ import {
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
 // import { withRouter } from 'react-router';
-// import gql from 'graphql-tag';
+import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
 import { FORM_LOGIN } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
 import stockersLogo from '../../static/images/logo_stockers.png';
@@ -120,12 +121,61 @@ const styles = {
   },
 };
 
+const LOGIN = gql`
+  mutation LOGIN(
+    $email: String!
+    $password: String!
+  ) {
+    logIn(
+      email: $email
+      password: $password
+    ) {
+      token
+    }
+  }
+`;
+
 function LoginPage({
   handleSubmit,
 }: FormProps) {
   // const [register, { loading }] = useMutation();
+  const [logIn, { data }] = useMutation(LOGIN);
+  // const [loading, data] = useQuery(LOGIN)
 
-  const onSubmit = useCallback(() => console.log('hi'), []);
+  const {
+    messageHub,
+    MESSAGE,
+  } = useContext(MessageHandlerContext);
+
+  const {
+    errorHub,
+    ERROR,
+  } = useContext(ErrorHandlerContext);
+
+  // useEffect(() => () => messageHub.emit(MESSAGE, '登入成功！'), [MESSAGE, messageHub]);
+
+  const onSubmit = useCallback(async ({
+    email,
+    password,
+  }) => {
+    try {
+      await logIn({
+        variables: {
+          email,
+          password,
+        },
+      });
+
+      await localStorage.setItem('token', data.logIn.token);
+    } catch {
+      errorHub.emit(ERROR, '登入失敗');
+    }
+
+    console.log('data', data);
+    messageHub.emit(MESSAGE, '登入成功！');
+  }, [MESSAGE, messageHub, ERROR, errorHub, data, logIn]);
+
+  // messageHub.emit(MESSAGE, '登入成功！');
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
@@ -137,7 +187,7 @@ function LoginPage({
         <div css={styles.block}>
           <Field
             inline
-            name="accountEmail"
+            name="email"
             placeholder="電子郵件"
             component={TextInput} />
         </div>
@@ -185,12 +235,12 @@ const formHook = reduxForm({
   validate: (values) => {
     const errors = {};
 
-    if (!values.accountEmail) {
-      errors.accountEmail = '必填';
+    if (!values.email) {
+      errors.email = '必填';
     }
 
-    if (values.accountEmail && !isEmail(values.accountEmail)) {
-      errors.accountEmail = '信箱格式不正確';
+    if (values.email && !isEmail(values.email)) {
+      errors.email = '信箱格式不正確';
     }
 
     if (!values.password) {

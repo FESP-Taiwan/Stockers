@@ -1,6 +1,10 @@
 // @flow
 
+export const BLOCK_ALL_INDEX = 9999;
+
 export const NOTIFICATION_INDEX = 999;
+
+export const SECONDARY_NOTIFICATION_INDEX = 998;
 
 export const FLOAT_TEXT_INDEX = 4;
 

@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { jsx, css } from '@emotion/core';
 import debug from 'debug';
 import isEmail from 'validator/lib/isEmail';
@@ -12,12 +12,12 @@ import {
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
 // import { withRouter } from 'react-router';
-// import gql from 'graphql-tag';
+import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
 import { FORM_REGISTER } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
-
-const debugRegister = debug('Stocekers:Register');
+import stockersLogo from '../../static/images/logo_stockers.png';
 
 const styles = {
   wrapper: css`
@@ -26,7 +26,60 @@ const styles = {
     height: 100%;
     justify-content: center;
     align-items: center;
+    font-weight: 600;
   `,
+  block: css`
+    width: 306px;
+    height: 80px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 13px;
+    padding: 20px;
+    background-color: #262626;
+  `,
+  registerBlock: css`
+    width: 306px;
+    height: 80px;
+    background-color: #FF9500;
+    border-radius: 40px;
+    text-align: center;
+    color: #FFF;
+    font-size: 13px;
+    fontWeight: 500;
+    padding: 20px;
+  `,
+  title: css`
+    width: 100px;
+    font-size: 13px;
+  `,
+  fakeBlock: css`
+    height: 20px;
+  `,
+  submitBtn: css`
+    color: #FFF;
+    font-size: 13px;
+  `,
+  submitBtnWrapper: css`
+    width: 306px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
+  brandWrapper: css`
+    display: flex;
+    justify-content: center;
+  `,
+  logo: {
+    width: 30,
+    height: 30,
+  },
+  brandLogo: {
+    width: 80,
+    height: 78,
+  },
 };
 
 function RegisterPage({
@@ -34,31 +87,89 @@ function RegisterPage({
 }: FormProps) {
   // const [register, { loading }] = useMutation();
 
-  const onSubmit = useCallback(() => console.log('hi'), []);
+  const {
+    messageHub,
+    MESSAGE,
+  } = useContext(MessageHandlerContext);
+
+  const {
+    errorHub,
+    ERROR,
+  } = useContext(ErrorHandlerContext);
+
+  const onSubmit = useCallback(async () => {
+    try {
+      // await logIn({
+      //   variables: {
+      //     email,
+      //     password,
+      //   },
+      // });
+
+      // await localStorage.setItem('token', data.logIn.token);
+      console.log('------');
+    } catch {
+      errorHub.emit(ERROR, '註冊失敗');
+    }
+
+    messageHub.emit(MESSAGE, '註冊成功！');
+  }, [MESSAGE, messageHub, ERROR, errorHub]);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
       <div css={styles.main}>
-        <Field
-          label="姓"
-          name="firstName"
-          component={TextInput} />
-        <Field
-          label="名"
-          name="lastName"
-          component={TextInput} />
-        <Field
-          label="電子信箱"
-          name="accountEmail"
-          component={TextInput} />
-        <Field
-          label="密碼"
-          name="password"
-          component={TextInput} />
-        <Field
-          label="確認密碼"
-          name="confirmPassword"
-          component={TextInput} />
+        <div css={styles.brandWrapper}>
+          <img css={styles.brandLogo} src={stockersLogo} alt="logo" />
+        </div>
+        <div css={styles.fakeBlock} />
+        <div css={styles.block}>
+          <Field
+            inline
+            name="firstName"
+            placeholder="姓"
+            component={TextInput} />
+        </div>
+        <div css={styles.fakeBlock} />
+        <div css={styles.block}>
+          <Field
+            inline
+            name="lastName"
+            placeholder="名"
+            component={TextInput} />
+        </div>
+        <div css={styles.fakeBlock} />
+        <div css={styles.block}>
+          <Field
+            inline
+            name="email"
+            placeholder="電子郵件"
+            component={TextInput} />
+        </div>
+        <div css={styles.fakeBlock} />
+        <div css={styles.block}>
+          <Field
+            inline
+            type="password"
+            name="password"
+            placeholder="密碼"
+            component={TextInput} />
+        </div>
+        <div css={styles.fakeBlock} />
+        <button
+          type="button"
+          css={styles.registerBlock}
+          onClick={() => console.log('click')}>
+          建立帳號
+        </button>
+        <div css={styles.fakeBlock} />
+        <div css={styles.submitBtnWrapper}>
+          <button
+            css={styles.submitBtn}
+            type="submit"
+            onClick={() => console.log('submit!')}>
+            已經有帳號? 登入
+          </button>
+        </div>
       </div>
     </Form>
   );

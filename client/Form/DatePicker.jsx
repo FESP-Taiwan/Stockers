@@ -30,7 +30,7 @@ const styles = {
     fontSize: 14,
     backgroundColor: '#EDEDED',
     borderRadius: 2,
-    boxShadow: '1px 2px 1px rgba(0, 0, 0, 0.3) inset',
+    boxShadow: '0px 1px 1px 0px #FFF, 1px 2px 1px rgba(0, 0, 0, 0.3) inset',
     textAlign: 'left',
     padding: '0 12px',
     letterSpacing: 1,
@@ -89,24 +89,6 @@ const styles = {
   openErrorStr: {
     display: 'none',
   },
-  startInput: {
-    width: 135,
-    height: 30,
-    border: '1px solid #E0E0E0',
-    backgroundColor: '#fff',
-    borderRadius: 3,
-    outline: 'none',
-    textAlign: 'center',
-    fontSize: 13,
-    color: Colors.SECONDARY,
-    padding: '0 12px',
-    letterSpacing: 1,
-    fontWeight: 400,
-    position: 'relative',
-    borderRight: 'none',
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  },
   singleInput: {
     width: '100%',
     height: 30,
@@ -122,48 +104,11 @@ const styles = {
     fontWeight: 400,
     position: 'relative',
   },
-  tilde: {
-    height: 30,
-    border: '1px solid #E0E0E0',
-    backgroundColor: '#fff',
-    borderLeft: 'none',
-    borderRight: 'none',
-    fontSize: 13,
-    lineHeight: 2,
-    color: '#9B9B9B',
-  },
-  endInput: {
-    width: 170,
-    height: 30,
-    border: '1px solid #E0E0E0',
-    backgroundColor: '#fff',
-    borderRadius: 3,
-    outline: 'none',
-    textAlign: 'center',
-    fontSize: 13,
-    color: Colors.SECONDARY,
-    padding: '0 12px',
-    letterSpacing: 1,
-    fontWeight: 400,
-    position: 'relative',
-    borderLeft: 'none',
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-  },
-  icon: {
-    width: 16,
-    position: 'absolute',
-    top: 8,
-    right: 12,
-    pointerEvents: 'none',
-  },
 };
 
 type Props = {
-  placeholder?: string,
   disabled?: boolean,
   ...FieldProps,
-  autoInitialize?: boolean,
 };
 
 function usePrevValue(value) {
@@ -177,13 +122,11 @@ function usePrevValue(value) {
 }
 
 function DatePicker({
-  placeholder,
   input: {
     onChange,
     value,
   },
   disabled,
-  autoInitialize,
   meta,
 }: Props) {
   const {
@@ -193,8 +136,6 @@ function DatePicker({
   } = meta || {};
 
   const [date, setDate] = useState(value || '');
-  const [startDate, setStartDate] = useState(value ? value.startFrom : '');
-  const [endDate, setEndDate] = useState(value ? value.endOn : '');
   const [isShown, show] = useState(false);
 
   const text = useMemo(() => {
@@ -216,6 +157,8 @@ function DatePicker({
     value,
   ]);
 
+  const prevValue = usePrevValue(value);
+
   const onClick = useCallback(() => {
     if (!value) {
       show(!isShown);
@@ -223,22 +166,13 @@ function DatePicker({
       return;
     }
 
-    onChange({
-      startFrom: autoInitialize ? moment().format('YYYY-MM-DD') : null,
-    });
-  }, [onChange, value, autoInitialize, show, isShown]);
-
-  const prevValue = usePrevValue(value);
+    onChange(null);
+  }, [onChange, value, show, isShown]);
 
   useEffect(() => {
     if (!value || !prevValue) return;
 
-    const {
-      startFrom: prevStartFrom,
-      endOn: prevEndOn,
-    } = prevValue;
-
-    if (value.startFrom !== prevStartFrom || value.endOn !== prevEndOn) {
+    if (value !== prevValue) {
       show(false);
     }
   }, [prevValue, value, show, isShown]);
@@ -263,7 +197,7 @@ function DatePicker({
           stroke="#000" />
       </svg>
     </button>
-  ) : null), [isShown, show, onClick]);
+  ) : null), [isShown, onClick]);
 
   const pickerStyles = useMemo(() => ({
     ...styles.picker,
@@ -279,7 +213,6 @@ function DatePicker({
         closePicker={() => show(false)}
         value={value}
         onChange={onChange}
-        startFrom={value ? moment(value.startFrom) : moment()}
         defaultMonth={value ? moment(value) : moment()} />
     );
   }, [isShown, onChange, value, show]);
@@ -308,8 +241,7 @@ function DatePicker({
         }}
         onChange={(e) => {
           setDate(e.target.value);
-        }}
-        placeholder="請輸入日期" />
+        }} />
     </div>
   ), [date, show, isShown, onChange]);
 
@@ -324,8 +256,6 @@ function DatePicker({
           onClick={() => {
             show(!isShown);
             setDate(null);
-            setStartDate(null);
-            setEndDate(null);
           }}
           style={extendBtnStyles}
           disabled={disabled}
@@ -343,9 +273,7 @@ function DatePicker({
 }
 
 DatePicker.defaultProps = {
-  placeholder: '選擇起始日期',
   disabled: false,
-  autoInitialize: false,
 };
 
 export default DatePicker;

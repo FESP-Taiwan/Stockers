@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { Fragment, useState, useEffect } from 'react';
-import { jsx, css } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import EventEmitter from 'events';
 import { NOTIFICATION_INDEX } from '../Constant/zIndex';
 import { ErrorHandlerContext } from '../Constant/context';

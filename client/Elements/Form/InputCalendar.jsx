@@ -34,7 +34,7 @@ const styles = {
     justifyContent: 'center',
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#000',
     letterSpacing: 1,
     padding: '0 0 0 1px',
@@ -53,55 +53,10 @@ const styles = {
     padding: '0 5px',
   },
   th: {
-    width: 14,
+    width: 18,
     flexShrink: 0,
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 400,
-  },
-  dot: {
-    backgroundColor: 'transparent',
-    width: 4,
-    height: 4,
-    display: 'block',
-    borderRadius: 2,
-    margin: '2px 0 0 0',
-  },
-  submit: {
-    width: 120,
-    height: 32,
-    backgroundColor: Colors.PRIMARY.NORMAL,
-    color: '#fff',
-    borderRadius: 3,
-    fontSize: 13,
-    fontWeight: 300,
-    letterSpacing: 1,
-    padding: '0 0 0 1px',
-  },
-  submitLine: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '16px 0 22px 0',
-  },
-  advancedLine: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    margin: '22px 0 16px 0',
-    padding: '0 10%',
-  },
-  submitSecondary: {
-    color: Colors.MAIN,
-    fontSize: 13,
-    letterSpacing: 1,
-    padding: '0 0 0 1px',
-    fontWeight: 300,
-  },
-  enterDailyReport: {
-    color: 'black',
-    textDecoration: 'none',
   },
   week: {
     margin: '4px -6px',
@@ -165,10 +120,6 @@ function InputCalendar({
   const prevMonth = useCallback(() => setActivedMonth(activedMonth.clone().subtract(1, 'month')), [activedMonth]);
   const nextMonth = useCallback(() => setActivedMonth(activedMonth.clone().add(1, 'month')), [activedMonth]);
 
-  const titleStyles = useMemo(() => ({
-    ...styles.title,
-  }), []);
-
   const prevStartFrom = usePrevValue(startFrom);
   const prevEndOn = usePrevValue(endOn);
 
@@ -198,7 +149,7 @@ function InputCalendar({
               d="M11 1L5 8L11 15" />
           </svg>
         </button>
-        <h6 style={titleStyles}>
+        <h6 style={styles.title}>
           {activedMonth.format('MMMM YYYY')}
         </h6>
         <button
@@ -223,11 +174,11 @@ function InputCalendar({
         <span style={styles.th}>Sa</span>
         <span style={styles.th}>SU</span>
       </div>
-      {dates.map((week) => (
+      {dates.map(week => (
         <div
           key={week.weekIndex}
           style={styles.week}>
-          {week.dates.map((date) => (
+          {week.dates.map(date => (
             <InputCalendarDateBlock
               key={date.valueOf()}
               date={date}

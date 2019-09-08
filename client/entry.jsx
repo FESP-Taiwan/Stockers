@@ -21,8 +21,10 @@ declare var module: {
 moment.locale('zh-tw');
 
 const client = new ApolloClient({
-  uri: 'https://48p1r2roz4.sse.codesandbox.io', // gql server
+  uri: 'https://631669ea.ngrok.io/graphql', // gql server
 });
+
+console.log('client', client);
 
 function renderPage() {
   const root = document.getElementById('root');
