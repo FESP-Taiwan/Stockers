@@ -1,7 +1,12 @@
 // @flow
 /** @jsx jsx */
 
-import { Fragment, useState, useEffect } from 'react';
+import {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import { jsx } from '@emotion/core';
 import EventEmitter from 'events';
 import { NOTIFICATION_INDEX } from '../Constant/zIndex';
@@ -43,53 +48,66 @@ function ErrorHandler({
 }: {
   children: Node,
 }) {
+  console.log('----');
   const [errorStack, setErrorStack] = useState([]);
   const [errorHub, setErrorHub] = useState(new EventEmitter());
   const [ERROR] = useState(Symbol('FormError'));
   const [counter, setCounter] = useState(0);
   const [timeoutMap, setTimeoutMap] = useState({});
 
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
   const ERROR_DISPLAY_TIME = 3000;
 
-  function makeMessageClear(id) {
-    return () => {
-      const index = errorStack.findIndex(err => err.id === id);
+  const makeMessageClear = useCallback(id => () => {
+    const index = errorStack.findIndex(err => err.id === id);
 
-      if (~index) {
-        setErrorStack([
-          ...errorStack.slice(0, index),
-          ...errorStack.slice(index + 1),
-        ]);
-      }
-    };
-  }
-
-  function onError(errorMessage) {
-    setCounter(counter + 1);
-
-    const id = counter;
-
-    setErrorStack([{
-      id,
-      message: errorMessage,
-      createdAt: Date.now(),
-    }, ...errorStack,
-    ]);
-
-    setTimeoutMap({
-      ...timeoutMap,
-      id: setTimeout(
-        makeMessageClear(id),
-        ERROR_DISPLAY_TIME + 1000,
-      ),
-    });
-  }
+    if (~index) {
+      setErrorStack([
+        ...errorStack.slice(0, index),
+        ...errorStack.slice(index + 1),
+      ]);
+    }
+  }, [errorStack]);
 
   useEffect(() => {
+    function onError(errorMessage) {
+      setCounter(counter + 1);
+
+      const id = counter;
+
+      setErrorStack([{
+        id,
+        message: errorMessage,
+        createdAt: Date.now(),
+      }, ...errorStack,
+      ]);
+
+      setTimeoutMap({
+        ...timeoutMap,
+        id: setTimeout(
+          makeMessageClear(id),
+          ERROR_DISPLAY_TIME + 1000,
+        ),
+      });
+    }
+
     errorHub.on(ERROR, onError);
 
-    return () => errorHub.removeListener(ERROR, onError);
-  });
+    let animationInterval = null;
+
+    animationInterval = setInterval(() => {
+      if (errorStack.length) {
+        forceUpdate();
+      }
+    });
+
+    return () => {
+      errorHub.removeListener(ERROR, onError);
+      clearInterval(animationInterval);
+    };
+  }, [counter, makeMessageClear, timeoutMap, ERROR, errorHub, errorStack, forceUpdate]);
 
   return (
     <Fragment>

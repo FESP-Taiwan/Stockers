@@ -172,10 +172,11 @@ function LoginPage({
     }
 
     console.log('data', data);
-    messageHub.emit(MESSAGE, '登入成功！');
+    errorHub.emit(ERROR, '登入失敗');
   }, [MESSAGE, messageHub, ERROR, errorHub, data, logIn]);
 
   // messageHub.emit(MESSAGE, '登入成功！');
+  errorHub.emit(ERROR, '登入失敗');
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>

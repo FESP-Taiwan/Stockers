@@ -25,7 +25,6 @@ const styles = {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    backgroundColor: '#000',
   },
 };
 
