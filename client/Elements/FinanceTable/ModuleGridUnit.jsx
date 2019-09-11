@@ -1,25 +1,51 @@
 // @flow
+/** @jsx jsx */
 
-import React, {
+import { jsx, css } from '@emotion/core';
+import {
   useMemo,
   useRef,
   useEffect,
   useCallback,
 } from 'react';
 import EventEmitter from 'events';
+import editIcon from '../../static/images/icon-edit.png';
+import cancelIcon from '../../static/images/icon-cancel.png';
 
 const styles = {
-  btn: {
-    width: 140,
-    height: 100,
+  btn: css`
+    position: relative;
+    width: 140px;
+    height: 100px;
+    padding: 0;
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    text-align: center;
+    line-height: 100px;
+  `,
+  editBtn: {
+    width: 14,
+    height: 14,
     padding: 0,
-    margin: '0 0 10px 0',
-    fontSize: 13,
-    textAlign: 'center',
-    lineHeight: '100px',
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    transition: '0.3s',
+    opacity: 0,
   },
-  btnActived: {
-    backgroundColor: Colors.LAYER_SECOND,
+  cancelBtn: {
+    width: 14,
+    height: 14,
+    padding: 0,
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    transition: '0.3s',
+    opacity: 0,
+  },
+  icon: {
+    width: 14,
+    height: 14,
   },
 };
 
@@ -78,6 +104,18 @@ function ModuleGridUnit({
   }, [rowId, columnId]);
 
   const onMouseEnter = useCallback(() => {
+    if (moduleGridUnit.current && rowId === 'header') {
+      const childrenNodes = Object.values(moduleGridUnit.current.children);
+
+      childrenNodes.map((child) => {
+        child.style.setProperty('top', '43px');
+
+        child.style.setProperty('opacity', 1);
+
+        return null;
+      });
+    }
+
     sharedEmitter.emit(ENTER_EVENT, {
       activedRowId: rowId,
       activedColumnId: columnId,
@@ -85,20 +123,56 @@ function ModuleGridUnit({
   }, [rowId, columnId]);
 
   const onMouseLeave = useCallback(() => {
+    if (moduleGridUnit.current && rowId === 'header') {
+      const childrenNodes = Object.values(moduleGridUnit.current.children);
+
+      childrenNodes.map((child) => {
+        child.style.setProperty('top', '50px');
+
+        child.style.setProperty('opacity', 0);
+
+        return null;
+      });
+    }
+
     sharedEmitter.emit(LEAVE_EVENT);
-  }, []);
+  }, [rowId]);
+
+  if (rowId === 'header') {
+    return (
+      <div
+        ref={moduleGridUnit}
+        className="module-grid-unit"
+        css={styles.btn}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}>
+        {label}
+        <button
+          style={styles.editBtn}
+          onClick={() => console.log('EDIT ACTION')}
+          type="button">
+          <img src={editIcon} alt="edit" style={styles.icon} />
+        </button>
+        <button
+          style={styles.cancelBtn}
+          onClick={() => console.log('CANCEL ACTION')}
+          type="button">
+          <img src={cancelIcon} alt="cancel" style={styles.icon} />
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div
+    <button
       ref={moduleGridUnit}
       className="module-grid-unit"
-      disabled={rowId === 'header'}
-      style={styles.btn}
+      css={styles.btn}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      role="button">
+      type="button">
       {label}
-    </div>
+    </button>
   );
 }
 
