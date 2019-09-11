@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import { ModuleDataContext } from '../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
+import addIcon from '../../static/images/icon-add-w.png';
 
 const styles = {
   wrapper: {
@@ -19,6 +20,18 @@ const styles = {
   dateSideHeaderMock: {
     width: 32,
     height: '100%',
+  },
+  addBtn: {
+    width: 140,
+    height: 100,
+    padding: 0,
+    fontSize: 13,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addBtnImg: {
+    width: 18,
   },
 };
 
@@ -44,6 +57,11 @@ function ModuleTable() {
     <div style={styles.wrapper}>
       <div style={styles.dateSideHeaderMock} />
       {moduleMainBlock}
+      <button
+        style={styles.addBtn}
+        type="button">
+        <img src={addIcon} alt="add" style={styles.addBtnImg} />
+      </button>
     </div>
   );
 }

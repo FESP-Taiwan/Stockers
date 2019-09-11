@@ -17,8 +17,6 @@ const styles = {
   btnActived: {
     backgroundColor: Colors.LAYER_SECOND,
   },
-  txt: {
-  },
 };
 
 type Props = {
