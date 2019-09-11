@@ -3,9 +3,11 @@
 import React, {
   useContext,
   useMemo,
+  useState,
 } from 'react';
 import { ModuleDataContext } from '../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
+import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
 import addIcon from '../../static/images/icon-add-w.png';
 
 const styles = {
@@ -36,6 +38,7 @@ const styles = {
 };
 
 function ModuleTable() {
+  const [isHeaderUpdateBlockOpen, setHeaderUpdateBlockOpen] = useState(false);
   const moduleData = useContext(ModuleDataContext);
 
   const moduleMainBlock = useMemo(() => {
@@ -45,8 +48,10 @@ function ModuleTable() {
 
     return (
       <>
-        {moduleData.map(elem => (
+        {moduleData.map((elem, id) => (
           <ModuleTableColumnBoard
+            columnId={id}
+            setHeaderUpdateBlockOpen={setHeaderUpdateBlockOpen}
             elem={elem} />
         ))}
       </>
@@ -58,10 +63,14 @@ function ModuleTable() {
       <div style={styles.dateSideHeaderMock} />
       {moduleMainBlock}
       <button
+        onClick={() => setHeaderUpdateBlockOpen(true)}
         style={styles.addBtn}
         type="button">
         <img src={addIcon} alt="add" style={styles.addBtnImg} />
       </button>
+      {/* <ChipHeaderUpdateBlock
+        isOpen={isHeaderUpdateBlockOpen}
+        setOpen={setHeaderUpdateBlockOpen} /> */}
     </div>
   );
 }

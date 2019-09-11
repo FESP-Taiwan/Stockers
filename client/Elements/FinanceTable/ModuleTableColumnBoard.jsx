@@ -13,6 +13,8 @@ type Props = {
     name: string,
     chipData: Array,
   },
+  columnId: number,
+  setHeaderUpdateBlockOpen: Function,
 }
 
 const styles = {
@@ -27,9 +29,10 @@ function ModuleTableColumnBoard({
     chipData,
     name,
   },
+  columnId,
+  setHeaderUpdateBlockOpen,
 }: Props) {
   const [sortedData, setSortedData] = useState([]);
-  const [isHeaderHovered, setHeaderHovered] = useState(false);
 
   useEffect(() => {
     if (!Array.isArray(chipData)) return () => {};
@@ -46,22 +49,22 @@ function ModuleTableColumnBoard({
 
     return (
       <>
-        {sortedData.map(({ value }) => (
+        {sortedData.map(({ value }, id) => (
           <ModuleGridUnit
-            isHeaderHovered={isHeaderHovered}
+            rowId={id}
+            columnId={columnId}
             label={value} />
         ))}
       </>
     );
-  }, [sortedData, isHeaderHovered]);
+  }, [sortedData, columnId]);
 
   return (
     <div style={styles.wrapper}>
       <ModuleGridUnit
-        isHeaderHovered={isHeaderHovered}
-        label={name}
-        setHeaderHovered={setHeaderHovered}
-        isHeader />
+        rowId="header"
+        columnId={columnId}
+        label={name} />
       {moduleMainBoard}
     </div>
   );

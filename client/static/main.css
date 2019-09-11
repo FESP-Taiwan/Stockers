@@ -33,3 +33,11 @@ button {
 #root {
   height: 100vh;
 }
+
+/* ModuleGridUnit Item */
+
+.module-grid-unit.hovered {
+  background-color: #464646 !important;
+  font-weight: 500;
+  cursor: pointer !important;
+}
