@@ -58,12 +58,12 @@ export const headerChipData = [{ // query: chips
   id: 11,
   name: '資產總額',
   layerNumber: 1,
-  childnode: [],
+  childNodes: [],
 }, {
   id: 12,
   name: '負債',
   layerNumber: 1,
-  childnode: [{
+  childNodes: [{
     id: 13,
     name: '短期借款',
     layerNumber: 2,

@@ -44,8 +44,6 @@ function ModuleTable() {
   const moduleMainBlock = useMemo(() => {
     if (!moduleData) return null;
 
-    console.log(moduleData);
-
     return (
       <>
         {moduleData.map((elem, id) => (
@@ -56,7 +54,7 @@ function ModuleTable() {
         ))}
       </>
     );
-  }, [moduleData]);
+  }, [moduleData, setHeaderUpdateBlockOpen]);
 
   return (
     <div style={styles.wrapper}>
@@ -68,9 +66,9 @@ function ModuleTable() {
         type="button">
         <img src={addIcon} alt="add" style={styles.addBtnImg} />
       </button>
-      {/* <ChipHeaderUpdateBlock
+      <ChipHeaderUpdateBlock
         isOpen={isHeaderUpdateBlockOpen}
-        setOpen={setHeaderUpdateBlockOpen} /> */}
+        setOpen={setHeaderUpdateBlockOpen} />
     </div>
   );
 }

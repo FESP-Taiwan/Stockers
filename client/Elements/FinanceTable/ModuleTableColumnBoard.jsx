@@ -63,6 +63,7 @@ function ModuleTableColumnBoard({
     <div style={styles.wrapper}>
       <ModuleGridUnit
         rowId="header"
+        setHeaderUpdateBlockOpen={setHeaderUpdateBlockOpen}
         columnId={columnId}
         label={name} />
       {moduleMainBoard}

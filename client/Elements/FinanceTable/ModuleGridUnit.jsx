@@ -3,7 +3,6 @@
 
 import { jsx, css } from '@emotion/core';
 import {
-  useMemo,
   useRef,
   useEffect,
   useCallback,
@@ -60,12 +59,14 @@ type Props = {
   label: string,
   rowId: string | number,
   columnId: string | number,
+  setHeaderUpdateBlockOpen?: Function,
 }
 
 function ModuleGridUnit({
   label,
   rowId,
   columnId,
+  setHeaderUpdateBlockOpen,
 }: Props) {
   const moduleGridUnit = useRef();
 
@@ -138,6 +139,12 @@ function ModuleGridUnit({
     sharedEmitter.emit(LEAVE_EVENT);
   }, [rowId]);
 
+  const setHeaderUpdateBlock = useCallback(() => {
+    if (typeof (setHeaderUpdateBlockOpen) === 'function') {
+      setHeaderUpdateBlockOpen(true);
+    }
+  }, [setHeaderUpdateBlockOpen]);
+
   if (rowId === 'header') {
     return (
       <div
@@ -149,7 +156,7 @@ function ModuleGridUnit({
         {label}
         <button
           style={styles.editBtn}
-          onClick={() => console.log('EDIT ACTION')}
+          onClick={setHeaderUpdateBlock}
           type="button">
           <img src={editIcon} alt="edit" style={styles.icon} />
         </button>
@@ -175,5 +182,9 @@ function ModuleGridUnit({
     </button>
   );
 }
+
+ModuleGridUnit.defaultProps = {
+  setHeaderUpdateBlockOpen: null,
+};
 
 export default ModuleGridUnit;
