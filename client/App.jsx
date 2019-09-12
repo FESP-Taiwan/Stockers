@@ -5,9 +5,17 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
+import type { ApolloClient } from 'apollo-client';
 import { ConnectedRouter } from 'connected-react-router';
+import { Provider } from 'react-redux';
 import store, { history } from './store';
+import MessageHandler from './Elements/MessageHandler';
+import ErrorHandler from './Elements/ErrorHandler';
+
+// Root Pages
+import RegisterPage from './Pages/Auth/RegisterPage';
+import LoginPage from './Pages/Auth/LoginPage';
 import ModuleTableWrapper from './Elements/FinanceTable/ModuleTableWrapper';
 
 const styles = {
@@ -21,13 +29,28 @@ const styles = {
   },
 };
 
-function App() {
+function App({
+  client,
+}: {
+  client: ApolloClient,
+}) {
   return (
     <div style={styles.wrapper}>
       <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <ModuleTableWrapper />
-        </ConnectedRouter>
+
+        <ApolloProvider client={client}>
+          <ConnectedRouter history={history}>
+            <MessageHandler>
+              <ErrorHandler>
+                <Switch>
+                  <Route exact path="/register" component={RegisterPage} />
+                  <Route exact path="/login" component={LoginPage} />
+                  <Route render={() => <ModuleTableWrapper />} />
+                </Switch>
+              </ErrorHandler>
+            </MessageHandler>
+          </ConnectedRouter>
+        </ApolloProvider>
       </Provider>
     </div>
   );
