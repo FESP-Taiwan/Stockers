@@ -24,6 +24,7 @@ module.exports = {
       Colors: JSON.stringify({
         LAYER_FIRST: '#262626',
         LAYER_SECOND: '#464646',
+        LAYER_THIRD: '#626262',
         BULL_MARKET: '#FF7E72',
         BEAR_MARKET: '#5EF28F',
         PRIMARY: '#FF9500',

@@ -1,6 +1,8 @@
 // @flow
+/** @jsx jsx */
 
-import React, {
+import { jsx, css } from '@emotion/core';
+import {
   useCallback,
   useContext,
   useState,
@@ -15,6 +17,8 @@ const styles = {
   wrapper: {
     display: 'flex',
     flexDirection: 'row',
+    maxHeight: 'calc(100vh - 130px)',
+    overflow: 'auto',
   },
   columnBoard: {
     display: 'flex',
@@ -24,14 +28,19 @@ const styles = {
     fontSize: 19,
     fontWeight: 500,
   },
-  btn: {
-    width: 220,
-    height: 32,
-    padding: 0,
-    lineHeight: '32px',
-    textAlign: 'left',
-    fontSize: 13,
-  },
+  btn: css`
+    width: 220px;
+    height: 32px;
+    padding: 0;
+    line-height: 32px;
+    text-align: left;
+    font-size: 13px;
+    transition: 0.3s;
+    margin: 0 30px 10px 0;
+    &:hover {
+      background-color: ${Colors.LAYER_THIRD};
+    }
+  `,
 };
 
 type Props = {
@@ -60,21 +69,23 @@ function ChipHeaderUpdateBlock({
   }, [setOpen]);
 
   const onClick = useCallback(() => {
+    console.log('ONCLICK ACTIONED');
 
-  }, []);
+    setOpen(false);
+  }, [setOpen]);
 
   const mainBlock = useMemo(() => {
     if (!headerChips.length) return null;
 
     return (
-      <div style={styles.wrapper}>
+      <div css={styles.wrapper}>
         {headerChips.map(({ name, childNodes }) => (
-          <div style={styles.columnBoard}>
-            <h2 style={styles.title}>{name}</h2>
+          <div css={styles.columnBoard}>
+            <h2 css={styles.title}>{name}</h2>
             {childNodes.map(childNode => (
               <button
                 onClick={onClick}
-                style={styles.btn}
+                css={styles.btn}
                 type="button">
                 {childNode.name}
               </button>
@@ -84,8 +95,6 @@ function ChipHeaderUpdateBlock({
       </div>
     );
   }, [headerChips, onClick]);
-
-  console.log(moduleData);
 
   if (!isOpen) return null;
 
