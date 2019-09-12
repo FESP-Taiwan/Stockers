@@ -6,124 +6,269 @@ import moment from 'moment';
 
 export const headerChipData = [{ // query: chips
   id: 1,
-  name: '資產',
+  name: '損益表',
   layerNumber: 1,
   childNodes: [{ // type: [chip]
     id: 2,
-    name: '現金及約當現金',
+    name: '營業成本',
     layerNumber: 2,
     childNodes: [],
   }, {
     id: 3,
-    name: '短期投資',
+    name: '毛利',
     layerNumber: 2,
     childNodes: [],
   }, {
     id: 4,
-    name: '應收帳款',
+    name: '銷售費用',
     layerNumber: 2,
     childNodes: [],
   }, {
     id: 5,
-    name: '存貨',
+    name: '管理費用',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 25,
+    name: '研發費用',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 26,
+    name: '營業外收益',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 27,
+    name: '稅前淨利',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 28,
+    name: '歸屬於母公司淨利',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 29,
+    name: '每股盈餘',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 30,
+    name: '營業活動',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 31,
+    name: '投資活動',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 32,
+    name: '自由現金流',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 33,
+    name: '經營績效',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 34,
+    name: '股東權益報酬率',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 35,
+    name: '毛利率',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 36,
+    name: '營業利益率',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 37,
+    name: '淨利率',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 38,
+    name: '股息',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 39,
+    name: '現金股利',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 40,
+    name: '股票股利',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 41,
+    name: '股利合計',
     layerNumber: 2,
     childNodes: [],
   }],
 }, {
   id: 6,
-  name: '流動資產',
+  name: '資產負債表',
   layerNumber: 1,
   childNodes: [{
     id: 7,
-    name: '長期投資',
+    name: '現金及約當現金',
     layerNumber: 2,
     childNodes: [],
   }, {
     id: 8,
-    name: '固定資產',
+    name: '短期投資',
     layerNumber: 2,
     childNodes: [],
   }, {
     id: 9,
+    name: '應收帳款',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 42,
+    name: '存貨',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 43,
+    name: '長期資產',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 44,
+    name: '固定資產',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 45,
     name: '其他資產',
     layerNumber: 2,
     childNodes: [],
-  }],
-}, {
-  id: 10,
-  name: '非流動資產',
-  layerNumber: 1,
-  childNodes: [],
-}, {
-  id: 11,
-  name: '資產總額',
-  layerNumber: 1,
-  childNodes: [],
-}, {
-  id: 12,
-  name: '負債',
-  layerNumber: 1,
-  childNodes: [{
-    id: 13,
+  }, {
+    id: 46,
     name: '短期借款',
     layerNumber: 2,
     childNodes: [],
   }, {
-    id: 14,
+    id: 47,
     name: '應付帳款',
     layerNumber: 2,
     childNodes: [],
-  }],
-}, {
-  id: 15,
-  name: '流動負債',
-  layerNumber: 1,
-  childNodes: [{
-    id: 16,
+  }, {
+    id: 48,
     name: '長期負債',
     layerNumber: 2,
     childNodes: [],
   }, {
-    id: 17,
+    id: 49,
     name: '其他負債',
     layerNumber: 2,
     childNodes: [],
   }],
 }, {
-  id: 18,
-  name: '非流動負債',
+  id: 12,
+  name: '現金流量表',
   layerNumber: 1,
-  childNodes: [],
+  childNodes: [{
+    id: 13,
+    name: '平均股本',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 14,
+    name: '營業活動',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 50,
+    name: '投資活動',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 51,
+    name: '融資活動',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 52,
+    name: '其他活動',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 53,
+    name: '淨現金流',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 54,
+    name: '自由現金流',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 55,
+    name: '期初餘額',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 56,
+    name: '期末餘額',
+    layerNumber: 2,
+    childNodes: [],
+  }],
 }, {
-  id: 19,
-  name: '負債總額',
+  id: 15,
+  name: '配股配息與除權息日子',
   layerNumber: 1,
-  childNodes: [],
-}, {
-  id: 20,
-  name: '歸屬於母公司業主之權益',
-  layerNumber: 1,
-  childNodes: [],
-}, {
-  id: 21,
-  name: '股本合計',
-  layerNumber: 1,
-  childNodes: [],
-}, {
-  id: 22,
-  name: '資本公積合計',
-  layerNumber: 1,
-  childNodes: [],
-}, {
-  id: 23,
-  name: '保留盈餘合計',
-  layerNumber: 1,
-  childNodes: [],
-}, {
-  id: 24,
-  name: '權益總額',
-  layerNumber: 1,
-  childNodes: [],
+  childNodes: [{
+    id: 16,
+    name: '年度／季度',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 17,
+    name: '董事會日期',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 57,
+    name: '股東會日期',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 58,
+    name: '除息日',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 59,
+    name: '除權日',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 60,
+    name: '現金股利發放日',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 61,
+    name: '現金股利(元／股)',
+    layerNumber: 2,
+    childNodes: [],
+  }, {
+    id: 62,
+    name: '股票股利(元／股)',
+    layerNumber: 2,
+    childNodes: [],
+  }],
 }];
 
 export const moduleDataMock = [{ // type: [chip]
