@@ -22,6 +22,12 @@ module.exports = {
     new webpack.DefinePlugin({
       NODE_ENV: `'${NODE_ENV || 'development'}'`,
       Colors: JSON.stringify({
+        LAYER_FIRST: '#262626',
+        LAYER_SECOND: '#464646',
+        LAYER_THIRD: '#626262',
+        BULL_MARKET: '#FF7E72',
+        BEAR_MARKET: '#5EF28F',
+        PRIMARY: '#FF9500',
         MAIN: '#1CC1D0',
         CALL_ACTION: '#44B582',
         GOOD: '#7ED321',

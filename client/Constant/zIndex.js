@@ -1,5 +1,9 @@
 // @flow
 
+export const MODAL_INDEX = 20;
+
+export const FLOAT_TEXT_ANCHOR_INDEX = 5;
+
 export const BLOCK_ALL_INDEX = 9999;
 
 export const NOTIFICATION_INDEX = 999;

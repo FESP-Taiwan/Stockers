@@ -16,6 +16,7 @@ import ErrorHandler from './Elements/ErrorHandler';
 // Root Pages
 import RegisterPage from './Pages/Auth/RegisterPage';
 import LoginPage from './Pages/Auth/LoginPage';
+import ModuleTableWrapper from './Elements/FinanceTable/ModuleTableWrapper';
 
 const styles = {
   wrapper: {
@@ -36,14 +37,17 @@ function App({
   return (
     <div style={styles.wrapper}>
       <Provider store={store}>
+
         <ApolloProvider client={client}>
           <ConnectedRouter history={history}>
             <MessageHandler>
-              <Switch>
-                <Route exact path="/register" component={RegisterPage} />
-                <Route exact path="/login" component={LoginPage} />
-                <Route render={() => <div>Stockers</div>} />
-              </Switch>
+              <ErrorHandler>
+                <Switch>
+                  <Route exact path="/register" component={RegisterPage} />
+                  <Route exact path="/login" component={LoginPage} />
+                  <Route render={() => <ModuleTableWrapper />} />
+                </Switch>
+              </ErrorHandler>
             </MessageHandler>
           </ConnectedRouter>
         </ApolloProvider>
