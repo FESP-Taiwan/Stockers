@@ -16,7 +16,7 @@ import ErrorHandler from './Elements/ErrorHandler';
 // Root Pages
 import RegisterPage from './Pages/Auth/RegisterPage';
 import LoginPage from './Pages/Auth/LoginPage';
-import ModuleTableWrapper from './Elements/FinanceTable/ModuleTableWrapper';
+import MainBoard from './Pages/MainBoard';
 
 const styles = {
   wrapper: {
@@ -45,7 +45,7 @@ function App({
                 <Switch>
                   <Route exact path="/register" component={RegisterPage} />
                   <Route exact path="/login" component={LoginPage} />
-                  <Route render={() => <ModuleTableWrapper />} />
+                  <Route component={MainBoard} />
                 </Switch>
               </ErrorHandler>
             </MessageHandler>
