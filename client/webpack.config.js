@@ -21,6 +21,25 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       NODE_ENV: `'${NODE_ENV || 'development'}'`,
+      Colors: JSON.stringify({
+        LAYER_FIRST: '#262626',
+        LAYER_SECOND: '#464646',
+        LAYER_THIRD: '#626262',
+        BULL_MARKET: '#FF7E72',
+        BEAR_MARKET: '#5EF28F',
+        PRIMARY: '#FF9500',
+        MAIN: '#1CC1D0',
+        CALL_ACTION: '#44B582',
+        GOOD: '#7ED321',
+        WARNING: '#F5A623',
+        ERROR: '#D7263D',
+        SECONDARY: '#4A4A4A',
+        YELLOW: '#F5DA23',
+        EVENING: '#04356A',
+        DARK_MODE: '#232323',
+        DISABLED: '#C1C1C1',
+        LOGO_RED: '#A1302B',
+      }),
     }),
     new CleanWebpackPlugin(),
     new HTMLWebpackPlugin({
