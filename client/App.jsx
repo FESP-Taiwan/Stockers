@@ -17,6 +17,7 @@ import ErrorHandler from './Elements/ErrorHandler';
 import RegisterPage from './Pages/Auth/RegisterPage';
 import LoginPage from './Pages/Auth/LoginPage';
 import MainBoard from './Pages/MainBoard';
+import BreadCrumb from './Elements/BreadCrumb/BreadCrumb';
 
 const styles = {
   wrapper: {
@@ -37,12 +38,12 @@ function App({
   return (
     <div style={styles.wrapper}>
       <Provider store={store}>
-
         <ApolloProvider client={client}>
           <ConnectedRouter history={history}>
             <MessageHandler>
               <ErrorHandler>
                 <Switch>
+                  <Route exact path="/breadCrumb" component={BreadCrumb} />
                   <Route exact path="/register" component={RegisterPage} />
                   <Route exact path="/login" component={LoginPage} />
                   <Route component={MainBoard} />

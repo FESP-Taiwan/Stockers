@@ -17,7 +17,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
 import { FORM_REGISTER } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
-import stockersLogo from '../../static/images/logo_stockers.png';
+import stockersLogo from '../../static/images/logo_stockers_text.png';
 
 const styles = {
   wrapper: css`

@@ -17,7 +17,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
 import { FORM_LOGIN } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
-import stockersLogo from '../../static/images/logo_stockers.png';
+import stockersLogo from '../../static/images/logo_stockers_text.png';
 import facebookLogo from '../../static/images/facebook-logo.png';
 import googleLogo from '../../static/images/google-logo.png';
 

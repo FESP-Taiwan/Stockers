@@ -2,7 +2,7 @@
 
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../static/images/logo_stockers.png';
+import logo from '../../static/images/logo_stockers.svg';
 
 const styles = {
   logo: {
@@ -20,7 +20,7 @@ function HeaderLogo() {
     <Fragment>
       <Link
         to="/">
-        <img alt="國家兩廳院場館設施服務系統" src={logo} style={styles.logo} />
+        <img alt="stockers" src={logo} style={styles.logo} />
       </Link>
       <div style={styles.placeholder} />
     </Fragment>
