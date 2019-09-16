@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ModuleTableWrapper from './Module/ModuleTableWrapper';
+import CommentBlock from './CommentBlock';
 
 const styles = {
   wrapper: {
@@ -22,7 +23,7 @@ const styles = {
     width: '100%',
     flexBasis: 100,
     flexShrink: 0,
-    backgroundColor: Colors.LAYER_THIRD,
+    backgroundColor: Colors.FIRST,
   },
 };
 
@@ -32,6 +33,7 @@ function InvestStrategyPage() {
       <div style={styles.headerBlock} />
       <div style={styles.mathBlock} />
       <ModuleTableWrapper />
+      <CommentBlock />
     </div>
   );
 }
