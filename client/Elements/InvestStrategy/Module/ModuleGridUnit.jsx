@@ -23,6 +23,17 @@ const styles = {
     line-height: 100px;
     flex-shrink: 0;
   `,
+  headerBtn: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    padding: 0,
+    fontSize: 13,
+    textAlign: 'center',
+    lineHeight: '100px',
+  },
   editBtn: {
     width: 14,
     height: 14,
@@ -55,6 +66,7 @@ sharedEmitter.setMaxListeners(300);
 
 export const ENTER_EVENT = 'E/MOUSE_ENTER';
 export const LEAVE_EVENT = 'E/MOUSE_LEAVE';
+export const CLICK_EVENT = 'E/ONCLICK';
 
 type Props = {
   label: string,
@@ -107,9 +119,11 @@ function ModuleGridUnit({
 
   const onMouseEnter = useCallback(() => {
     if (moduleGridUnit.current && rowId === 'header') {
-      const childrenNodes = Object.values(moduleGridUnit.current.children);
+      const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
 
       childrenNodes.map((child) => {
+        if (child.className === 'module-grid-unit') return null;
+
         child.style.setProperty('top', '43px');
 
         child.style.setProperty('opacity', 1);
@@ -126,9 +140,11 @@ function ModuleGridUnit({
 
   const onMouseLeave = useCallback(() => {
     if (moduleGridUnit.current && rowId === 'header') {
-      const childrenNodes = Object.values(moduleGridUnit.current.children);
+      const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
 
       childrenNodes.map((child) => {
+        if (child.className === 'module-grid-unit hovered') return null;
+
         child.style.setProperty('top', '50px');
 
         child.style.setProperty('opacity', 0);
@@ -146,15 +162,24 @@ function ModuleGridUnit({
     }
   }, [setHeaderUpdateBlockOpen]);
 
+  const onClick = useCallback(() => {
+    sharedEmitter.emit(CLICK_EVENT);
+  }, [rowId, columnId]);
+
   if (rowId === 'header') {
     return (
       <div
-        ref={moduleGridUnit}
-        className="module-grid-unit"
-        css={styles.btn}
         onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}>
-        {label}
+        onMouseLeave={onMouseLeave}
+        css={styles.btn}>
+        <button
+          ref={moduleGridUnit}
+          className="module-grid-unit"
+          style={styles.headerBtn}
+          onClick={onClick}
+          type="button">
+          {label}
+        </button>
         <button
           style={styles.editBtn}
           onClick={setHeaderUpdateBlock}
@@ -176,6 +201,7 @@ function ModuleGridUnit({
       ref={moduleGridUnit}
       className="module-grid-unit"
       css={styles.btn}
+      onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       type="button">

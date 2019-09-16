@@ -3,9 +3,11 @@
 import React, {
   useState,
   useMemo,
+  useEffect,
   useCallback,
 } from 'react';
 import CommentForm from './CommentForm';
+import { sharedEmitter, CLICK_EVENT } from './Module/ModuleGridUnit';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
 
 const styles = {
@@ -51,6 +53,18 @@ const styles = {
 
 function CommentBlock() {
   const [isFormOpened, setFormOpened] = useState(false);
+
+  useEffect(() => {
+    const clickHandler = () => {
+      setFormOpened(true);
+    };
+
+    sharedEmitter.on(CLICK_EVENT, clickHandler);
+
+    return () => {
+      sharedEmitter.removeListener(CLICK_EVENT, clickHandler);
+    };
+  }, []);
 
   const onClick = useCallback(() => {
     setFormOpened(!isFormOpened);
