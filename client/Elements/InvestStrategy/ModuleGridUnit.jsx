@@ -21,6 +21,7 @@ const styles = {
     font-size: 13px;
     text-align: center;
     line-height: 100px;
+    flex-shrink: 0;
   `,
   editBtn: {
     width: 14,

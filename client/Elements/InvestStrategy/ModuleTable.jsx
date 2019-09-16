@@ -18,6 +18,8 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    overflow: 'auto',
+    maxWidth: '100%',
   },
   dateSideHeaderMock: {
     width: 32,
@@ -31,6 +33,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    flexShrink: 0,
   },
   addBtnImg: {
     width: 18,
