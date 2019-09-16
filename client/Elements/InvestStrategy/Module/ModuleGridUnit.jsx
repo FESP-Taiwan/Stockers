@@ -8,8 +8,8 @@ import {
   useCallback,
 } from 'react';
 import EventEmitter from 'events';
-import editIcon from '../../static/images/icon-edit.png';
-import cancelIcon from '../../static/images/icon-cancel.png';
+import editIcon from '../../../static/images/icon-edit.png';
+import cancelIcon from '../../../static/images/icon-cancel.png';
 
 const styles = {
   btn: css`

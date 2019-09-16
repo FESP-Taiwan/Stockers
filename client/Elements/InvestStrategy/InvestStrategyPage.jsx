@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import ModuleTableWrapper from './ModuleTableWrapper';
+import ModuleTableWrapper from './Module/ModuleTableWrapper';
 
 const styles = {
   wrapper: {

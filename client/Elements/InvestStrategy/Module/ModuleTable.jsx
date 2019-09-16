@@ -5,10 +5,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { ModuleDataContext } from '../../Constant/context';
+import { ModuleDataContext } from '../../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
 import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
-import addIcon from '../../static/images/icon-add-w.png';
+import addIcon from '../../../static/images/icon-add-w.png';
 
 const styles = {
   wrapper: {
@@ -51,6 +51,7 @@ function ModuleTable() {
       <>
         {moduleData.map((elem, id) => (
           <ModuleTableColumnBoard
+            key={elem.id}
             columnId={id}
             setHeaderUpdateBlockOpen={setHeaderUpdateBlockOpen}
             elem={elem} />

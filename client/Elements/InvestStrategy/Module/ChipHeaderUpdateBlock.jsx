@@ -9,9 +9,9 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import Modal from '../Modal/Modal';
-import { ModuleDataContext } from '../../Constant/context';
-import { headerChipData } from '../../Mocks/Queries/financeTable';
+import Modal from '../../Modal/Modal';
+import { ModuleDataContext } from '../../../Constant/context';
+import { headerChipData } from '../../../Mocks/Queries/financeTable';
 
 const styles = {
   wrapper: {
@@ -79,11 +79,12 @@ function ChipHeaderUpdateBlock({
 
     return (
       <div css={styles.wrapper}>
-        {headerChips.map(({ name, childNodes }) => (
-          <div css={styles.columnBoard}>
+        {headerChips.map(({ name, childNodes, id }) => (
+          <div key={id} css={styles.columnBoard}>
             <h2 css={styles.title}>{name}</h2>
             {childNodes.map(childNode => (
               <button
+                key={childNode.id}
                 onClick={onClick}
                 css={styles.btn}
                 type="button">
