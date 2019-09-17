@@ -44,10 +44,12 @@ const styles = {
     borderRadius: 40,
     backgroundColor: Colors.LAYER_THIRD,
     transition: '0.5s',
+    opacity: 0,
   },
   formBlockActived: {
     width: 284,
     height: 456,
+    opacity: 1,
   },
 };
 
