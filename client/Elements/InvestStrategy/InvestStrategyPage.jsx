@@ -33,7 +33,10 @@ function InvestStrategyPage() {
       <div style={styles.headerBlock} />
       <div style={styles.mathBlock} />
       <ModuleTableWrapper />
-      <CommentBlock />
+      <CommentBlock
+        initialValues={{
+          comment: '',
+        }} />
     </div>
   );
 }

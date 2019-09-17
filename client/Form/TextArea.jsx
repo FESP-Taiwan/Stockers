@@ -26,8 +26,12 @@ const styles = {
   textarea: {
     width: '100%',
     height: '100%',
-    borderRadius: 40,
-    backgroundColor: Colors.LAYER_THIRD,
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    fontSize: 13,
+    border: 'none',
+    outline: 'none',
+    resize: 'none',
   },
 };
 

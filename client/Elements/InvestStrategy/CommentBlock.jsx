@@ -6,8 +6,13 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import CommentForm from './CommentForm';
+import {
+  reduxForm,
+  Field,
+} from 'redux-form';
+import TextArea from '../../Form/TextArea';
 import { sharedEmitter, CLICK_EVENT } from './Module/ModuleGridUnit';
+import { FORM_STRATEGY_COMMENT } from '../../Constant/form';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
 
 const styles = {
@@ -86,10 +91,17 @@ function CommentBlock() {
         筆記欄
       </button>
       <div style={formBlockStyles}>
-        <CommentForm />
+        <Field
+          name="comment"
+          placeholder="點擊欄位自動填入欄位代號"
+          component={TextArea} />
       </div>
     </div>
   );
 }
 
-export default CommentBlock;
+const formHook = reduxForm({
+  form: FORM_STRATEGY_COMMENT,
+});
+
+export default formHook(CommentBlock);
