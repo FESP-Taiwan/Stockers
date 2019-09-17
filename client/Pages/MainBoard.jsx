@@ -6,7 +6,7 @@ import {
   Route,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
-import ModuleTableWrapper from '../Elements/FinanceTable/ModuleTableWrapper';
+import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
 
 const styles = {
   wrapper: {
@@ -29,8 +29,8 @@ function MainBoard() {
       </Switch>
       <div style={styles.main}>
         <Switch>
-          <Route exact path="/tablepage" component={ModuleTableWrapper} />
-          <Route render={() => <div>首頁待完成，Table這邊請 - /tablepage</div>} />
+          <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
+          <Route render={() => <div>首頁待完成，Table這邊請 - /strategy</div>} />
         </Switch>
       </div>
     </div>

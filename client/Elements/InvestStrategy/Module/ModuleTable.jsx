@@ -5,10 +5,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { ModuleDataContext } from '../../Constant/context';
+import { ModuleDataContext } from '../../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
 import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
-import addIcon from '../../static/images/icon-add-w.png';
+import addIcon from '../../../static/images/icon-add-w.png';
 
 const styles = {
   wrapper: {
@@ -18,6 +18,8 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    overflow: 'auto',
+    maxWidth: '100%',
   },
   dateSideHeaderMock: {
     width: 32,
@@ -31,6 +33,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    flexShrink: 0,
   },
   addBtnImg: {
     width: 18,
@@ -48,6 +51,7 @@ function ModuleTable() {
       <>
         {moduleData.map((elem, id) => (
           <ModuleTableColumnBoard
+            key={elem.id}
             columnId={id}
             setHeaderUpdateBlockOpen={setHeaderUpdateBlockOpen}
             elem={elem} />
