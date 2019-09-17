@@ -27,9 +27,9 @@ const styles = {
   },
   modal: {
     maxHeight: 'calc(100vh - 30px)',
-    padding: '50px 16px 16px 50px',
+    padding: '50px',
     borderRadius: 2,
-    backgroundColor: Colors.LAYER_SECOND,
+    backgroundColor: '#FFF',
     boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.54)',
     position: 'relative',
     overflowY: 'auto',
@@ -94,7 +94,7 @@ function Modal({
               d="M4 4L20 20M20 4L4 20"
               fill="transparent"
               strokeWidth="2"
-              stroke="#FFF" />
+              stroke="#000" />
           </svg>
         </button>
       </div>

@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import ModuleTableWrapper from '../Elements/FinanceTable/ModuleTableWrapper';
+import EllipsisText from '../Elements/Misc/EllipsisText';
 
 const styles = {
   wrapper: {
@@ -30,7 +31,19 @@ function MainBoard() {
       <div style={styles.main}>
         <Switch>
           <Route exact path="/tablepage" component={ModuleTableWrapper} />
-          <Route render={() => <div>首頁待完成，Table這邊請 - /tablepage</div>} />
+          <Route render={() => (
+            <div style={{ width: 100 }}>
+              <EllipsisText
+                editPlaceholder="備註文字"
+                editTitle="編輯備註"
+                editDesc="新增備註"
+                onEdit={() => {
+                  console.log('onEdit');
+                }}>
+                剩餘文字顯示！首頁未完成，Table這邊請：/tablepage
+              </EllipsisText>
+            </div>
+          )} />
         </Switch>
       </div>
     </div>
