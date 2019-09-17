@@ -56,13 +56,13 @@ function TextArea({
   placeholder,
   disabled,
 }: Props) {
-  const onChangeHandler = useCallback(() => {
+  const onChangeHandler = useCallback((e) => {
     if (!isStrategyCommentForm) {
 
     } else {
-
+      onChange(e);
     }
-  }, [isStrategyCommentForm]);
+  }, [isStrategyCommentForm, onChange, value]);
 
   const errorTag = useMemo(() => (error && (dirty || submitFailed) ? (
     <div

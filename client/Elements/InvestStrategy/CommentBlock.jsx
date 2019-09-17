@@ -93,6 +93,7 @@ function CommentBlock() {
       <div style={formBlockStyles}>
         <Field
           name="comment"
+          isStrategyCommentForm
           placeholder="點擊欄位自動填入欄位代號"
           component={TextArea} />
       </div>
