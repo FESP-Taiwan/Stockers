@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { useMemo } from 'react';
-import {jsx, css} from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import logo from '../../static/images/logo_stockers.svg';
@@ -45,8 +45,8 @@ const styles = {
     width: 60px;
     height: 24px;
     display: 'block';
-    textDecoration: 'none';
-    textAlign: 'center';
+    text-decoration: 'none';
+    text-align: 'center';
     outline: 'none';
     border: 1px solid #FF9500;
   `,

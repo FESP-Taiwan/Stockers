@@ -119,9 +119,6 @@ function EllipsisText({
     ...(btnHover ? styles.editBtnHovered : {}),
   }), [btnHover]);
 
-  console.log('a', Array.isArray(children));
-  console.log('c', children);
-
   return (
     <Fragment>
       {PlaceholderComponent && !children ? (

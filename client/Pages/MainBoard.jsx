@@ -6,8 +6,8 @@ import {
   Route,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
-import ModuleTableWrapper from '../Elements/FinanceTable/ModuleTableWrapper';
 import EllipsisText from '../Elements/Misc/EllipsisText';
+import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
 
 const styles = {
   wrapper: {
@@ -30,7 +30,7 @@ function MainBoard() {
       </Switch>
       <div style={styles.main}>
         <Switch>
-          <Route exact path="/tablepage" component={ModuleTableWrapper} />
+          <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
           <Route render={() => (
             <div style={{ width: 100 }}>
               <EllipsisText
@@ -40,7 +40,7 @@ function MainBoard() {
                 onEdit={() => {
                   console.log('onEdit');
                 }}>
-                剩餘文字顯示！首頁未完成，Table這邊請：/tablepage
+                剩餘文字顯示！首頁未完成，strategy這邊請：/strategy
               </EllipsisText>
             </div>
           )} />
