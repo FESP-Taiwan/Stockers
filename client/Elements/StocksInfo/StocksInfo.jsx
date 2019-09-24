@@ -2,21 +2,13 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
+import { flex } from '../../Constant/emotion';
 import FollowingCard from './Form.jsx/FollowingCard';
-
-const flex = css`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
+import LineChartWrapper from '../Form/Chart/LineChartWrapper';
 
 const styles = {
   wrapper: css`
     ${flex}
-    overflow: auto;
   `,
   following: css`
     ${flex}
@@ -59,6 +51,9 @@ function StockersInfo() {
         <h3 css={styles.title}>
           大盤產業
         </h3>
+        <div>
+          <LineChartWrapper />
+        </div>
       </div>
       <div css={styles.industryCardWrapper}>
         大盤拼圖

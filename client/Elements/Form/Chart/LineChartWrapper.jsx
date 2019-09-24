@@ -3,7 +3,7 @@
 import React from 'react';
 // 引用要使用的圖表元素
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
 } from 'recharts';
 
 const styles = {
@@ -50,10 +50,10 @@ const data = [
   },
 ];
 
-function Chart() {
+function LineChartWrapper() {
   return (
     <div style={styles.wrapper}>
-      <LineChart width={800} height={600} data={data}>
+      <LineChart width={400} height={225} data={data}>
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
@@ -64,4 +64,4 @@ function Chart() {
   );
 }
 
-export default Chart;
+export default LineChartWrapper;

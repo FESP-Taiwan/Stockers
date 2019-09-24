@@ -2,15 +2,7 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-
-const flex = css`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
+import { flex } from '../../../Constant/emotion';
 
 const styles = {
   wrapper: css`
@@ -18,11 +10,21 @@ const styles = {
     width: 225px;
     height: 130px;
     flex-direction: row;
-    border: solid 1px #FFF;
     border-radius: 40px;
+    background-color: #262626;
   `,
   leftPart: css`
     ${flex}
+    flexGrow: 1;
+    align-items: flex-start;
+    margin: 0 0 0 40px;
+  `,
+  rightPart: css`
+    ${flex}
+    flexGrow: 1;
+  `,
+  word: css`
+    font-size: 13px;
   `,
 };
 
@@ -33,11 +35,15 @@ function FollowingCard() {
         <span>
           2330 台積電
         </span>
-        <span>
-          買ＡＢ
-        </span>
+        <div>
+          <span>
+            買ＡＢ
+          </span>
+        </div>
       </div>
-      Photo
+      <div css={styles.rightPart}>
+        Photo
+      </div>
     </div>
   );
 }

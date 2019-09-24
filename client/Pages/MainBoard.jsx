@@ -25,7 +25,8 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    margin: '0 0 0 40px',
+    padding: '0 0 0 40px',
+    overflowY: 'auto',
   },
   example: {
     width: '100%',
