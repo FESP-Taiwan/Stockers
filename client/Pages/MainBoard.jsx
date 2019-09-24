@@ -8,10 +8,8 @@ import {
   Route,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
-import HomePage from './HomePage/HomePage';
-import EllipsisText from '../Elements/Misc/EllipsisText';
+import StocksInfoPageWrapper from './StocksInfoPage/StocksInfoPageWrapper';
 import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
-import Chart from '../Elements/Chart/Chart';
 
 const styles = {
   wrapper: {
@@ -27,6 +25,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    margin: '0 0 0 40px',
   },
   example: {
     width: '100%',
@@ -42,7 +41,7 @@ function MainBoard() {
       <div style={styles.main}>
         <Switch>
           <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
-          <Route render={() => (<HomePage />)} />
+          <Route render={() => (<StocksInfoPageWrapper />)} />
         </Switch>
       </div>
     </div>
