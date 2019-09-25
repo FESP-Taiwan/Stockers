@@ -11,6 +11,7 @@ import {
   Field,
 } from 'redux-form';
 import TextArea from '../../Form/TextArea';
+import Editor from '../ArtiboxEditor/Editor';
 import { sharedEmitter, CLICK_EVENT } from './Module/ModuleGridUnit';
 import { FORM_STRATEGY_COMMENT } from '../../Constant/form';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
@@ -97,6 +98,7 @@ function CommentBlock() {
           placeholder="點擊欄位自動填入欄位代號"
           component={TextArea} />
       </div>
+      <Editor />
     </div>
   );
 }

@@ -14,6 +14,8 @@ const styles = {
 function Editor() {
   const [state, dispatch] = useReducer(reducer, fromJSON(), initializer);
 
+  console.log(state);
+
   return (
     <DispatchContext.Provider value={dispatch}>
 
