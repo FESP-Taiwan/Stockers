@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 import reducer, { initializer } from './Reducer';
 import { fromJSON } from '../../helper/json';
+import { Dispatch as DispatchContext } from '../../Constant/ArtiboxEditor/context';
 
 const styles = {
 
@@ -14,8 +15,9 @@ function Editor() {
   const [state, dispatch] = useReducer(reducer, fromJSON(), initializer);
 
   return (
-    // Dispatch context provider
-    <div></div>
+    <DispatchContext.Provider value={dispatch}>
+
+    </DispatchContext.Provider>
   );
 }
 
