@@ -92,6 +92,7 @@ function Editor() {
               dispatch({
                 type: Actions.NEW_LINE,
               });
+              console.log('SEND DISPACHER');
             }
           }}
           role="button">
