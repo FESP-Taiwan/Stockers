@@ -28,6 +28,7 @@ export default function reducer(state, action) {
             type: BLOCK_TYPES.TEXT,
             content: '',
             meta: {},
+            focus: true,
           },
         ],
       };

@@ -11,6 +11,7 @@ import { fromJSON } from '../../helper/json';
 import { Dispatch as DispatchContext } from '../../Constant/ArtiboxEditor/context';
 import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/blockTypes';
 import Actions from '../../Constant/ArtiboxEditor/actions';
+import Text from './Blocks/Text';
 
 const styles = {
   wrapper: {
@@ -67,7 +68,11 @@ function Editor() {
             case BLOCK_TYPES.TEXT:
             case BLOCK_TYPES.HIGHLIGHT_AREA:
               return (
-                <div></div>
+                <Text
+                  focus={block.focus}
+                  meta={block.meta}
+                  type={block.type}
+                  content={block.content} />
               );
 
             default:
