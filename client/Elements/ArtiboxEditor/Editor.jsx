@@ -21,6 +21,7 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    overflow: 'auto',
   },
   blockCreator: {
     flexGrow: 1,

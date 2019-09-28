@@ -21,7 +21,7 @@ export default function reducer(state, action) {
     case Actions.NEW_LINE: {
       if (action.at) {
         const currentIndex = state.blocks.findIndex(block => block.id === action.at);
-        console.log(currentIndex);
+
         if (~currentIndex) {
           return {
             ...state,

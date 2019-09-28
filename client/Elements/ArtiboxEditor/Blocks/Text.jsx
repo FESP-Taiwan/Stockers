@@ -66,6 +66,7 @@ const styles = {
     outline: 'none',
     resize: 'none',
     backgroundColor: 'transparent',
+    padding: 0,
   },
   displayer: {
     position: 'absolute',
@@ -73,6 +74,8 @@ const styles = {
     left: 0,
     top: 0,
     pointerEvents: 'none',
+    wordWrap: 'break-word',
+    whiteSpace: 'pre-wrap',
   },
 };
 
@@ -127,6 +130,15 @@ function Text({
     }
   }, [focus]);
 
+  const onInputHandler = useCallback(({ target }) => {
+    target.style.setProperty('height', `${BASIC_HEIGHT[type]}px`);
+
+    const newHeight = `${target.scrollHeight}px`;
+
+    target.style.setProperty('height', newHeight);
+    target.parentNode.style.setProperty('height', newHeight);
+  }, [type]);
+
   const onFocusHandler = useCallback(() => {
     dispatch({
       type: Actions.FOCUS,
@@ -176,6 +188,7 @@ function Text({
     fontWeight: FONT_WEIGHT[type],
     letterSpacing: LETTER_SPACING[type],
     color: COLOR[type],
+    lineHeight: `${BASIC_HEIGHT[type]}px`,
   }), [type]);
 
   const displayerStyles = useMemo(() => ({
@@ -184,6 +197,7 @@ function Text({
     fontWeight: FONT_WEIGHT[type],
     letterSpacing: LETTER_SPACING[type],
     color: COLOR[type],
+    lineHeight: `${BASIC_HEIGHT[type]}px`,
   }), [type]);
 
   return (
@@ -191,6 +205,7 @@ function Text({
       <textarea
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
+        onInput={onInputHandler}
         onFocus={onFocusHandler}
         style={inputStyles}
         placeholder={placeholder}
