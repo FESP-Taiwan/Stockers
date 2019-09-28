@@ -95,6 +95,7 @@ function Editor() {
             case BLOCK_TYPES.HIGHLIGHT_AREA:
               return (
                 <Text
+                  key={block.id}
                   id={block.id}
                   focus={block.focus}
                   meta={block.meta}

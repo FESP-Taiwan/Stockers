@@ -18,7 +18,34 @@ export function initializer(initialArg = { blocks: [] }) {
 
 export default function reducer(state, action) {
   switch (action.type) {
-    case Actions.NEW_LINE:
+    case Actions.NEW_LINE: {
+      if (action.at) {
+        const currentIndex = state.blocks.findIndex(block => block.id === action.at);
+        console.log(currentIndex);
+        if (~currentIndex) {
+          return {
+            ...state,
+            blocks: [
+              ...state.blocks.slice(0, currentIndex + 1).map(block => (block.focus ? {
+                ...block,
+                focus: false,
+              } : block)),
+              {
+                id: uuid(),
+                type: BLOCK_TYPES.TEXT,
+                content: '',
+                meta: {},
+                focus: true,
+              },
+              ...state.blocks.slice(currentIndex + 1).map(block => (block.focus ? {
+                ...block,
+                focus: false,
+              } : block)),
+            ],
+          };
+        }
+      }
+
       return {
         ...state,
         blocks: [
@@ -35,6 +62,7 @@ export default function reducer(state, action) {
           },
         ],
       };
+    }
 
     case Actions.UPDATE_META_AND_CONTENT: {
       const updateIndex = state.blocks.findIndex(block => block.id === action.id);

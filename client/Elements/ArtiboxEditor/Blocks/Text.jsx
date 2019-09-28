@@ -82,6 +82,7 @@ type Props = {
   focus: boolean,
   meta: Object,
   id: string,
+  placeholder?: string,
 }
 
 function Text({
@@ -90,14 +91,15 @@ function Text({
   focus,
   meta,
   id,
+  placeholder,
 }: Props) {
-  console.log({
-    id,
-    type,
-    content,
-    focus,
-    meta,
-  });
+  // console.log({
+  //   id,
+  //   type,
+  //   content,
+  //   focus,
+  //   meta,
+  // });
   const textarea = useRef();
   const displayer = useRef();
 
@@ -158,6 +160,7 @@ function Text({
 
       dispatch({
         type: Actions.NEW_LINE,
+        at: id,
       });
     }
   }, [dispatch, content, id]);
@@ -190,6 +193,7 @@ function Text({
         onChange={onChangeHandler}
         onFocus={onFocusHandler}
         style={inputStyles}
+        placeholder={placeholder}
         className="Artibox-input"
         ref={textarea} />
       <div
@@ -200,5 +204,9 @@ function Text({
     </div>
   );
 }
+
+Text.defaultProps = {
+  placeholder: '請在此輸入內容',
+};
 
 export default Text;
