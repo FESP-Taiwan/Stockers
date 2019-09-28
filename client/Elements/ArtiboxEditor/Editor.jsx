@@ -28,6 +28,12 @@ const styles = {
     cursor: 'text',
     minHeight: 64,
   },
+  placeholderTxt: {
+    color: '#DBDBDB',
+    fontWeight: 300,
+    letterSpacing: 1,
+    padding: '6px 12px 6px 14px',
+  },
 };
 
 function usePreviosState(value) {
@@ -45,6 +51,24 @@ function Editor() {
 
   const prevState = usePreviosState(state);
 
+  useEffect(() => {
+    if (!state || !prevState) return;
+    // Focus feature after block removed
+    if (state.blocks.length !== prevState.blocks.length) {
+      const newBlockIds = state.blocks.map(block => block.id);
+      const oldBlockIds = prevState.blocks.map(block => block.id);
+      const removeId = oldBlockIds.findIndex(block => !~newBlockIds.indexOf(block));
+
+      if (~removeId) {
+        const artiInputs = document.querySelectorAll('.Artibox-input');
+
+        if (removeId !== 0) {
+          artiInputs[removeId - 1].focus();
+        }
+      }
+    }
+  }, [state, prevState]);
+
   const placeholder = useMemo(() => {
     if (!state) return null;
 
@@ -52,7 +76,9 @@ function Editor() {
       blocks,
     } = state;
 
-    return (blocks.length && !blocks[blocks.length - 1].content) ? null : '請在此輸入內容';
+    return (blocks.length && !blocks[blocks.length - 1].content) ? null : (
+      <span style={styles.placeholderTxt}>請在此輸入內容</span>
+    );
   }, [state]);
 
   console.log(state);
@@ -98,7 +124,6 @@ function Editor() {
               dispatch({
                 type: Actions.NEW_LINE,
               });
-              console.log('SEND DISPACHER');
             }
           }}
           role="button">

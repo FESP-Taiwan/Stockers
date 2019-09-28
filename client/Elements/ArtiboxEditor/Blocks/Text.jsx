@@ -47,9 +47,17 @@ const COLOR = {
 };
 
 const styles = {
-  placement: {
+  wrapper: {
     width: '100%',
     position: 'relative',
+    borderLeft: '2px solid transparent',
+    padding: '0 12px',
+  },
+  focusWrapper: {
+    width: '100%',
+    position: 'relative',
+    borderLeft: `2px solid ${Colors.PRIMARY}`,
+    padding: '0 12px',
   },
   input: {
     height: 26,
@@ -139,7 +147,12 @@ function Text({
 
     // delete
     if (keyCode === 8) {
-
+      if (content === '') {
+        dispatch({
+          type: Actions.REMOVE_BLOCK,
+          id,
+        });
+      }
     } else if (keyCode === 13) { // enter
       e.preventDefault();
 
@@ -147,7 +160,12 @@ function Text({
         type: Actions.NEW_LINE,
       });
     }
-  }, [dispatch]);
+  }, [dispatch, content, id]);
+
+  const wrapperStyles = useMemo(() => ({
+    ...(focus ? styles.focusWrapper : styles.wrapper),
+    height: BASIC_HEIGHT[type],
+  }), [focus, type]);
 
   const inputStyles = useMemo(() => ({
     ...styles.input,
@@ -166,12 +184,13 @@ function Text({
   }), [type]);
 
   return (
-    <div style={styles.placement}>
+    <div style={wrapperStyles}>
       <textarea
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
         onFocus={onFocusHandler}
         style={inputStyles}
+        className="Artibox-input"
         ref={textarea} />
       <div
         style={displayerStyles}

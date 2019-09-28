@@ -79,6 +79,22 @@ export default function reducer(state, action) {
       };
     }
 
+    case Actions.REMOVE_BLOCK: {
+      const removeId = state.blocks.findIndex(block => block.id === action.id);
+
+      if (~removeId) {
+        return {
+          ...state,
+          blocks: [
+            ...state.blocks.slice(0, removeId),
+            ...state.blocks.slice(removeId + 1),
+          ],
+        };
+      }
+
+      return state;
+    }
+
     default:
       return state;
   }

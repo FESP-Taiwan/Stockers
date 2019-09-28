@@ -18,7 +18,7 @@ import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex'
 
 const styles = {
   wrapper: {
-    width: 106,
+    width: 80,
     height: 80,
     position: 'fixed',
     right: 30,
@@ -37,7 +37,7 @@ const styles = {
     textAlign: 'center',
     color: '#000',
     fontWeight: 500,
-    borderRadius: 40,
+    borderRadius: 50,
   },
   formBlock: {
     position: 'absolute',
@@ -46,7 +46,7 @@ const styles = {
     zIndex: BASE_CONTAINER_INDEX,
     width: 0,
     height: 0,
-    padding: 40,
+    padding: '42px 30px',
     borderRadius: 40,
     backgroundColor: Colors.LAYER_THIRD,
     transition: '0.5s',
