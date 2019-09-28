@@ -41,3 +41,29 @@ button {
   font-weight: 500;
   cursor: pointer !important;
 }
+
+/* Artibox Item */
+
+textarea.artibox-input::-webkit-input-placeholder {
+  color: #DBDBDB;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+textarea.artibox-input::-moz-placeholder {
+  color: #DBDBDB;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+textarea.artibox-input::-ms-input-placeholder {
+  color: #DBDBDB;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+textarea.artibox-input::placeholder {
+  color: #DBDBDB;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
