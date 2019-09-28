@@ -3,6 +3,7 @@
 import React, {
   useRef,
   useEffect,
+  useMemo,
 } from 'react';
 import { BLOCK_TYPES } from '../../../Constant/ArtiboxEditor/blockTypes';
 
@@ -43,7 +44,16 @@ const COLOR = {
 
 const styles = {
   placement: {
+    width: '100%',
     position: 'relative',
+  },
+  input: {
+    height: 26,
+    border: 'none',
+    width: '100%',
+    outline: 'none',
+    resize: 'none',
+    backgroundColor: 'transparent',
   },
 };
 
@@ -60,6 +70,7 @@ function Text({
   focus,
   meta,
 }: Props) {
+  console.log(type);
   const textarea = useRef();
   const displayer = useRef();
 
@@ -77,11 +88,29 @@ function Text({
     }
   }, [type]);
 
+  const inputStyles = useMemo(() => ({
+    ...styles.input,
+    fontSize: FONT_SIZE[type],
+    fontWeight: FONT_WEIGHT[type],
+    letterSpacing: LETTER_SPACING[type],
+    color: COLOR[type],
+  }), [type]);
+
+  const displayStyles = useMemo(() => ({
+    ...styles.input,
+    fontSize: FONT_SIZE[type],
+    fontWeight: FONT_WEIGHT[type],
+    letterSpacing: LETTER_SPACING[type],
+    color: COLOR[type],
+  }), [type]);
+
   return (
     <div style={styles.placement}>
       <textarea
+        style={inputStyles}
         ref={textarea} />
       <div
+        style={displayStyles}
         ref={displayer}>
 
       </div>
