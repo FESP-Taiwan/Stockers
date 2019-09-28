@@ -144,12 +144,16 @@ function DatePicker({
     return value;
   }, [error, value]);
 
-  const errorTag = useMemo(() => (error && (dirty || submitFailed || !value) ? (
-    <div
-      style={isShown ? styles.openErrorStr : styles.errorStr}>
-      {error}
-    </div>
-  ) : null), [
+  const errorTag = useMemo(() => {
+    if (error && (dirty || submitFailed || !value)) return null;
+
+    return (
+      <div
+        style={isShown ? styles.openErrorStr : styles.errorStr}>
+        {error}
+      </div>
+    );
+  }, [
     error,
     dirty,
     submitFailed,
