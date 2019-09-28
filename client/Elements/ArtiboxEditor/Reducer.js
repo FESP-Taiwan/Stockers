@@ -22,7 +22,10 @@ export default function reducer(state, action) {
       return {
         ...state,
         blocks: [
-          ...state.blocks,
+          ...state.blocks.map(block => (block.focus ? {
+            ...block,
+            focus: false,
+          } : block)),
           {
             id: uuid(),
             type: BLOCK_TYPES.TEXT,
@@ -51,6 +54,29 @@ export default function reducer(state, action) {
           ],
         };
       }
+
+      return state;
+    }
+
+    case Actions.FOCUS: {
+      return {
+        ...state,
+        blocks: [
+          ...state.blocks.map((block) => {
+            if (block.id === action.id) {
+              return {
+                ...block,
+                focus: true,
+              };
+            }
+
+            return {
+              ...block,
+              focus: false,
+            };
+          }),
+        ],
+      };
     }
 
     default:

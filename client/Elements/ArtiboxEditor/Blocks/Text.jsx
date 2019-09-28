@@ -59,6 +59,13 @@ const styles = {
     resize: 'none',
     backgroundColor: 'transparent',
   },
+  displayer: {
+    position: 'absolute',
+    width: '100%',
+    left: 0,
+    top: 0,
+    pointerEvents: 'none',
+  },
 };
 
 type Props = {
@@ -102,6 +109,21 @@ function Text({
     }
   }, [type]);
 
+  useEffect(() => {
+    const { current } = textarea;
+
+    if (current && focus) {
+      current.focus();
+    }
+  }, [focus]);
+
+  const onFocusHandler = useCallback(() => {
+    dispatch({
+      type: Actions.FOCUS,
+      id,
+    });
+  }, [dispatch, id]);
+
   const onChangeHandler = useCallback(({ target }) => {
     dispatch({
       type: Actions.UPDATE_META_AND_CONTENT,
@@ -135,8 +157,8 @@ function Text({
     color: COLOR[type],
   }), [type]);
 
-  const displayStyles = useMemo(() => ({
-    ...styles.input,
+  const displayerStyles = useMemo(() => ({
+    ...styles.displayer,
     fontSize: FONT_SIZE[type],
     fontWeight: FONT_WEIGHT[type],
     letterSpacing: LETTER_SPACING[type],
@@ -148,10 +170,11 @@ function Text({
       <textarea
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
+        onFocus={onFocusHandler}
         style={inputStyles}
         ref={textarea} />
       <div
-        style={displayStyles}
+        style={displayerStyles}
         ref={displayer}>
 
       </div>
