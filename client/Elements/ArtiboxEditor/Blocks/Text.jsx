@@ -4,7 +4,11 @@ import React, {
   useRef,
   useEffect,
   useMemo,
+  useCallback,
+  useContext,
 } from 'react';
+import Actions from '../../../Constant/ArtiboxEditor/actions';
+import { Dispatch as DispatchContext } from '../../../Constant/ArtiboxEditor/context';
 import { BLOCK_TYPES } from '../../../Constant/ArtiboxEditor/blockTypes';
 
 const BASIC_HEIGHT = {
@@ -62,6 +66,7 @@ type Props = {
   content: string,
   focus: boolean,
   meta: Object,
+  id: string,
 }
 
 function Text({
@@ -69,10 +74,19 @@ function Text({
   content,
   focus,
   meta,
+  id,
 }: Props) {
-  console.log(type);
+  console.log({
+    id,
+    type,
+    content,
+    focus,
+    meta,
+  });
   const textarea = useRef();
   const displayer = useRef();
+
+  const dispatch = useContext(DispatchContext);
 
   useEffect(() => {
     if (textarea.current && displayer.current) {
@@ -87,6 +101,31 @@ function Text({
       parentNode.style.height = `${BASIC_HEIGHT[type]}px`;
     }
   }, [type]);
+
+  const onChangeHandler = useCallback(({ target }) => {
+    dispatch({
+      type: Actions.UPDATE_META_AND_CONTENT,
+      id,
+      content: target.value,
+    });
+  }, [dispatch, id]);
+
+  const onKeyDownHandler = useCallback((e) => {
+    const {
+      keyCode,
+    } = e;
+
+    // delete
+    if (keyCode === 8) {
+
+    } else if (keyCode === 13) { // enter
+      e.preventDefault();
+
+      dispatch({
+        type: Actions.NEW_LINE,
+      });
+    }
+  }, [dispatch]);
 
   const inputStyles = useMemo(() => ({
     ...styles.input,
@@ -107,6 +146,8 @@ function Text({
   return (
     <div style={styles.placement}>
       <textarea
+        onKeyDown={onKeyDownHandler}
+        onChange={onChangeHandler}
         style={inputStyles}
         ref={textarea} />
       <div

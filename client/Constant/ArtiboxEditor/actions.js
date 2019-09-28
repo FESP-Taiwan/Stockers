@@ -2,7 +2,7 @@
 
 export default {
   NEW_LINE: Symbol('Artibox/Action/NEW_LINE'),
-  CHANGE_AND_UPDATE_META: Symbol('Artibox/Action/CHANGE_AND_UPDATE_META'),
+  UPDATE_META_AND_CONTENT: Symbol('Artibox/Action/UPDATE_META_AND_CONTENT'),
   REMOVE_BLOCK: Symbol('Artibox/Action/REMOVE_BLOCK'),
   FOCUS: Symbol('Artibox/Action/FOCUS'),
   CHANGE_TYPE: Symbol('Artibox/Action/CHANGE_TYPE'),

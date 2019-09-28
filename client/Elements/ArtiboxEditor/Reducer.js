@@ -33,6 +33,26 @@ export default function reducer(state, action) {
         ],
       };
 
+    case Actions.UPDATE_META_AND_CONTENT: {
+      const updateIndex = state.blocks.findIndex(block => block.id === action.id);
+
+      if (~updateIndex) {
+        const targetBlock = state.blocks[updateIndex];
+
+        return {
+          ...state,
+          blocks: [
+            ...state.blocks.slice(0, updateIndex),
+            {
+              ...targetBlock,
+              content: action.content,
+            },
+            ...state.blocks.slice(updateIndex + 1),
+          ],
+        };
+      }
+    }
+
     default:
       return state;
   }
