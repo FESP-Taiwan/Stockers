@@ -40,7 +40,7 @@ const LETTER_SPACING = {
 };
 
 const COLOR = {
-  [BLOCK_TYPES.TEXT]: '#000',
+  [BLOCK_TYPES.TEXT]: '#FFF',
   [BLOCK_TYPES.TITLE]: '#4a4a4a',
   [BLOCK_TYPES.SUBTITLE]: '#212121',
   [BLOCK_TYPES.QUOTE]: '#b2b2b2',
