@@ -53,7 +53,7 @@ const data = [
 function LineChartWrapper() {
   return (
     <div style={styles.wrapper}>
-      <LineChart width={400} height={225} data={data}>
+      <LineChart width={225} height={70} data={data}>
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />

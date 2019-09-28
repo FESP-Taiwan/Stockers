@@ -20,13 +20,11 @@ const styles = {
   },
   main: {
     width: '100%',
-    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: '0 0 0 40px',
-    overflowY: 'auto',
+    padding: '0 0 0 30px',
   },
   example: {
     width: '100%',
