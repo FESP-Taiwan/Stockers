@@ -12,6 +12,7 @@ import { Dispatch as DispatchContext } from '../../Constant/ArtiboxEditor/contex
 import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/blockTypes';
 import Actions from '../../Constant/ArtiboxEditor/actions';
 import Text from './Blocks/Text';
+import TypeSelectorMenu from './Elements/TypeSelectorMenu';
 
 const styles = {
   wrapper: {
@@ -22,6 +23,9 @@ const styles = {
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     overflow: 'auto',
+  },
+  paddingBlock: {
+    height: 42,
   },
   blockCreator: {
     flexGrow: 1,
@@ -34,6 +38,16 @@ const styles = {
     fontWeight: 300,
     letterSpacing: 1,
     padding: '6px 12px 6px 14px',
+  },
+  blockPlacement: {
+    width: '100%',
+    position: 'relative',
+  },
+  menuWrapper: {
+    height: 40,
+    position: 'absolute',
+    top: -40,
+    right: 0,
   },
 };
 
@@ -87,6 +101,7 @@ function Editor() {
   return (
     <DispatchContext.Provider value={dispatch}>
       <div style={styles.wrapper}>
+        <div style={styles.paddingBlock} />
         {state.blocks.map((block) => {
           switch (block.type) {
             case BLOCK_TYPES.QUOTE:
@@ -95,13 +110,18 @@ function Editor() {
             case BLOCK_TYPES.TEXT:
             case BLOCK_TYPES.HIGHLIGHT_AREA:
               return (
-                <Text
-                  key={block.id}
-                  id={block.id}
-                  focus={block.focus}
-                  meta={block.meta}
-                  type={block.type}
-                  content={block.content} />
+                <div style={styles.blockPlacement}>
+                  <Text
+                    key={block.id}
+                    id={block.id}
+                    focus={block.focus}
+                    meta={block.meta}
+                    type={block.type}
+                    content={block.content} />
+                  <div style={styles.menuWrapper}>
+                    <TypeSelectorMenu />
+                  </div>
+                </div>
               );
 
             default:
