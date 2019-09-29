@@ -22,10 +22,11 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    overflow: 'auto',
   },
-  paddingBlock: {
-    height: 42,
+  mainBlock: {
+    padding: '42px 30px 0 30px',
+    overflow: 'auto',
+    flexGrow: 1,
   },
   blockCreator: {
     flexGrow: 1,
@@ -44,10 +45,11 @@ const styles = {
     position: 'relative',
   },
   menuWrapper: {
-    height: 40,
-    position: 'absolute',
-    top: -40,
-    right: 0,
+    width: '100%',
+    height: 80,
+    backgroundColor: '#737373',
+    borderRadius: 40,
+    padding: '0 30px',
   },
 };
 
@@ -101,55 +103,57 @@ function Editor() {
   return (
     <DispatchContext.Provider value={dispatch}>
       <div style={styles.wrapper}>
-        <div style={styles.paddingBlock} />
-        {state.blocks.map((block) => {
-          switch (block.type) {
-            case BLOCK_TYPES.QUOTE:
-            case BLOCK_TYPES.TITLE:
-            case BLOCK_TYPES.SUBTITLE:
-            case BLOCK_TYPES.TEXT:
-            case BLOCK_TYPES.HIGHLIGHT_AREA:
-              return (
-                <div style={styles.blockPlacement}>
-                  <Text
+        <div style={styles.mainBlock}>
+          {state.blocks.map((block) => {
+            switch (block.type) {
+              case BLOCK_TYPES.QUOTE:
+              case BLOCK_TYPES.TITLE:
+              case BLOCK_TYPES.SUBTITLE:
+              case BLOCK_TYPES.TEXT:
+              case BLOCK_TYPES.HIGHLIGHT_AREA:
+                return (
+                  <div
                     key={block.id}
-                    id={block.id}
-                    focus={block.focus}
-                    meta={block.meta}
-                    type={block.type}
-                    content={block.content} />
-                  <div style={styles.menuWrapper}>
-                    <TypeSelectorMenu />
+                    style={styles.blockPlacement}>
+                    <Text
+                      id={block.id}
+                      focus={block.focus}
+                      meta={block.meta}
+                      type={block.type}
+                      content={block.content} />
                   </div>
-                </div>
-              );
+                );
 
-            default:
-              return null;
-          }
-        })}
-        <div
-          tabIndex={-1}
-          style={styles.blockCreator}
-          onMouseDown={(e) => {
-            e.preventDefault();
-
-            const {
-              blocks,
-            } = state;
-
-            const lastBlock = (blocks.length && blocks[blocks.length - 1]);
-
-            if (!lastBlock || (lastBlock
-              && (lastBlock.type === BLOCK_TYPES.LINE ? true : !!lastBlock.content))
-            ) {
-              dispatch({
-                type: Actions.NEW_LINE,
-              });
+              default:
+                return null;
             }
-          }}
-          role="button">
-          {placeholder}
+          })}
+          <div
+            tabIndex={-1}
+            style={styles.blockCreator}
+            onMouseDown={(e) => {
+              e.preventDefault();
+
+              const {
+                blocks,
+              } = state;
+
+              const lastBlock = (blocks.length && blocks[blocks.length - 1]);
+
+              if (!lastBlock || (lastBlock
+                && (lastBlock.type === BLOCK_TYPES.LINE ? true : !!lastBlock.content))
+              ) {
+                dispatch({
+                  type: Actions.NEW_LINE,
+                });
+              }
+            }}
+            role="button">
+            {placeholder}
+          </div>
+        </div>
+        <div style={styles.menuWrapper}>
+          <TypeSelectorMenu />
         </div>
       </div>
     </DispatchContext.Provider>

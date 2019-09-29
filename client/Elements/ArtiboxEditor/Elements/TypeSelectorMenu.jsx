@@ -10,17 +10,48 @@ const styles = {
     height: '100%',
     flexGrow: 1,
     backgroundColor: 'transparent',
-    border: 'solid 1px #000',
+  },
+  btn: {
+    height: '100%',
+    padding: '0 9px',
   },
 };
 
-function TypeSelectorMenu() {
+type Props = {
+  focus: true,
+  type: symbol,
+  id: string,
+};
+
+function TypeSelectorMenu({
+  focus,
+  type,
+  id,
+}: Props) {
+  // if (!focus) return null;
+
   return (
     <div style={styles.wrapper}>
-      <Icons.TITLE />
-      <Icons.SUBTITLE />
-      <Icons.LINE />
-      <Icons.QUOTE />
+      <button
+        style={styles.btn}
+        type="button">
+        <Icons.TITLE />
+      </button>
+      <button
+        style={styles.btn}
+        type="button">
+        <Icons.SUBTITLE />
+      </button>
+      <button
+        style={styles.btn}
+        type="button">
+        <Icons.LINE />
+      </button>
+      <button
+        style={styles.btn}
+        type="button">
+        <Icons.QUOTE />
+      </button>
     </div>
   );
 }
