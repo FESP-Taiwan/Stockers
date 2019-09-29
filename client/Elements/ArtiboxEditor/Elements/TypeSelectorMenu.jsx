@@ -1,37 +1,44 @@
 // @flow
 
-import React from 'react';
+import React, {
+  useMemo,
+} from 'react';
 import Icons from '../../../Constant/ArtiboxEditor/icons';
 
 const styles = {
   wrapper: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     height: '100%',
     flexGrow: 1,
     backgroundColor: 'transparent',
   },
   btn: {
-    height: '100%',
-    padding: '0 9px',
+    height: 40,
+    width: 40,
+    margin: '0 9px',
+    borderRadius: 50,
   },
 };
 
 type Props = {
-  focus: true,
-  type: symbol,
-  id: string,
+  curFocusId: string,
+  curFocusType: symbol,
 };
 
 function TypeSelectorMenu({
-  focus,
-  type,
-  id,
+  curFocusId,
+  curFocusType,
 }: Props) {
-  // if (!focus) return null;
+  const wrapperStyles = useMemo(() => ({
+    ...styles.wrapper,
+    ...(curFocusId ? {} : { opacity: 0.4 }),
+  }), [curFocusId]);
 
   return (
-    <div style={styles.wrapper}>
+    <div style={wrapperStyles}>
       <button
         style={styles.btn}
         type="button">

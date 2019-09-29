@@ -5,6 +5,7 @@ import React, {
   useRef,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 import reducer, { initializer } from './Reducer';
 import { fromJSON } from '../../helper/json';
@@ -64,9 +65,22 @@ function usePreviosState(value) {
 }
 
 function Editor() {
+  const [curFocusBlock, setFocusBlock] = useState(null);
   const [state, dispatch] = useReducer(reducer, fromJSON(), initializer);
 
   const prevState = usePreviosState(state);
+
+  useEffect(() => {
+    if (!state) return;
+
+    const target = state.blocks.find(block => block.focus);
+
+    if (target) {
+      setFocusBlock(target);
+    } else {
+      setFocusBlock(null);
+    }
+  }, [state]);
 
   useEffect(() => {
     if (!state || !prevState) return;
@@ -153,7 +167,9 @@ function Editor() {
           </div>
         </div>
         <div style={styles.menuWrapper}>
-          <TypeSelectorMenu />
+          <TypeSelectorMenu
+            curFocusId={curFocusBlock ? curFocusBlock.id : null}
+            curFocusType={curFocusBlock ? curFocusBlock.type : null} />
         </div>
       </div>
     </DispatchContext.Provider>
