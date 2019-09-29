@@ -25,6 +25,8 @@ const styles = {
     alignItems: 'flex-start',
   },
   mainBlock: {
+    display: 'flex',
+    flexDirection: 'column',
     padding: '42px 30px 0 30px',
     overflow: 'auto',
     flexGrow: 1,
@@ -160,6 +162,13 @@ function Editor() {
                 dispatch({
                   type: Actions.NEW_LINE,
                 });
+              } else if (document.activeElement === document.body) {
+                const allInputs = document.querySelectorAll('.Artibox-input');
+                const lastInput = allInputs[allInputs.length - 1];
+
+                if (lastInput) {
+                  lastInput.focus();
+                }
               }
             }}
             role="button">
