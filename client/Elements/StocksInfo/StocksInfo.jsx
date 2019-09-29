@@ -22,7 +22,9 @@ const styles = {
     margin: 0 0 40px 0;
   `,
   industry: css`
-    ${flex}
+    display: flex;
+    width: 100%;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     flex-grow: 1;
@@ -30,7 +32,6 @@ const styles = {
   industryCardWrapper: css`
     ${flex}
     flex-direction: row;
-    align-items: flex-start;
     flex-grow: 3;
     flex-wrap: wrap;
   `,
@@ -48,6 +49,10 @@ const styles = {
   `,
   kLine: css`
     ${flex}
+    height: 225px;
+    border-radius: 40px;
+    background-color: ${Colors.LAYER_FIRST};
+    margin: 0 0 20px 0;
   `,
 };
 

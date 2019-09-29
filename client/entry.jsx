@@ -21,7 +21,7 @@ declare var module: {
 moment.locale('zh-tw');
 
 const client = new ApolloClient({
-  uri: 'https://631669ea.ngrok.io/graphql', // gql server
+  uri: 'localhost:5000/graphql', // gql server
 });
 
 console.log('client', client);
