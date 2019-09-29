@@ -162,7 +162,7 @@ function Editor() {
                   type: Actions.NEW_LINE,
                 });
               } else if (document.activeElement === document.body
-                || document.activeElement.className === 'Artibox-selector-btn') {
+                || document.activeElement.className === 'Artibox-type-selector-btn') {
                 const allInputs = document.querySelectorAll('.Artibox-input');
                 const lastInput = allInputs[allInputs.length - 1];
 

@@ -64,7 +64,7 @@ function TypeSelectorMenu({
           ...(curFocusType === BLOCK_TYPES.TITLE ? styles.btnFocused : {}),
         }}
         onClick={() => onClick(BLOCK_TYPES.TITLE)}
-        className="Artibox-selector-btn"
+        className="Artibox-type-selector-btn"
         type="button">
         <Icons.TITLE />
       </button>
@@ -74,7 +74,7 @@ function TypeSelectorMenu({
           ...(curFocusType === BLOCK_TYPES.SUBTITLE ? styles.btnFocused : {}),
         }}
         onClick={() => onClick(BLOCK_TYPES.SUBTITLE)}
-        className="Artibox-selector-btn"
+        className="Artibox-type-selector-btn"
         type="button">
         <Icons.SUBTITLE />
       </button>
@@ -84,7 +84,7 @@ function TypeSelectorMenu({
           ...(curFocusType === BLOCK_TYPES.LINE ? styles.btnFocused : {}),
         }}
         onClick={() => onClick(BLOCK_TYPES.LINE)}
-        className="Artibox-selector-btn"
+        className="Artibox-type-selector-btn"
         type="button">
         <Icons.LINE />
       </button>
@@ -94,9 +94,9 @@ function TypeSelectorMenu({
           ...(curFocusType === BLOCK_TYPES.QUOTE ? styles.btnFocused : {}),
         }}
         onClick={() => onClick(BLOCK_TYPES.QUOTE)}
-        className="Artibox-selector-btn"
+        className="Artibox-type-selector-btn"
         type="button">
-        <Icons.QUOTE />
+        <Icons.BOLD />
       </button>
     </div>
   );
