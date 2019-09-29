@@ -3,6 +3,7 @@
 import React from 'react';
 import ModuleTableWrapper from './Module/ModuleTableWrapper';
 import CommentBlock from './CommentBlock';
+import HeaderBlock from './HeaderBlock';
 
 const styles = {
   wrapper: {
@@ -30,7 +31,7 @@ const styles = {
 function InvestStrategyPage() {
   return (
     <div style={styles.wrapper}>
-      <div style={styles.headerBlock} />
+      <HeaderBlock />
       <div style={styles.mathBlock} />
       <ModuleTableWrapper />
       <CommentBlock
