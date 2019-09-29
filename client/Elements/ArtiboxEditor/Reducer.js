@@ -123,6 +123,18 @@ export default function reducer(state, action) {
       return state;
     }
 
+    case Actions.CHANGE_TYPE: {
+      return {
+        ...state,
+        blocks: [
+          ...state.blocks.map(block => ((block.id === action.id) ? {
+            ...block,
+            type: (action.newType === block.type) ? BLOCK_TYPES.TEXT : action.newType,
+          } : block)),
+        ],
+      };
+    }
+
     default:
       return state;
   }

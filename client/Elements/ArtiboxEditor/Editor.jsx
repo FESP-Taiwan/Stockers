@@ -52,7 +52,6 @@ const styles = {
     height: 80,
     backgroundColor: '#737373',
     borderRadius: 40,
-    padding: '0 30px',
   },
 };
 
@@ -162,7 +161,8 @@ function Editor() {
                 dispatch({
                   type: Actions.NEW_LINE,
                 });
-              } else if (document.activeElement === document.body) {
+              } else if (document.activeElement === document.body
+                || document.activeElement.className === 'Artibox-selector-btn') {
                 const allInputs = document.querySelectorAll('.Artibox-input');
                 const lastInput = allInputs[allInputs.length - 1];
 
