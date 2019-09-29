@@ -4,8 +4,10 @@ import React from 'react';
 import {
   Switch,
   Route,
+  Link,
 } from 'react-router-dom';
-import HeaderLogo from './HeaderLogo';
+import logo from '../../static/images/logo_stockers.svg';
+import HeaderIndustry from './HeaderIndustry';
 
 const styles = {
   wrapper: {
@@ -16,14 +18,28 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  logo: {
+    width: 40,
+    height: 40,
+    marginLeft: 40,
+  },
+  placeholder: {
+    flexGrow: 1,
+  },
 };
 
 function SiteHeader() {
   return (
     <header style={styles.wrapper}>
-      <Switch>
-        <Route component={HeaderLogo} />
-      </Switch>
+      <Link
+        to="/">
+        <img alt="stockers" src={logo} style={styles.logo} />
+      </Link>
+      <div style={styles.placeholder}>
+        <Switch>
+          <Route exact path="/industry" component={HeaderIndustry} />
+        </Switch>
+      </div>
     </header>
   );
 }
