@@ -72,6 +72,7 @@ type Props = {
   label: string,
   rowId: string | number,
   columnId: string | number,
+  headerName?: string,
   setHeaderUpdateBlockOpen?: Function,
 }
 
@@ -79,6 +80,7 @@ function ModuleGridUnit({
   label,
   rowId,
   columnId,
+  headerName,
   setHeaderUpdateBlockOpen,
 }: Props) {
   const moduleGridUnit = useRef();
@@ -163,8 +165,12 @@ function ModuleGridUnit({
   }, [setHeaderUpdateBlockOpen]);
 
   const onClick = useCallback(() => {
-    sharedEmitter.emit(CLICK_EVENT);
-  }, [rowId, columnId]);
+    sharedEmitter.emit(CLICK_EVENT, {
+      rowId,
+      columnId,
+      name: (headerName || label),
+    });
+  }, [rowId, columnId, headerName, label]);
 
   if (rowId === 'header') {
     return (
@@ -212,6 +218,7 @@ function ModuleGridUnit({
 
 ModuleGridUnit.defaultProps = {
   setHeaderUpdateBlockOpen: null,
+  headerName: null,
 };
 
 export default ModuleGridUnit;

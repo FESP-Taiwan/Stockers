@@ -54,11 +54,12 @@ function ModuleTableColumnBoard({
             key={elemId}
             rowId={id}
             columnId={columnId}
+            headerName={name}
             label={value} />
         ))}
       </>
     );
-  }, [sortedData, columnId]);
+  }, [sortedData, columnId, name]);
 
   return (
     <div style={styles.wrapper}>

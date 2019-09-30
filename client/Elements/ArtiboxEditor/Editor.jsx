@@ -13,6 +13,7 @@ import { Dispatch as DispatchContext } from '../../Constant/ArtiboxEditor/contex
 import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/types';
 import Actions from '../../Constant/ArtiboxEditor/actions';
 import Text from './Blocks/Text';
+import Line from './Blocks/Line';
 import TypeSelectorMenu from './Elements/TypeSelectorMenu';
 
 const styles = {
@@ -30,6 +31,7 @@ const styles = {
     padding: '35px 30px 0 30px',
     overflow: 'auto',
     flexGrow: 1,
+    width: '100%',
   },
   blockCreator: {
     flexGrow: 1,
@@ -121,6 +123,16 @@ function Editor() {
         <div style={styles.mainBlock}>
           {state.blocks.map((block) => {
             switch (block.type) {
+              case BLOCK_TYPES.LINE:
+                return (
+                  <Line
+                    id={block.id}
+                    focus={block.focus}
+                    content={block.content}
+                    meta={block.meta}
+                    type={block.type}
+                    key={block.id} />
+                );
               case BLOCK_TYPES.QUOTE:
               case BLOCK_TYPES.TITLE:
               case BLOCK_TYPES.SUBTITLE:
