@@ -80,12 +80,10 @@ function Line({
                 break;
 
               case 8:
-                if (content === '') {
-                  dispatch({
-                    type: Actions.REMOVE_BLOCK,
-                    id,
-                  });
-                }
+                dispatch({
+                  type: Actions.REMOVE_BLOCK,
+                  id,
+                });
 
                 break;
 
