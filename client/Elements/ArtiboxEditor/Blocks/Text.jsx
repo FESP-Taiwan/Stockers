@@ -1,6 +1,8 @@
 // @flow
 
 import React, {
+  Fragment,
+  useState,
   useRef,
   useEffect,
   useMemo,
@@ -9,7 +11,8 @@ import React, {
 } from 'react';
 import Actions from '../../../Constant/ArtiboxEditor/actions';
 import { Dispatch as DispatchContext } from '../../../Constant/ArtiboxEditor/context';
-import { BLOCK_TYPES } from '../../../Constant/ArtiboxEditor/blockTypes';
+import { BLOCK_TYPES, MARKER_TYPES } from '../../../Constant/ArtiboxEditor/types';
+import MarkerEditorMenu from '../Elements/MarkerEditorMenu';
 
 const BASIC_HEIGHT = {
   [BLOCK_TYPES.TEXT]: 26,
@@ -20,7 +23,7 @@ const BASIC_HEIGHT = {
 
 const FONT_SIZE = {
   [BLOCK_TYPES.TEXT]: 16,
-  [BLOCK_TYPES.TITLE]: 28,
+  [BLOCK_TYPES.TITLE]: 24,
   [BLOCK_TYPES.SUBTITLE]: 20,
   [BLOCK_TYPES.QUOTE]: 16,
 };
@@ -34,7 +37,7 @@ const FONT_WEIGHT = {
 
 const LETTER_SPACING = {
   [BLOCK_TYPES.TEXT]: 1,
-  [BLOCK_TYPES.TITLE]: 4,
+  [BLOCK_TYPES.TITLE]: 3,
   [BLOCK_TYPES.SUBTITLE]: 2,
   [BLOCK_TYPES.QUOTE]: 6,
 };
@@ -67,15 +70,27 @@ const styles = {
     resize: 'none',
     backgroundColor: 'transparent',
     padding: 0,
+    color: Colors.LAYER_THIRD,
+    caretColor: '#FFF',
   },
   displayer: {
     position: 'absolute',
     width: '100%',
+    padding: '0 12px',
     left: 0,
     top: 0,
     pointerEvents: 'none',
     wordWrap: 'break-word',
     whiteSpace: 'pre-wrap',
+  },
+  hightLightTag: {
+    color: 'rgb(214, 87, 71)',
+  },
+  boldTag: {
+    fontWeight: 700,
+  },
+  italicTag: {
+    fontStyle: 'italic',
   },
 };
 
@@ -96,17 +111,19 @@ function Text({
   id,
   placeholder,
 }: Props) {
-  // console.log({
-  //   id,
-  //   type,
-  //   content,
-  //   focus,
-  //   meta,
-  // });
+  console.log({
+    id,
+    type,
+    content,
+    focus,
+    meta,
+  });
   const textarea = useRef();
   const displayer = useRef();
 
   const dispatch = useContext(DispatchContext);
+
+  const [currentCaret, setCurrentCaret] = useState(0);
 
   useEffect(() => {
     if (textarea.current && displayer.current) {
@@ -146,18 +163,81 @@ function Text({
     });
   }, [dispatch, id]);
 
+  // unstudied
   const onChangeHandler = useCallback(({ target }) => {
+    const diff = target.selectionStart - currentCaret;
+
+    const MARKERS = (meta.MARKERS || []).reduce((markers, marker) => {
+      if (currentCaret > marker.TO && target.selectionStart < marker.FROM) return markers;
+
+      if (currentCaret > marker.TO) {
+        if (target.selectionStart < marker.TO) {
+          return [
+            ...markers,
+            {
+              ...marker,
+              TO: target.selectionStart,
+            },
+          ];
+        }
+
+        return [
+          ...markers,
+          marker,
+        ];
+      }
+
+      if (currentCaret <= marker.FROM) {
+        return [
+          ...markers,
+          {
+            ...marker,
+            FROM: marker.FROM + diff,
+            TO: marker.TO + diff,
+          },
+        ];
+      }
+
+      if (currentCaret > marker.FROM && target.selectionStart < marker.FROM) {
+        return [
+          ...markers,
+          {
+            ...marker,
+            FROM: marker.FROM - (marker.FROM - target.selectionStart),
+            TO: marker.TO + diff,
+          },
+        ];
+      }
+
+      return [
+        ...markers,
+        {
+          ...marker,
+          TO: marker.TO + diff,
+        },
+      ];
+    }, []);
+
     dispatch({
       type: Actions.UPDATE_META_AND_CONTENT,
       id,
       content: target.value,
+      meta: {
+        ...meta,
+        MARKERS,
+      },
     });
-  }, [dispatch, id]);
+
+    setCurrentCaret(target.selectionEnd);
+  }, [dispatch, id, currentCaret, meta]);
 
   const onKeyDownHandler = useCallback((e) => {
     const {
       keyCode,
+      target,
     } = e;
+
+    setCurrentCaret(target.selectionEnd);
 
     // delete
     if (keyCode === 8) {
@@ -177,6 +257,120 @@ function Text({
     }
   }, [dispatch, content, id]);
 
+  const onPasteHandler = useCallback(({ target }) => {
+    setCurrentCaret(target.selectionEnd);
+  }, []);
+
+  const addTagToList = useCallback((tag, marker) => {
+    switch (marker.TYPE) {
+      case MARKER_TYPES.HIGHTLIGHT: {
+        tag.push(
+          <span
+            style={styles.hightLightTag}
+            key={`${marker.FROM}:${marker.TO}`}>
+            {content.substring(marker.FROM, marker.TO)}
+          </span>
+        );
+
+        break;
+      }
+
+      case MARKER_TYPES.BOLD: {
+        tag.push(
+          <span
+            style={styles.boldTag}
+            key={`${marker.FROM}:${marker.TO}`}>
+            {content.substring(marker.FROM, marker.TO)}
+          </span>
+        );
+
+        break;
+      }
+
+      case MARKER_TYPES.ITALIC: {
+        tag.push(
+          <span
+            style={styles.italicTag}
+            key={`${marker.FROM}:${marker.TO}`}>
+            {content.substring(marker.FROM, marker.TO)}
+          </span>
+        );
+
+        break;
+      }
+
+      default: {
+        tag.push(
+          <span
+            key={`${marker.FROM}:${marker.TO}`}>
+            {content.substring(marker.FROM, marker.TO)}
+          </span>
+        );
+
+        break;
+      }
+    }
+  }, [content]);
+
+  const contentDisplayer = useMemo(() => {
+    const tag = [];
+    const markers = (meta.MARKERS || []);
+
+    if (!markers.length) return content;
+
+    markers.forEach((marker, index, Markers) => {
+      if (index === 0) {
+        tag.push(
+          <span
+            key={`0:${marker.FROM}`}>
+            {content.substring(0, marker.FROM)}
+          </span>
+        );
+
+        addTagToList(tag, marker);
+
+        if (markers.length === 1) {
+          tag.push(
+            <span
+              key={`${marker.TO}:`}>
+              {content.substring(marker.TO)}
+            </span>
+          );
+        }
+
+        return;
+      }
+
+      const prevMarker = Markers[index - 1];
+
+      if (prevMarker.TO !== marker.FROM) {
+        tag.push(
+          <span
+            key={`${prevMarker.TO}:${marker.FROM}`}>
+            {content.substring(prevMarker.TO, marker.FROM)}
+          </span>
+        );
+      }
+
+      addTagToList(tag, marker);
+
+      if (index === Markers.length - 1) {
+        tag.push(
+          <span
+            key={`${marker.TO}:`}>
+            {content.substring(marker.TO)}
+          </span>
+        );
+      }
+    });
+
+    return (
+      <Fragment>
+        {tag}
+      </Fragment>
+    );
+  }, [meta, content, addTagToList]);
+
   const wrapperStyles = useMemo(() => ({
     ...(focus ? styles.focusWrapper : styles.wrapper),
     height: BASIC_HEIGHT[type],
@@ -187,7 +381,7 @@ function Text({
     fontSize: FONT_SIZE[type],
     fontWeight: FONT_WEIGHT[type],
     letterSpacing: LETTER_SPACING[type],
-    color: COLOR[type],
+    caretColor: COLOR[type],
     lineHeight: `${BASIC_HEIGHT[type]}px`,
   }), [type]);
 
@@ -203,6 +397,7 @@ function Text({
   return (
     <div style={wrapperStyles}>
       <textarea
+        onPaste={onPasteHandler}
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
         onInput={onInputHandler}
@@ -214,7 +409,12 @@ function Text({
       <div
         style={displayerStyles}
         ref={displayer}>
-
+        {contentDisplayer}
+        <MarkerEditorMenu
+          meta={meta}
+          blockId={id}
+          displayer={displayer}
+          textarea={textarea} />
       </div>
     </div>
   );
