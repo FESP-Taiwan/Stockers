@@ -9,4 +9,11 @@ export const BLOCK_TYPES = {
   HIGHLIGHT_AREA: Symbol('Artibox/Block/HIGHLIGHT_AREA'),
 };
 
+export const MARKER_TYPES = {
+  HIGHTLIGHT: Symbol('Artibox/Marker/HIGHLIGHT'),
+  BOLD: Symbol('Artibox/Marker/BOLD'),
+  ITALIC: Symbol('Artibox/Marker/ITALIC'),
+  ERASE: Symbol('Artibox/Marker/ERASE'),
+};
+
 export default null;

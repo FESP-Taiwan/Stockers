@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from 'react';
 import Icons from '../../../Constant/ArtiboxEditor/icons';
-import { BLOCK_TYPES } from '../../../Constant/ArtiboxEditor/blockTypes';
+import { BLOCK_TYPES } from '../../../Constant/ArtiboxEditor/types';
 import { Dispatch as DispatchContext } from '../../../Constant/ArtiboxEditor/context';
 import Actions from '../../../Constant/ArtiboxEditor/actions';
 

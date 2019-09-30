@@ -10,7 +10,7 @@ import React, {
 import reducer, { initializer } from './Reducer';
 import { fromJSON } from '../../helper/json';
 import { Dispatch as DispatchContext } from '../../Constant/ArtiboxEditor/context';
-import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/blockTypes';
+import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/types';
 import Actions from '../../Constant/ArtiboxEditor/actions';
 import Text from './Blocks/Text';
 import TypeSelectorMenu from './Elements/TypeSelectorMenu';

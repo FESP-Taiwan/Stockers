@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import Actions from '../../../Constant/ArtiboxEditor/actions';
 import { Dispatch as DispatchContext } from '../../../Constant/ArtiboxEditor/context';
-import { BLOCK_TYPES } from '../../../Constant/ArtiboxEditor/blockTypes';
+import { BLOCK_TYPES } from '../../../Constant/ArtiboxEditor/types';
 import MarkerEditorMenu from '../Elements/MarkerEditorMenu';
 
 const BASIC_HEIGHT = {
@@ -216,6 +216,8 @@ function Text({
         style={displayerStyles}
         ref={displayer}>
         <MarkerEditorMenu
+          meta={meta}
+          blockId={id}
           displayer={displayer}
           textarea={textarea} />
       </div>
