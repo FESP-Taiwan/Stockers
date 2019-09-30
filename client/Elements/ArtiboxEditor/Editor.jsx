@@ -50,7 +50,7 @@ const styles = {
   menuWrapper: {
     width: '100%',
     height: 80,
-    backgroundColor: '#737373',
+    backgroundColor: Colors.LAYER_FOURTH,
     borderRadius: 40,
   },
 };

@@ -10,7 +10,20 @@ const styles = {
   wrapper: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     position: 'absolute',
+    top: -30,
+    right: 0,
+    backgroundColor: Colors.LAYER_FOURTH,
+    borderRadius: 40,
+    pointerEvents: 'auto',
+    padding: '0 7px',
+    height: 38,
+    border: `solid 1px ${Colors.LAYER_FOURTH}`,
+  },
+  btn: {
+    cursor: 'pointer',
+    margin: '0 8px',
   },
 };
 
@@ -64,44 +77,27 @@ function MarkerEditorMenu({
     };
   }, [isShown, input]);
 
-  // useEffect(() => {
-  //   if (!input) return () => {};
-  //
-  //   function onSelectHandler() {
-  //     const {
-  //       selectionStart,
-  //       selectionEnd,
-  //     } = input;
-  //
-  //     if (selectionStart !== selectionEnd) {
-  //       // setShown(true);
-  //     }
-  //   }
-  //
-  //   input.addEventListener('select', onSelectHandler, false);
-  //
-  //   return () => {
-  //     input.removeEventListener('select', onSelectHandler, false);
-  //   };
-  // }, [input]);
-
   if (!isShown) return null;
 
   return (
     <div style={styles.wrapper}>
       <button
+        style={styles.btn}
         type="button">
         <Icons.HIGHLIGHT />
       </button>
       <button
+        style={styles.btn}
         type="button">
         <Icons.BOLD />
       </button>
       <button
+        style={styles.btn}
         type="button">
         <Icons.ITALIC />
       </button>
       <button
+        style={styles.btn}
         type="button">
         <Icons.ERASE />
       </button>
