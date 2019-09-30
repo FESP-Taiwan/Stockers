@@ -69,7 +69,8 @@ const styles = {
     resize: 'none',
     backgroundColor: 'transparent',
     padding: 0,
-    color: Colors.THIRD,
+    color: Colors.LAYER_THIRD,
+    caretColor: '#FFF',
   },
   displayer: {
     position: 'absolute',
@@ -283,7 +284,7 @@ function Text({
 
       addTagToList(tag, marker);
 
-      if (marker.TO === Markers.length - 1) {
+      if (index === Markers.length - 1) {
         tag.push(
           <span
             key={`${marker.TO}:`}>
@@ -310,6 +311,7 @@ function Text({
     fontSize: FONT_SIZE[type],
     fontWeight: FONT_WEIGHT[type],
     letterSpacing: LETTER_SPACING[type],
+    caretColor: COLOR[type],
     lineHeight: `${BASIC_HEIGHT[type]}px`,
   }), [type]);
 

@@ -101,7 +101,11 @@ function MarkerEditorMenu({
 
     const initUnitMarkersSet = (meta.MARKERS || []).reduce((map, curMarker) => {
       Array.from(Array(curMarker.TO - curMarker.FROM)).forEach((n, index) => {
-        map.set(curMarker.FROM + index, curMarker.TYPE);
+        if (markerType !== MARKER_TYPES.ERASE) {
+          map.set(curMarker.FROM + index, curMarker.TYPE);
+        } else {
+          map.delete(curMarker.FROM + index);
+        }
       });
 
       return map;
@@ -167,6 +171,7 @@ function MarkerEditorMenu({
   return (
     <div style={styles.wrapper}>
       <button
+        onClick={() => addMarkersToList(MARKER_TYPES.HIGHTLIGHT)}
         style={styles.btn}
         type="button">
         <Icons.HIGHLIGHT />
@@ -178,11 +183,13 @@ function MarkerEditorMenu({
         <Icons.BOLD />
       </button>
       <button
+        onClick={() => addMarkersToList(MARKER_TYPES.ITALIC)}
         style={styles.btn}
         type="button">
         <Icons.ITALIC />
       </button>
       <button
+        onClick={() => addMarkersToList(MARKER_TYPES.ERASE)}
         style={styles.btn}
         type="button">
         <Icons.ERASE />
