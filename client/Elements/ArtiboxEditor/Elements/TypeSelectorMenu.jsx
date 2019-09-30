@@ -96,7 +96,7 @@ function TypeSelectorMenu({
         onClick={() => onClick(BLOCK_TYPES.QUOTE)}
         className="Artibox-type-selector-btn"
         type="button">
-        <Icons.BOLD />
+        <Icons.QUOTE />
       </button>
     </div>
   );
