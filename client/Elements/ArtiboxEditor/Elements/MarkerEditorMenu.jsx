@@ -101,7 +101,7 @@ function MarkerEditorMenu({
 
     const initUnitMarkersSet = (meta.MARKERS || []).reduce((map, curMarker) => {
       Array.from(Array(curMarker.TO - curMarker.FROM)).forEach((n, index) => {
-        map.set(curMarker.FROM + index, curMarker);
+        map.set(curMarker.FROM + index, curMarker.TYPE);
       });
 
       return map;
@@ -114,52 +114,52 @@ function MarkerEditorMenu({
         return unitMarkers;
       }, initUnitMarkersSet);
 
-    console.log(unitMarkersSet);
+    const newMarkers = Array.from(unitMarkersSet.entries())
+      .sort((cursorA, cursorB) => cursorA[0] - cursorB[0])
+      .reduce((markers, [unitIndex, mark], index, markerSet) => {
+        if (!markers.length) {
+          return [{
+            TYPE: mark,
+            FROM: unitIndex,
+            TO: unitIndex + 1,
+          }];
+        }
 
-    // const newMarkers = Array.from(unitMarkersSet.entries())
-    //   .sort((cursorA, cursorB) => cursorA[0] - cursorB[0])
-    //   .reduce((markers, [unitIndex, mark], index, markerSet) => {
-    //     if (!markers.length) {
-    //       return [{
-    //         ...mark,
-    //         FROM: unitIndex,
-    //         TO: unitIndex + 1,
-    //       }];
-    //     }
-    //
-    //     const [
-    //       prevCursor,
-    //       prevMark,
-    //     ] = markerSet[index - 1];
-    //
-    //     if (prevCursor === index - 1 && prevMark === mark) {
-    //       return [
-    //         ...markers.slice(0, markers.length - 1),
-    //         {
-    //           ...markers[markers.length - 1],
-    //           TO: unitIndex + 1,
-    //         },
-    //       ];
-    //     }
-    //
-    //     return [
-    //       ...markers,
-    //       {
-    //         ...mark,
-    //         FROM: unitIndex,
-    //         TO: unitIndex + 1,
-    //       },
-    //     ];
-    //   }, []);
-    //
-    // dispatch({
-    //   type: Actions.SET_METADATA,
-    //   id: blockId,
-    //   meta: {
-    //     ...meta,
-    //     MARKERS: newMarkers,
-    //   },
-    // });
+        const [
+          prevUnitIndex,
+          prevMark,
+        ] = markerSet[index - 1];
+
+        if (prevUnitIndex === unitIndex - 1 && prevMark === mark) {
+          return [
+            ...markers.slice(0, markers.length - 1),
+            {
+              ...markers[markers.length - 1],
+              TO: unitIndex + 1,
+            },
+          ];
+        }
+
+        return [
+          ...markers,
+          {
+            TYPE: mark,
+            FROM: unitIndex,
+            TO: unitIndex + 1,
+          },
+        ];
+      }, []);
+
+    dispatch({
+      type: Actions.SET_METADATA,
+      id: blockId,
+      meta: {
+        ...meta,
+        MARKERS: [
+          ...newMarkers,
+        ],
+      },
+    });
   }, [input, meta, dispatch, blockId]);
 
   if (!isShown) return null;
