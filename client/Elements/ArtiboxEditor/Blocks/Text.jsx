@@ -2,6 +2,7 @@
 
 import React, {
   Fragment,
+  useState,
   useRef,
   useEffect,
   useMemo,
@@ -122,6 +123,8 @@ function Text({
 
   const dispatch = useContext(DispatchContext);
 
+  const [currentCaret, setCurrentCaret] = useState(0);
+
   useEffect(() => {
     if (textarea.current && displayer.current) {
       textarea.current.style.height = `${BASIC_HEIGHT[type]}px`;
@@ -160,18 +163,81 @@ function Text({
     });
   }, [dispatch, id]);
 
+  // unstudied
   const onChangeHandler = useCallback(({ target }) => {
+    const diff = target.selectionStart - currentCaret;
+
+    const MARKERS = (meta.MARKERS || []).reduce((markers, marker) => {
+      if (currentCaret > marker.TO && target.selectionStart < marker.FROM) return markers;
+
+      if (currentCaret > marker.TO) {
+        if (target.selectionStart < marker.TO) {
+          return [
+            ...markers,
+            {
+              ...marker,
+              TO: target.selectionStart,
+            },
+          ];
+        }
+
+        return [
+          ...markers,
+          marker,
+        ];
+      }
+
+      if (currentCaret <= marker.FROM) {
+        return [
+          ...markers,
+          {
+            ...marker,
+            FROM: marker.FROM + diff,
+            TO: marker.TO + diff,
+          },
+        ];
+      }
+
+      if (currentCaret > marker.FROM && target.selectionStart < marker.FROM) {
+        return [
+          ...markers,
+          {
+            ...marker,
+            FROM: marker.FROM - (marker.FROM - target.selectionStart),
+            TO: marker.TO + diff,
+          },
+        ];
+      }
+
+      return [
+        ...markers,
+        {
+          ...marker,
+          TO: marker.TO + diff,
+        },
+      ];
+    }, []);
+
     dispatch({
       type: Actions.UPDATE_META_AND_CONTENT,
       id,
       content: target.value,
+      meta: {
+        ...meta,
+        MARKERS,
+      },
     });
-  }, [dispatch, id]);
+
+    setCurrentCaret(target.selectionEnd);
+  }, [dispatch, id, currentCaret, meta]);
 
   const onKeyDownHandler = useCallback((e) => {
     const {
       keyCode,
+      target,
     } = e;
+
+    setCurrentCaret(target.selectionEnd);
 
     // delete
     if (keyCode === 8) {
@@ -190,6 +256,10 @@ function Text({
       });
     }
   }, [dispatch, content, id]);
+
+  const onPasteHandler = useCallback(({ target }) => {
+    setCurrentCaret(target.selectionEnd);
+  }, []);
 
   const addTagToList = useCallback((tag, marker) => {
     switch (marker.TYPE) {
@@ -327,6 +397,7 @@ function Text({
   return (
     <div style={wrapperStyles}>
       <textarea
+        onPaste={onPasteHandler}
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
         onInput={onInputHandler}

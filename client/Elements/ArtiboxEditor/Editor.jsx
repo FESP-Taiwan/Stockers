@@ -27,7 +27,7 @@ const styles = {
   mainBlock: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '42px 30px 0 30px',
+    padding: '35px 30px 0 30px',
     overflow: 'auto',
     flexGrow: 1,
   },

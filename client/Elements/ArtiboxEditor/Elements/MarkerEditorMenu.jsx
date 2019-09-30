@@ -101,11 +101,7 @@ function MarkerEditorMenu({
 
     const initUnitMarkersSet = (meta.MARKERS || []).reduce((map, curMarker) => {
       Array.from(Array(curMarker.TO - curMarker.FROM)).forEach((n, index) => {
-        if (markerType !== MARKER_TYPES.ERASE) {
-          map.set(curMarker.FROM + index, curMarker.TYPE);
-        } else {
-          map.delete(curMarker.FROM + index);
-        }
+        map.set(curMarker.FROM + index, curMarker.TYPE);
       });
 
       return map;
@@ -113,7 +109,11 @@ function MarkerEditorMenu({
 
     const unitMarkersSet = Array.from(Array(selectionEnd - selectionStart))
       .reduce((unitMarkers, selectedUnit, id) => {
-        unitMarkers.set(selectionStart + id, markerType);
+        if (markerType !== MARKER_TYPES.ERASE) {
+          unitMarkers.set(selectionStart + id, markerType);
+        } else {
+          unitMarkers.delete(selectionStart + id);
+        }
 
         return unitMarkers;
       }, initUnitMarkersSet);
