@@ -97,7 +97,12 @@ function HeaderBlock() {
           <img src={strategyIcon} css={styles.icon} alt="strategy" />
           <span>調整比重</span>
         </button>
-        <span css={[styles.btn, styles.finishBtn, actived && styles.actived]}>完成</span>
+        <button
+          onClick={onClick}
+          type="button"
+          css={[styles.btn, styles.finishBtn, actived && styles.actived]}>
+          完成
+        </button>
       </div>
       <span css={styles.line} />
       <button
