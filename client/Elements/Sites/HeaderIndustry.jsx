@@ -11,16 +11,25 @@ const styles = {
     height: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+  `,
+  arrow: css`
+    width: 24px;
+    height: 24px;
+    margin: 0 20px;
+  `,
+  industryName: css`
+    font-size: 20px;
+    font-weight: 800;
   `,
 };
 
 function HeaderIndustry() {
   return (
     <div css={styles.wrapper}>
-      <img src={arrow} alt="arrow" />
-      <span>
+      <img src={arrow} alt="arrow" css={styles.arrow} />
+      <span css={styles.industryName}>
         半導體
       </span>
     </div>
