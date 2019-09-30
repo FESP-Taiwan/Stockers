@@ -95,11 +95,10 @@ function ModuleBtn({
         css={btnStyle}>
         {name}
       </button>
-      {actived ? (
-        <Field
-          name={`${id}-range-slider`}
-          component={RangeSlider} />
-      ) : null}
+      <Field
+        actived={actived}
+        name={`${id}-range-slider`}
+        component={RangeSlider} />
     </div>
   );
 }

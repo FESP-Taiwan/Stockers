@@ -57,6 +57,15 @@ const styles = {
     width: 24,
     margin: '0 20px 0 0',
   },
+  finishBtn: css`
+    opacity: 0;
+    bottom: 0;
+    background-color: #444444;
+  `,
+  actived: css`
+    opacity: 1;
+    transition: opacity 0.5s 1s;
+  `,
 };
 
 const mockModules = [{
@@ -88,7 +97,7 @@ function HeaderBlock() {
           <img src={strategyIcon} css={styles.icon} alt="strategy" />
           <span>調整比重</span>
         </button>
-        {actived ? <span css={[styles.btn, css`bottom: 0; background-color: #444444;`]}>完成</span> : null}
+        <span css={[styles.btn, styles.finishBtn, actived && styles.actived]}>完成</span>
       </div>
       <span css={styles.line} />
       <button

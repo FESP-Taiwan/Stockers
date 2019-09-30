@@ -107,7 +107,7 @@ input[type=range]::-moz-range-thumb {
 input[type=range]::-ms-thumb {
   appearance: none;
   height: 80px;
-  width: 10px;
+  width: 20px;
   opacity: 0;
   cursor: pointer;
 }
