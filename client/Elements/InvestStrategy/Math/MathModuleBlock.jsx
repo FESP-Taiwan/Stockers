@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import MathInput from './MathInput';
 
 const styles = {
   wrapper: {
@@ -23,6 +24,7 @@ const styles = {
   },
   mathInputBlock: {
     flexGrow: 1,
+    height: '100%',
   },
   btn: {
     flexBasis: 106,
@@ -40,7 +42,7 @@ function MathModuleBlock() {
     <div style={styles.wrapper}>
       <h2 style={styles.header}>數學公式：</h2>
       <div style={styles.mathInputBlock}>
-
+        <MathInput />
       </div>
       <button
         onClick={() => {}}
