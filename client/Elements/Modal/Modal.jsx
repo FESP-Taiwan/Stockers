@@ -29,11 +29,11 @@ const styles = {
     maxHeight: 'calc(100vh - 30px)',
     padding: '50px',
     borderRadius: 2,
-    backgroundColor: '#FFF',
     boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.54)',
     position: 'relative',
     overflowY: 'auto',
     overflowX: 'hidden',
+    backgroundColor: Colors.LAYER_SECOND,
   },
   closeBtn: {
     width: 24,
