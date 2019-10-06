@@ -5,12 +5,11 @@ import {
   useMemo,
 } from 'react';
 import { jsx, css } from '@emotion/core';
-import { useQuery } from '@apollo/react-hooks';
 import { flex } from '../../Constant/emotion';
 import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
 import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
-import { followingStocks, industryCard, INDUSTRY_STICKERS } from '../../Mocks/Queries/StockInfo';
+import { followingStocks, industryCard } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
 import LoadingSpinner from '../../Elements/LoadingSpinner';
 
@@ -62,10 +61,6 @@ const styles = {
 };
 
 function StockersInfoPage() {
-  const { loading: industryLoading, data } = useQuery(INDUSTRY_STICKERS);
-
-  console.log('d', data);
-
   return (
     <div css={styles.wrapper}>
       <div css={styles.following}>

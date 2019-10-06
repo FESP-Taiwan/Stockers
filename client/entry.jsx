@@ -6,7 +6,6 @@ import { render } from 'react-dom';
 import debug from 'debug';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
-import ApolloClient from 'apollo-boost';
 import App from './App';
 import './static/main.css';
 
@@ -20,34 +19,25 @@ declare var module: {
 
 moment.locale('zh-tw');
 
-const client = new ApolloClient({
-  uri: ' https://c3da3b62.ngrok.io/graphql', // gql server
-  fetchOptions: {
-    mode: 'no-cors',
-  },
-});
-
-console.log('client', client);
-
 function renderPage() {
   const root = document.getElementById('root');
 
   if (root) {
     render(
-      <App client={client} />,
+      <App />,
       root,
     );
   }
 }
 
 // Initialize rendering
-renderPage(client);
+renderPage();
 
 // Hot reload for development
 async function init() {
   if (module.hot) {
     module.hot.accept('./App', () => {
-      renderPage(client);
+      renderPage();
     });
   }
 }

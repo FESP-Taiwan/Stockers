@@ -111,13 +111,6 @@ function Text({
   id,
   placeholder,
 }: Props) {
-  console.log({
-    id,
-    type,
-    content,
-    focus,
-    meta,
-  });
   const textarea = useRef();
   const displayer = useRef();
 

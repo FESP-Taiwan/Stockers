@@ -46,8 +46,6 @@ type Props = {
 function usePrevValue(value) {
   const ref = useRef();
 
-  console.log('r', ref);
-
   useEffect(() => {
     ref.current = value;
   });
@@ -77,9 +75,6 @@ function SearchBar({
       onChange('');
     }
   }, [terms, value, onChange]);
-
-  console.log('v', value);
-  console.log('p', prevValue);
 
   return (
     <div style={styles.wrapper}>

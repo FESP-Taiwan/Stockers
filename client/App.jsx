@@ -6,7 +6,6 @@ import {
   Route,
 } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
-import type { ApolloClient } from 'apollo-client';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import store, { history } from './store';
@@ -30,28 +29,22 @@ const styles = {
   },
 };
 
-function App({
-  client,
-}: {
-  client: ApolloClient,
-}) {
+function App() {
   return (
     <div style={styles.wrapper}>
       <Provider store={store}>
-        <ApolloProvider client={client}>
-          <ConnectedRouter history={history}>
-            <MessageHandler>
-              <ErrorHandler>
-                <Switch>
-                  <Route exact path="/breadCrumb" component={BreadCrumb} />
-                  <Route exact path="/register" component={RegisterPage} />
-                  <Route exact path="/login" component={LoginPage} />
-                  <Route component={MainBoard} />
-                </Switch>
-              </ErrorHandler>
-            </MessageHandler>
-          </ConnectedRouter>
-        </ApolloProvider>
+        <ConnectedRouter history={history}>
+          <MessageHandler>
+            <ErrorHandler>
+              <Switch>
+                <Route exact path="/breadCrumb" component={BreadCrumb} />
+                <Route exact path="/register" component={RegisterPage} />
+                <Route exact path="/login" component={LoginPage} />
+                <Route component={MainBoard} />
+              </Switch>
+            </ErrorHandler>
+          </MessageHandler>
+        </ConnectedRouter>
       </Provider>
     </div>
   );
