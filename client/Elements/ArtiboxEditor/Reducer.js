@@ -1,7 +1,7 @@
 // @flow
 
 import uuid from 'uuid/v4';
-import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/blockTypes';
+import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/types';
 import Actions from '../../Constant/ArtiboxEditor/actions';
 
 export function initializer(initialArg = { blocks: [] }) {
@@ -116,6 +116,41 @@ export default function reducer(state, action) {
           blocks: [
             ...state.blocks.slice(0, removeId),
             ...state.blocks.slice(removeId + 1),
+          ],
+        };
+      }
+
+      return state;
+    }
+
+    case Actions.CHANGE_TYPE: {
+      return {
+        ...state,
+        blocks: [
+          ...state.blocks.map(block => ((block.id === action.id) ? {
+            ...block,
+            type: (action.newType === block.type) ? BLOCK_TYPES.TEXT : action.newType,
+          } : block)),
+        ],
+      };
+    }
+
+    case Actions.SET_METADATA: {
+      const updateIndex = state.blocks.findIndex(block => action.id === block.id);
+
+      if (~updateIndex) {
+        return {
+          ...state,
+          blocks: [
+            ...state.blocks.slice(0, updateIndex),
+            {
+              ...state.blocks[updateIndex],
+              meta: {
+                ...state.blocks[updateIndex].meta,
+                ...action.meta,
+              },
+            },
+            ...state.blocks.slice(updateIndex + 1),
           ],
         };
       }

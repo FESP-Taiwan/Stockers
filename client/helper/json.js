@@ -1,7 +1,7 @@
 // @flow
 
 import uuid from 'uuid/v4';
-import { BLOCK_TYPES } from '../Constant/ArtiboxEditor/blockTypes';
+import { BLOCK_TYPES } from '../Constant/ArtiboxEditor/types';
 
 export function fromJSON(json = { blocks: [] }) {
   return {
