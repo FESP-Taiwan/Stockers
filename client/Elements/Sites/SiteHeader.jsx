@@ -1,6 +1,8 @@
 // @flow
 
-import React from 'react';
+import React, {
+  useState,
+} from 'react';
 import {
   Switch,
   Route,
@@ -60,6 +62,8 @@ const styles = {
 };
 
 function SiteHeader() {
+  const [searchTerm, setSearchTerm] = useState('');
+
   return (
     <header style={styles.wrapper}>
       <Link
@@ -75,6 +79,10 @@ function SiteHeader() {
       </div>
       <div style={styles.searchBar}>
         <SearchBar
+          input={{
+            value: searchTerm,
+            onChange: setSearchTerm,
+          }}
           placeholder="以股號/股名查詢" />
       </div>
       <span style={styles.email}>

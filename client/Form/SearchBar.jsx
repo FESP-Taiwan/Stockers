@@ -5,6 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
+import type { FieldProps } from 'redux-form';
 import search from '../static/images/search-icon.png';
 
 const styles = {
@@ -34,19 +35,77 @@ const styles = {
 };
 
 type Props = {
+  input: {
+    name: string,
+    value: string,
+    onChange: Function,
+  },
   placeholder: string,
 };
 
+function usePrevValue(value) {
+  const ref = useRef();
+
+  console.log('r', ref);
+
+  useEffect(() => {
+    ref.current = value;
+  });
+
+  return ref.current;
+}
+
 function SearchBar({
+  input: {
+    name,
+    value,
+    onChange,
+  },
   placeholder,
 }: Props) {
+  const [terms, setTerms] = useState(value);
+  const prevValue = usePrevValue(value);
+
+  useEffect(() => {
+    if (value !== prevValue && value !== terms) {
+      setTerms(value);
+    }
+  }, [value, prevValue, terms]);
+
+  useEffect(() => {
+    if (!terms && value) {
+      onChange('');
+    }
+  }, [terms, value, onChange]);
+
+  console.log('v', value);
+  console.log('p', prevValue);
+
   return (
     <div style={styles.wrapper}>
       <img src={search} alt="search" style={styles.icon} />
       <input
+        value={terms}
+        onKeyDown={(e) => {
+          if (e.which === 13 || e.keyCode === 13) {
+            e.preventDefault();
+          }
+        }}
+        onKeyUp={(e) => {
+          if (e.which === 13 || e.keyCode === 13) {
+            e.onChange(terms);
+          }
+        }}
+        onChange={({
+          target: {
+            value: newVal,
+          },
+        }) => {
+          setTerms(newVal);
+        }}
         style={styles.search}
         placeholder={placeholder}
-        type="search" />
+        type="text" />
     </div>
   );
 }
