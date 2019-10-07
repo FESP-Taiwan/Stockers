@@ -31,6 +31,7 @@ const styles = {
     color: Colors.PRIMARY,
     margin: '0 40px 0 0',
     flexShrink: 0,
+    position: 'relative',
   },
   mathInputBlock: {
     flexGrow: 1,
@@ -57,18 +58,61 @@ const styles = {
   btnWrapperActived: {
     width: 212,
   },
+  hintModalBtn: {
+    width: 0,
+    height: 0,
+    opacity: 0,
+    textAlign: 'center',
+    lineHeight: '16px',
+    backgroundColor: Colors.LAYER_THIRD,
+    position: 'absolute',
+    right: 14,
+    bottom: -18,
+    borderRadius: 50,
+    fontWeight: 500,
+  },
+  hintModalBtnActived: {
+    width: 16,
+    height: 16,
+    opacity: 1,
+  },
+  hintModal: {
+    padding: 16,
+    opacity: 0,
+    width: 0,
+    display: 'flex',
+    flexDirection: 'flex-start',
+    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 2px 12px',
+    backgroundColor: Colors.PRIMARY,
+    margin: '8px 0 0 0',
+    borderRadius: 8,
+  },
+  hintModalActived: {
+    width: 252,
+    opacity: 1,
+    transition: 'opacity 0.2s ease-out',
+  },
+  hint: {
+    fontSize: 12,
+    letterSpacing: 2,
+  },
 };
 
 function MathModuleBlock() {
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
+  const [isHintModalActived, setHintModalActived] = useState(false);
 
   useEffect(() => {
     function startEditHandler() {
       setMathModuleEditting(true);
+
+      setHintModalActived(true);
     }
 
     function endEditHandler() {
       setMathModuleEditting(false);
+
+      setHintModalActived(false);
     }
 
     mathSharedEmitter.on(START_EDITTING, startEditHandler);
@@ -100,6 +144,17 @@ function MathModuleBlock() {
     document.querySelector('.math-module-handler').style.setProperty('width', '106px');
   }, []);
 
+  const hintModalBtnStyles = useMemo(() => ({
+    ...styles.hintModalBtn,
+    ...(isMathModuleEditting ? styles.hintModalBtnActived : {}),
+    ...(isHintModalActived ? { backgroundColor: Colors.PRIMARY } : {}),
+  }), [isHintModalActived, isMathModuleEditting]);
+
+  const hintModalStyles = useMemo(() => ({
+    ...styles.hintModal,
+    ...(isHintModalActived && isMathModuleEditting ? styles.hintModalActived : {}),
+  }), [isHintModalActived, isMathModuleEditting]);
+
   const mathModuleHandlerBtn = useMemo(() => {
     if (isMathModuleEditting) {
       return '編輯完成';
@@ -123,7 +178,18 @@ function MathModuleBlock() {
 
   return (
     <div style={styles.wrapper}>
-      <h2 style={styles.header}>數學模型：</h2>
+      <h2 style={styles.header}>
+        數學模型：
+        <button
+          style={hintModalBtnStyles}
+          onClick={() => setHintModalActived(!isHintModalActived)}
+          type="button">
+          !
+          <div style={hintModalStyles}>
+            <span style={styles.hint}>點擊Module Grid以獲取資料內容</span>
+          </div>
+        </button>
+      </h2>
       <div style={styles.mathInputBlock}>
         <MathInput />
       </div>
