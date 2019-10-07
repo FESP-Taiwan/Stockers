@@ -44,25 +44,25 @@ button {
 
 /* Artibox Item */
 
-textarea.artibox-input::-webkit-input-placeholder {
+textarea.Artibox-input::-webkit-input-placeholder {
   color: #DBDBDB;
   font-weight: 300;
   letter-spacing: 1px;
 }
 
-textarea.artibox-input::-moz-placeholder {
+textarea.Artibox-input::-moz-placeholder {
   color: #DBDBDB;
   font-weight: 300;
   letter-spacing: 1px;
 }
 
-textarea.artibox-input::-ms-input-placeholder {
+textarea.Artibox-input::-ms-input-placeholder {
   color: #DBDBDB;
   font-weight: 300;
   letter-spacing: 1px;
 }
 
-textarea.artibox-input::placeholder {
+textarea.Artibox-input::placeholder {
   color: #DBDBDB;
   font-weight: 300;
   letter-spacing: 1px;

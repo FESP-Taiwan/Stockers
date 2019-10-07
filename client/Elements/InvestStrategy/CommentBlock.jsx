@@ -46,7 +46,6 @@ const styles = {
     zIndex: BASE_CONTAINER_INDEX,
     width: 0,
     height: 0,
-    padding: '42px 30px',
     borderRadius: 40,
     backgroundColor: Colors.LAYER_THIRD,
     transition: '0.5s',
