@@ -115,8 +115,6 @@ function Editor() {
     );
   }, [state]);
 
-  console.log(state);
-
   return (
     <DispatchContext.Provider value={dispatch}>
       <div style={styles.wrapper}>

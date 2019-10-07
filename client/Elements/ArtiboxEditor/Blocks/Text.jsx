@@ -111,13 +111,6 @@ function Text({
   id,
   placeholder,
 }: Props) {
-  console.log({
-    id,
-    type,
-    content,
-    focus,
-    meta,
-  });
   const textarea = useRef();
   const displayer = useRef();
 
@@ -382,6 +375,7 @@ function Text({
     fontWeight: FONT_WEIGHT[type],
     letterSpacing: LETTER_SPACING[type],
     caretColor: COLOR[type],
+
     lineHeight: `${BASIC_HEIGHT[type]}px`,
   }), [type]);
 

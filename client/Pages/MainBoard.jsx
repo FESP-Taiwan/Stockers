@@ -8,7 +8,8 @@ import {
   Route,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
-import StocksInfoPageWrapper from './StocksInfoPage/StocksInfoPageWrapper';
+import StocksInfoPage from './StocksInfo/StocksInfoPage';
+import IndustryPage from './Indusry/IndustryPage';
 import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
 
 const styles = {
@@ -24,7 +25,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: '0 0 0 30px',
+    padding: '0 20px 0 30px',
   },
   example: {
     width: '100%',
@@ -40,7 +41,8 @@ function MainBoard() {
       <div style={styles.main}>
         <Switch>
           <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
-          <Route render={() => (<StocksInfoPageWrapper />)} />
+          <Route exact path="/industry" component={IndustryPage} />
+          <Route render={() => (<StocksInfoPage />)} />
         </Switch>
       </div>
     </div>

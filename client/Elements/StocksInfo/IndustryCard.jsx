@@ -2,8 +2,9 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { flex } from '../../../Constant/emotion';
-import IndustryCardChart from './IndustryCardChart';
+import { Link } from 'react-router-dom';
+import { flex } from '../../Constant/emotion';
+import IndustryCardChart from './Form/IndustryCardChart';
 
 const styles = {
   wrapper: css`
@@ -12,6 +13,7 @@ const styles = {
     border-radius: 40px;
     background-color: ${Colors.LAYER_FIRST};
     margin: 0 10px 20px 10px;
+    text-decoration: none;
   `,
   main: css`
     ${flex}
@@ -45,10 +47,8 @@ function IndustryCard({
   name,
   chart,
 }: Props) {
-  console.log('c', chart);
-
   return (
-    <div css={styles.wrapper}>
+    <Link css={styles.wrapper} to="/industry">
       <div css={styles.main}>
         <div css={styles.word}>
           <span css={styles.title}>
@@ -63,7 +63,7 @@ function IndustryCard({
             data={chart} />
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
