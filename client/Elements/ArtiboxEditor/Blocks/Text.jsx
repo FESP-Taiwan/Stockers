@@ -375,6 +375,7 @@ function Text({
     fontWeight: FONT_WEIGHT[type],
     letterSpacing: LETTER_SPACING[type],
     caretColor: COLOR[type],
+
     lineHeight: `${BASIC_HEIGHT[type]}px`,
   }), [type]);
 

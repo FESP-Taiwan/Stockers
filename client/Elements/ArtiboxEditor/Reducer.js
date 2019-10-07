@@ -2,6 +2,7 @@
 
 import uuid from 'uuid/v4';
 import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/types';
+
 import Actions from '../../Constant/ArtiboxEditor/actions';
 
 export function initializer(initialArg = { blocks: [] }) {
@@ -157,7 +158,6 @@ export default function reducer(state, action) {
 
       return state;
     }
-
     default:
       return state;
   }
