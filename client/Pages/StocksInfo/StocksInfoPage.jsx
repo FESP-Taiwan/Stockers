@@ -2,16 +2,18 @@
 /** @jsx jsx */
 
 import {
-  useMemo,
+  useEffect,
 } from 'react';
 import { jsx, css } from '@emotion/core';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { flex } from '../../Constant/emotion';
 import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
 import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
 import { followingStocks, industryCard } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
-import LoadingSpinner from '../../Elements/LoadingSpinner';
+import * as IndustryActions from '../../actions/Industry';
 
 const styles = {
   wrapper: css`
@@ -60,7 +62,21 @@ const styles = {
   `,
 };
 
-function StockersInfoPage() {
+type Props = {
+  fetchIndustryCardData: Function,
+  industryCardData: Array,
+};
+
+function StockersInfoPage({
+  fetchIndustryCardData,
+  industryCardData,
+}: Props) {
+  useEffect(() => {
+    fetchIndustryCardData();
+  }, [fetchIndustryCardData]);
+
+  console.log('industryCardData', industryCardData);
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.following}>
@@ -99,4 +115,13 @@ function StockersInfoPage() {
   );
 }
 
-export default StockersInfoPage;
+const reduxHook = connect(
+  state => ({
+    industryCardData: state.industryCardData,
+  }),
+  dispatch => bindActionCreators({
+    ...IndustryActions,
+  }, dispatch),
+);
+
+export default reduxHook(StockersInfoPage);
