@@ -42,6 +42,13 @@ button {
   cursor: pointer !important;
 }
 
+.module-math-edit-handler.hovered {
+  opacity: 1 !important;
+  width: 80px !important;
+  height: 80px !important;
+  transition: opacity 0.2s ease-out;
+}
+
 /* Artibox Item */
 
 textarea.Artibox-input::-webkit-input-placeholder {

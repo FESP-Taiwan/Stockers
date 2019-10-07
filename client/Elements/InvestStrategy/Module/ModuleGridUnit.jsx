@@ -6,13 +6,21 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useMemo,
+  useState,
 } from 'react';
 import EventEmitter from 'events';
 import editIcon from '../../../static/images/icon-edit.png';
 import cancelIcon from '../../../static/images/icon-cancel.png';
+import {
+  mathSharedEmitter,
+  START_EDITTING,
+  END_EDITTING,
+  INIT_MODULE,
+} from '../Math/MathInput';
 
 const styles = {
-  btn: css`
+  btnWrapper: css`
     position: relative;
     width: 140px;
     height: 100px;
@@ -24,9 +32,6 @@ const styles = {
     flex-shrink: 0;
   `,
   headerBtn: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
     width: '100%',
     height: '100%',
     padding: 0,
@@ -58,6 +63,23 @@ const styles = {
     width: 14,
     height: 14,
   },
+  mathHandlerBlock: {
+    position: 'absolute',
+    right: 4,
+    bottom: 80,
+    width: 0,
+    height: 0,
+    opacity: 0,
+    backgroundColor: Colors.LAYER_FOURTH,
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: 30,
+  },
+  mathEditBtn: {
+    width: '100%',
+    height: 30,
+    borderRadius: 30,
+  },
 };
 
 export const sharedEmitter = new EventEmitter();
@@ -84,19 +106,76 @@ function ModuleGridUnit({
   setHeaderUpdateBlockOpen,
 }: Props) {
   const moduleGridUnit = useRef();
+  const mathEditHandler = useRef();
+
+  const [isMathModuleEditting, setMathModuleEditting] = useState(false);
+
+  console.log(isMathModuleEditting);
+
+  const mathEmitHandlerBlock = useMemo(() => {
+    if (!isMathModuleEditting) return null;
+
+    return (
+      <div
+        ref={mathEditHandler}
+        className="module-math-edit-handler"
+        style={styles.mathHandlerBlock}>
+        <button
+          style={styles.mathEditBtn}
+          type="button">
+          1
+        </button>
+        <button
+          style={styles.mathEditBtn}
+          type="button">
+          2
+        </button>
+      </div>
+    );
+  }, [isMathModuleEditting]);
+
+  useEffect(() => {
+    function startEditHandler() {
+      setMathModuleEditting(true);
+    }
+
+    function endEditHandler() {
+      setMathModuleEditting(false);
+    }
+
+    mathSharedEmitter.on(START_EDITTING, startEditHandler);
+    mathSharedEmitter.on(END_EDITTING, endEditHandler);
+    mathSharedEmitter.on(INIT_MODULE, endEditHandler);
+
+    return () => {
+      mathSharedEmitter.removeListener(START_EDITTING, startEditHandler);
+      mathSharedEmitter.removeListener(END_EDITTING, endEditHandler);
+      mathSharedEmitter.removeListener(INIT_MODULE, endEditHandler);
+    };
+  }, []);
 
   useEffect(() => {
     const enterHandler = ({ activedRowId, activedColumnId }) => {
       const { current } = moduleGridUnit;
+      const { current: mathHandlerCurrent } = mathEditHandler;
 
       if (current) {
+        // clean up
         if (current.classList.contains('hovered')) {
           current.classList.remove('hovered');
         }
 
+        if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
+          mathHandlerCurrent.classList.remove('hovered');
+        }
+
         if (activedColumnId === columnId) {
-          if (activedRowId === 'header' || activedRowId === rowId) {
+          if (activedRowId === rowId) {
             current.classList.add('hovered');
+
+            if (isMathModuleEditting && mathHandlerCurrent) {
+              mathHandlerCurrent.classList.add('hovered');
+            }
           }
         }
       }
@@ -104,9 +183,14 @@ function ModuleGridUnit({
 
     const leaveHandler = () => {
       const { current } = moduleGridUnit;
+      const { current: mathHandlerCurrent } = mathEditHandler;
 
       if (current && current.classList.contains('hovered')) {
         current.classList.remove('hovered');
+      }
+
+      if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
+        mathHandlerCurrent.classList.remove('hovered');
       }
     };
 
@@ -117,20 +201,18 @@ function ModuleGridUnit({
       sharedEmitter.removeListener(ENTER_EVENT, enterHandler);
       sharedEmitter.removeListener(LEAVE_EVENT, leaveHandler);
     };
-  }, [rowId, columnId]);
+  }, [rowId, columnId, isMathModuleEditting]);
 
   const onMouseEnter = useCallback(() => {
     if (moduleGridUnit.current && rowId === 'header') {
       const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
 
-      childrenNodes.map((child) => {
-        if (child.className === 'module-grid-unit') return null;
+      childrenNodes.forEach((child) => {
+        if (child.className !== 'module-grid-unit') {
+          child.style.setProperty('top', '43px');
 
-        child.style.setProperty('top', '43px');
-
-        child.style.setProperty('opacity', 1);
-
-        return null;
+          child.style.setProperty('opacity', 1);
+        }
       });
     }
 
@@ -177,7 +259,7 @@ function ModuleGridUnit({
       <div
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        css={styles.btn}>
+        css={styles.btnWrapper}>
         <button
           ref={moduleGridUnit}
           className="module-grid-unit"
@@ -198,21 +280,26 @@ function ModuleGridUnit({
           type="button">
           <img src={cancelIcon} alt="cancel" style={styles.icon} />
         </button>
+        {mathEmitHandlerBlock}
       </div>
     );
   }
 
   return (
-    <button
-      ref={moduleGridUnit}
-      className="module-grid-unit"
-      css={styles.btn}
-      onClick={onClick}
+    <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      type="button">
-      {label}
-    </button>
+      css={styles.btnWrapper}>
+      <button
+        ref={moduleGridUnit}
+        className="module-grid-unit"
+        css={styles.headerBtn}
+        onClick={onClick}
+        type="button">
+        {label}
+      </button>
+      {mathEmitHandlerBlock}
+    </div>
   );
 }
 
