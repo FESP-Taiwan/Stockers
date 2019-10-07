@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
   useContext,
+  useRef,
 } from 'react';
 import EventEmitter from 'events';
 import { MathInitDataContext } from '../../../Constant/context';
@@ -36,10 +37,12 @@ export const END_EDITTING = 'MATH/END_EDITTING';
 export const INIT_MODULE = 'MATH/INIT_MODULE';
 
 function MathInput() {
+  const inputRef = useRef();
+
   const mathInitData = useContext(MathInitDataContext);
 
   const [firstLoaded, setFirstLoaded] = useState(false);
-  const [isInputDisabled, setInputDisabled] = useState(true);
+  const [isEditting, setIsEditting] = useState(false);
   const [inputState, setInputState] = useState({
     content: '',
     meta: {},
@@ -56,22 +59,30 @@ function MathInput() {
   }, [firstLoaded, mathInitData]);
 
   useEffect(() => {
+    const { current } = inputRef;
+
+    if (current && isEditting) {
+      current.focus();
+    }
+  }, [isEditting]);
+
+  useEffect(() => {
     function startEditHandler() {
       console.log('EDIT START');
 
-      setInputDisabled(false);
+      setIsEditting(true);
     }
 
     function endEditHandler() {
       console.log('EDIT END');
 
-      setInputDisabled(true);
+      setIsEditting(false);
     }
 
     function initModuleHandler() {
       console.log('INITTED MODULE');
 
-      setInputDisabled(true);
+      setIsEditting(false);
     }
 
     mathSharedEmitter.on(START_EDITTING, startEditHandler);
@@ -89,7 +100,8 @@ function MathInput() {
     <div
       style={styles.wrapper}>
       <input
-        disabled={isInputDisabled}
+        ref={inputRef}
+        disabled={!isEditting}
         value={inputState.content}
         onChange={onChangeHandler}
         style={styles.input} />
