@@ -111,13 +111,6 @@ function Text({
   id,
   placeholder,
 }: Props) {
-  console.log({
-    id,
-    type,
-    content,
-    focus,
-    meta,
-  });
   const textarea = useRef();
   const displayer = useRef();
 
@@ -397,6 +390,7 @@ function Text({
   return (
     <div style={wrapperStyles}>
       <textarea
+        value={content}
         onPaste={onPasteHandler}
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
