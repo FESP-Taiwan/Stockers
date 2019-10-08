@@ -64,22 +64,27 @@ const styles = {
     height: 14,
   },
   mathHandlerBlock: {
+    padding: 4,
     position: 'absolute',
     right: 4,
-    bottom: 80,
+    top: -14,
     width: 0,
     height: 0,
     opacity: 0,
-    backgroundColor: Colors.LAYER_FOURTH,
+    backgroundColor: Colors.LAYER_THIRD,
     display: 'flex',
-    flexDirection: 'column',
-    borderRadius: 30,
+    flexDirection: 'row',
+    borderRadius: 4,
   },
-  mathEditBtn: {
-    width: '100%',
-    height: 30,
-    borderRadius: 30,
-  },
+  mathEditBtn: css`
+    flex-grow: 1;
+    height: 100%;
+    text-align: center;
+    line-height: 22px;
+    &:hover {
+      background-color: ${Colors.LAYER_FOURTH};
+    }
+  `,
 };
 
 export const sharedEmitter = new EventEmitter();
@@ -96,6 +101,7 @@ type Props = {
   columnId: string | number,
   headerName?: string,
   setHeaderUpdateBlockOpen?: Function,
+  timeStamp?: MomentType,
 }
 
 function ModuleGridUnit({
@@ -103,6 +109,7 @@ function ModuleGridUnit({
   rowId,
   columnId,
   headerName,
+  timeStamp,
   setHeaderUpdateBlockOpen,
 }: Props) {
   const moduleGridUnit = useRef();
@@ -115,24 +122,44 @@ function ModuleGridUnit({
   const mathEmitHandlerBlock = useMemo(() => {
     if (!isMathModuleEditting) return null;
 
+    if (rowId === 'header') {
+      return (
+        <div
+          ref={mathEditHandler}
+          className="module-math-edit-handler"
+          style={styles.mathHandlerBlock}>
+          <button
+            css={styles.mathEditBtn}
+            type="button">
+            取平均
+          </button>
+          <button
+            css={styles.mathEditBtn}
+            type="button">
+            取眾數
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div
         ref={mathEditHandler}
         className="module-math-edit-handler"
         style={styles.mathHandlerBlock}>
         <button
-          style={styles.mathEditBtn}
+          css={styles.mathEditBtn}
           type="button">
-          1
+          取格子
         </button>
         <button
-          style={styles.mathEditBtn}
+          css={styles.mathEditBtn}
           type="button">
-          2
+          取時間
         </button>
       </div>
     );
-  }, [isMathModuleEditting]);
+  }, [isMathModuleEditting, rowId]);
 
   useEffect(() => {
     function startEditHandler() {
@@ -208,7 +235,7 @@ function ModuleGridUnit({
       const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
 
       childrenNodes.forEach((child) => {
-        if (child.className !== 'module-grid-unit') {
+        if (child.className !== 'module-grid-unit' && child.className !== 'module-math-edit-handler') {
           child.style.setProperty('top', '43px');
 
           child.style.setProperty('opacity', 1);
@@ -226,14 +253,12 @@ function ModuleGridUnit({
     if (moduleGridUnit.current && rowId === 'header') {
       const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
 
-      childrenNodes.map((child) => {
-        if (child.className === 'module-grid-unit hovered') return null;
+      childrenNodes.forEach((child) => {
+        if (child.className !== 'module-grid-unit hovered' && child.className !== 'module-math-edit-handler hovered') {
+          child.style.setProperty('top', '50px');
 
-        child.style.setProperty('top', '50px');
-
-        child.style.setProperty('opacity', 0);
-
-        return null;
+          child.style.setProperty('opacity', 0);
+        }
       });
     }
 
@@ -306,6 +331,7 @@ function ModuleGridUnit({
 ModuleGridUnit.defaultProps = {
   setHeaderUpdateBlockOpen: null,
   headerName: null,
+  timeStamp: null,
 };
 
 export default ModuleGridUnit;

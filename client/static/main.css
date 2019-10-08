@@ -44,8 +44,8 @@ button {
 
 .module-math-edit-handler.hovered {
   opacity: 1 !important;
-  width: 80px !important;
-  height: 80px !important;
+  width: 100px !important;
+  height: 30px !important;
   transition: opacity 0.2s ease-out;
 }
 
