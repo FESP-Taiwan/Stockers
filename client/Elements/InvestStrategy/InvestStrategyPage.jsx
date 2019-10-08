@@ -3,6 +3,7 @@
 import React from 'react';
 import ModuleTableWrapper from './Module/ModuleTableWrapper';
 import CommentBlock from './CommentBlock';
+import MathModuleBlockWrapper from './Math/MathModuleBlockWrapper';
 
 const styles = {
   wrapper: {
@@ -19,19 +20,13 @@ const styles = {
     flexShrink: 0,
     backgroundColor: Colors.LAYER_SECOND,
   },
-  mathBlock: {
-    width: '100%',
-    flexBasis: 100,
-    flexShrink: 0,
-    backgroundColor: Colors.FIRST,
-  },
 };
 
 function InvestStrategyPage() {
   return (
     <div style={styles.wrapper}>
       <div style={styles.headerBlock} />
-      <div style={styles.mathBlock} />
+      <MathModuleBlockWrapper />
       <ModuleTableWrapper />
       <CommentBlock
         initialValues={{

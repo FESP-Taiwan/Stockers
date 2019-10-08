@@ -8,6 +8,7 @@ import React, {
 import { ModuleDataContext } from '../../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
 import addIcon from '../../../static/images/icon-add-w.png';
+import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
 
 const styles = {
   wrapper: {
@@ -69,6 +70,9 @@ function ModuleTable() {
         type="button">
         <img src={addIcon} alt="add" style={styles.addBtnImg} />
       </button>
+      <ChipHeaderUpdateBlock
+        isOpen={isHeaderUpdateBlockOpen}
+        setOpen={setHeaderUpdateBlockOpen} />
     </div>
   );
 }
