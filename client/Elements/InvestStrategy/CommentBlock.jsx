@@ -12,7 +12,7 @@ import {
 } from 'redux-form';
 import TextArea from '../../Form/TextArea';
 import Editor from '../ArtiboxEditor/Editor';
-import { moduleGridSharedEmitter, CLICK_EVENT } from '../../Constant/investStrategyEmitter';
+import { investStrategySharedEmitter, CLICK_EVENT } from '../../Constant/investStrategy';
 import { FORM_STRATEGY_COMMENT } from '../../Constant/form';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
 
@@ -61,17 +61,17 @@ const styles = {
 function CommentBlock() {
   const [isFormOpened, setFormOpened] = useState(false);
 
-  useEffect(() => {
-    const clickHandler = () => {
-      setFormOpened(true);
-    };
-
-    moduleGridSharedEmitter.on(CLICK_EVENT, clickHandler);
-
-    return () => {
-      moduleGridSharedEmitter.removeListener(CLICK_EVENT, clickHandler);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const clickHandler = () => {
+  //     setFormOpened(true);
+  //   };
+  //
+  //   investStrategySharedEmitter.on(CLICK_EVENT, clickHandler);
+  // 
+  //   return () => {
+  //     investStrategySharedEmitter.removeListener(CLICK_EVENT, clickHandler);
+  //   };
+  // }, []);
 
   const onClick = useCallback(() => {
     setFormOpened(!isFormOpened);

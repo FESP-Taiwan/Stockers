@@ -9,11 +9,11 @@ import React, {
 } from 'react';
 import { MathInitDataContext } from '../../../Constant/context';
 import {
-  mathSharedEmitter,
+  investStrategySharedEmitter,
   START_EDITTING,
   END_EDITTING,
   INIT_MODULE,
-} from '../../../Constant/investStrategyEmitter';
+} from '../../../Constant/investStrategy';
 
 const styles = {
   wrapper: {
@@ -84,14 +84,14 @@ function MathInput() {
       setIsEditting(false);
     }
 
-    mathSharedEmitter.on(START_EDITTING, startEditHandler);
-    mathSharedEmitter.on(END_EDITTING, endEditHandler);
-    mathSharedEmitter.on(INIT_MODULE, initModuleHandler);
+    investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
+    investStrategySharedEmitter.on(END_EDITTING, endEditHandler);
+    investStrategySharedEmitter.on(INIT_MODULE, initModuleHandler);
 
     return () => {
-      mathSharedEmitter.removeListener(START_EDITTING, startEditHandler);
-      mathSharedEmitter.removeListener(END_EDITTING, endEditHandler);
-      mathSharedEmitter.removeListener(INIT_MODULE, initModuleHandler);
+      investStrategySharedEmitter.removeListener(START_EDITTING, startEditHandler);
+      investStrategySharedEmitter.removeListener(END_EDITTING, endEditHandler);
+      investStrategySharedEmitter.removeListener(INIT_MODULE, initModuleHandler);
     };
   }, []);
 

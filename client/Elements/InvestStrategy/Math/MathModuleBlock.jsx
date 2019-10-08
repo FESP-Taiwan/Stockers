@@ -8,11 +8,11 @@ import React, {
 } from 'react';
 import MathInput from './MathInput';
 import {
-  mathSharedEmitter,
+  investStrategySharedEmitter,
   START_EDITTING,
   END_EDITTING,
   INIT_MODULE,
-} from '../../../Constant/investStrategyEmitter';
+} from '../../../Constant/investStrategy';
 
 const styles = {
   wrapper: {
@@ -116,31 +116,31 @@ function MathModuleBlock() {
       setHintModalActived(false);
     }
 
-    mathSharedEmitter.on(START_EDITTING, startEditHandler);
-    mathSharedEmitter.on(END_EDITTING, endEditHandler);
-    mathSharedEmitter.on(INIT_MODULE, endEditHandler);
+    investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
+    investStrategySharedEmitter.on(END_EDITTING, endEditHandler);
+    investStrategySharedEmitter.on(INIT_MODULE, endEditHandler);
 
     return () => {
-      mathSharedEmitter.removeListener(START_EDITTING, startEditHandler);
-      mathSharedEmitter.removeListener(END_EDITTING, endEditHandler);
-      mathSharedEmitter.removeListener(INIT_MODULE, endEditHandler);
+      investStrategySharedEmitter.removeListener(START_EDITTING, startEditHandler);
+      investStrategySharedEmitter.removeListener(END_EDITTING, endEditHandler);
+      investStrategySharedEmitter.removeListener(INIT_MODULE, endEditHandler);
     };
   }, []);
 
   const mathModuleHandlerOnClick = useCallback(() => {
     if (!isMathModuleEditting) {
-      mathSharedEmitter.emit(START_EDITTING);
+      investStrategySharedEmitter.emit(START_EDITTING);
 
       document.querySelector('.math-module-handler').style.setProperty('width', '212px');
     } else {
-      mathSharedEmitter.emit(END_EDITTING);
+      investStrategySharedEmitter.emit(END_EDITTING);
 
       document.querySelector('.math-module-handler').style.setProperty('width', '106px');
     }
   }, [isMathModuleEditting]);
 
   const initMathModuleOnClick = useCallback(() => {
-    mathSharedEmitter.emit(INIT_MODULE);
+    investStrategySharedEmitter.emit(INIT_MODULE);
 
     document.querySelector('.math-module-handler').style.setProperty('width', '106px');
   }, []);

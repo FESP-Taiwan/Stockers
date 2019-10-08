@@ -12,11 +12,13 @@ import {
 import editIcon from '../../../static/images/icon-edit.png';
 import cancelIcon from '../../../static/images/icon-cancel.png';
 import {
-  mathSharedEmitter,
+  investStrategySharedEmitter,
   START_EDITTING,
   END_EDITTING,
   INIT_MODULE,
-} from '../../../Constant/investStrategyEmitter';
+  CLICK_EVENT,
+  MATH_META_TYPES,
+} from '../../../Constant/investStrategy';
 
 const styles = {
   btnWrapper: css`
@@ -104,11 +106,19 @@ function ModuleGridUnit({
   setHeaderUpdateBlockOpen,
 }: Props) {
   const moduleGridUnit = useRef();
-  const mathEditHandler = useRef();
+  const mathEmitHandler = useRef();
 
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
 
-  console.log(isMathModuleEditting);
+  const onClick = useCallback((type: null) => {
+    investStrategySharedEmitter.emit(CLICK_EVENT, {
+      rowId,
+      columnId,
+      type,
+      date: (type === MATH_META_TYPES.DATE ? timeStamp : null),
+      name: (headerName || label),
+    });
+  }, [rowId, columnId, headerName, label, timeStamp]);
 
   const mathEmitHandlerBlock = useMemo(() => {
     if (!isMathModuleEditting) return null;
@@ -116,16 +126,18 @@ function ModuleGridUnit({
     if (rowId === 'header') {
       return (
         <div
-          ref={mathEditHandler}
+          ref={mathEmitHandler}
           className="module-math-edit-handler"
           style={styles.mathHandlerBlock}>
           <button
             css={styles.mathEditBtn}
+            onClick={() => onClick(MATH_META_TYPES.AVERAGE)}
             type="button">
             取平均
           </button>
           <button
             css={styles.mathEditBtn}
+            onClick={() => onClick(MATH_META_TYPES.NUMEROUS)}
             type="button">
             取眾數
           </button>
@@ -135,22 +147,24 @@ function ModuleGridUnit({
 
     return (
       <div
-        ref={mathEditHandler}
+        ref={mathEmitHandler}
         className="module-math-edit-handler"
         style={styles.mathHandlerBlock}>
         <button
           css={styles.mathEditBtn}
+          onClick={() => onClick(MATH_META_TYPES.GRID)}
           type="button">
           取格子
         </button>
         <button
           css={styles.mathEditBtn}
+          onClick={() => onClick(MATH_META_TYPES.DATE)}
           type="button">
           取時間
         </button>
       </div>
     );
-  }, [isMathModuleEditting, rowId]);
+  }, [isMathModuleEditting, rowId, onClick]);
 
   useEffect(() => {
     function startEditHandler() {
@@ -161,20 +175,20 @@ function ModuleGridUnit({
       setMathModuleEditting(false);
     }
 
-    mathSharedEmitter.on(START_EDITTING, startEditHandler);
-    mathSharedEmitter.on(END_EDITTING, endEditHandler);
-    mathSharedEmitter.on(INIT_MODULE, endEditHandler);
+    investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
+    investStrategySharedEmitter.on(END_EDITTING, endEditHandler);
+    investStrategySharedEmitter.on(INIT_MODULE, endEditHandler);
 
     return () => {
-      mathSharedEmitter.removeListener(START_EDITTING, startEditHandler);
-      mathSharedEmitter.removeListener(END_EDITTING, endEditHandler);
-      mathSharedEmitter.removeListener(INIT_MODULE, endEditHandler);
+      investStrategySharedEmitter.removeListener(START_EDITTING, startEditHandler);
+      investStrategySharedEmitter.removeListener(END_EDITTING, endEditHandler);
+      investStrategySharedEmitter.removeListener(INIT_MODULE, endEditHandler);
     };
   }, []);
 
   const onMouseEnter = useCallback(() => {
     const { current } = moduleGridUnit;
-    const { current: mathHandlerCurrent } = mathEditHandler;
+    const { current: mathHandlerCurrent } = mathEmitHandler;
 
     if (current) {
       // clean up
@@ -209,7 +223,7 @@ function ModuleGridUnit({
 
   const onMouseLeave = useCallback(() => {
     const { current } = moduleGridUnit;
-    const { current: mathHandlerCurrent } = mathEditHandler;
+    const { current: mathHandlerCurrent } = mathEmitHandler;
 
     if (current) {
       if (current && current.classList.contains('hovered')) {
@@ -240,14 +254,6 @@ function ModuleGridUnit({
     }
   }, [setHeaderUpdateBlockOpen]);
 
-  // const onClick = useCallback(() => {
-  //   moduleGridSharedEmitter.emit(CLICK_EVENT, {
-  //     rowId,
-  //     columnId,
-  //     name: (headerName || label),
-  //   });
-  // }, [rowId, columnId, headerName, label]);
-
   if (rowId === 'header') {
     return (
       <div
@@ -258,19 +264,21 @@ function ModuleGridUnit({
           ref={moduleGridUnit}
           className="module-grid-unit"
           style={styles.headerBtn}
-          // onClick={onClick}
+          onClick={onClick}
           type="button">
           {label}
         </button>
         <button
           style={styles.editBtn}
           onClick={setHeaderUpdateBlock}
+          disabled={isMathModuleEditting}
           type="button">
           <img src={editIcon} alt="edit" style={styles.icon} />
         </button>
         <button
           style={styles.cancelBtn}
           onClick={() => console.log('CANCEL ACTION')}
+          disabled={isMathModuleEditting}
           type="button">
           <img src={cancelIcon} alt="cancel" style={styles.icon} />
         </button>
@@ -288,7 +296,8 @@ function ModuleGridUnit({
         ref={moduleGridUnit}
         className="module-grid-unit"
         css={styles.headerBtn}
-        // onClick={onClick}
+        onClick={onClick}
+        // disabled={isMathModuleEditting}
         type="button">
         {label}
       </button>
