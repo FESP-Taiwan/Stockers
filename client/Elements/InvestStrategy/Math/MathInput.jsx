@@ -97,6 +97,58 @@ function MathInput() {
   useEffect(() => {
     const { current } = inputRef;
 
+    if (!isEditting || !current) return () => {};
+
+    console.log('passed');
+
+    function onSelectionChangeHandler() {
+      console.log('SELECTION CHANGED');
+
+      if (document.activeElement !== current) {
+        return;
+      }
+
+      const {
+        content,
+        chipInfos,
+      } = inputState;
+
+      const {
+        selectionStart,
+        selectionEnd,
+      } = current;
+
+      console.log('selectionStart', selectionStart);
+      console.log('selectionEnd', selectionEnd);
+
+      const newSelectionRange = chipInfos.map(chipInfo => {
+        if (selectionStart < chipInfo.FROM) {
+          if (selectionEnd < chipInfo.FROM) {
+            return {
+              from: selectionStart,
+              to: selectionEnd,
+            };
+          }
+
+          return {
+            from: chipInfo.FROM,
+            to: chipInfo.TO,
+          };
+        }
+      });
+    }
+
+    document.addEventListener('selectionchange', onSelectionChangeHandler, false);
+
+    return () => {
+      document.removeEventListener('selectionchange', onSelectionChangeHandler, false);
+    };
+  }, [isEditting, inputState]);
+
+  // click emitter effect
+  useEffect(() => {
+    const { current } = inputRef;
+
     if (!current) return () => {};
 
     function clickEventHandler({
@@ -155,6 +207,7 @@ function MathInput() {
     };
   }, [isEditting, getMetaTypeContent, inputState]);
 
+  // emitter listener
   useEffect(() => {
     function startEditHandler() {
       setIsEditting(true);
@@ -184,6 +237,10 @@ function MathInput() {
       content: target.value,
       chipInfos: [],
     });
+  }, []);
+
+  const onFocusHandler = useCallback(() => {
+    console.log('input FOCUSED');
   }, []);
 
   const contentDisplayer = useMemo(() => {
