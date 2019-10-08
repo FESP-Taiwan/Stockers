@@ -56,7 +56,7 @@ function MathInput() {
   const [caretPosition, setCaretPosition] = useState(0);
   const [inputState, setInputState] = useState({
     content: '',
-    meta: {},
+    chipInfos: [],
   });
 
   console.log(inputState);
@@ -108,8 +108,10 @@ function MathInput() {
     }) {
       const {
         content,
-        meta,
+        chipInfos,
       } = inputState;
+
+      console.log(chipInfos);
 
       const currentCaret = current.selectionEnd;
 
@@ -117,11 +119,28 @@ function MathInput() {
 
       const newContent = `${content.substring(0, currentCaret)}${name}-${metaTypeContent}${content.substring(currentCaret)}`;
 
-      setCaretPosition(newContent.length - content.substring(currentCaret).length);
+      const newCaretPosition = newContent.length - content.substring(currentCaret).length;
+
+      const newChipInfos = [
+        ...chipInfos,
+        {
+          FROM: currentCaret,
+          TO: newCaretPosition - 1,
+          chipData: {
+            name,
+            type,
+            rowId,
+            columnId,
+            date,
+          },
+        },
+      ].sort((elem1, elem2) => elem1.FROM - elem2.FROM);
+
+      setCaretPosition(newCaretPosition);
 
       setInputState({
         content: newContent,
-        meta,
+        chipInfos: newChipInfos,
       });
     }
 
@@ -163,6 +182,7 @@ function MathInput() {
   const onChangeHandler = useCallback(({ target }) => {
     setInputState({
       content: target.value,
+      chipInfos: [],
     });
   }, []);
 
