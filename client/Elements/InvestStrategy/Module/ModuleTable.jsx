@@ -7,8 +7,8 @@ import React, {
 } from 'react';
 import { ModuleDataContext } from '../../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
-import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
 import addIcon from '../../../static/images/icon-add-w.png';
+import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
 
 const styles = {
   wrapper: {

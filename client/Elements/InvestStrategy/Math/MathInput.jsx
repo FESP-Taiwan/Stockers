@@ -30,7 +30,7 @@ const styles = {
 
 export const mathSharedEmitter = new EventEmitter();
 
-mathSharedEmitter.setMaxListeners(30);
+mathSharedEmitter.setMaxListeners(1000);
 
 export const START_EDITTING = 'MATH/START_EDITTING';
 export const END_EDITTING = 'MATH/END_EDITTING';
@@ -88,6 +88,12 @@ function MathInput() {
     mathSharedEmitter.on(START_EDITTING, startEditHandler);
     mathSharedEmitter.on(END_EDITTING, endEditHandler);
     mathSharedEmitter.on(INIT_MODULE, initModuleHandler);
+
+    return () => {
+      mathSharedEmitter.removeListener(START_EDITTING, startEditHandler);
+      mathSharedEmitter.removeListener(END_EDITTING, endEditHandler);
+      mathSharedEmitter.removeListener(INIT_MODULE, initModuleHandler);
+    };
   }, []);
 
   const onChangeHandler = useCallback(({ target }) => {

@@ -94,7 +94,7 @@ function Modal({
               d="M4 4L20 20M20 4L4 20"
               fill="transparent"
               strokeWidth="2"
-              stroke="#000" />
+              stroke="#FFF" />
           </svg>
         </button>
       </div>
