@@ -6,12 +6,13 @@ import React, {
   useState,
   useMemo,
 } from 'react';
-import MathInput, {
+import MathInput from './MathInput';
+import {
   mathSharedEmitter,
   START_EDITTING,
   END_EDITTING,
   INIT_MODULE,
-} from './MathInput';
+} from '../../../Constant/investStrategyEmitter';
 
 const styles = {
   wrapper: {

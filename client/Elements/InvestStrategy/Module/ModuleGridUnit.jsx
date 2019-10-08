@@ -9,7 +9,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-import EventEmitter from 'events';
 import editIcon from '../../../static/images/icon-edit.png';
 import cancelIcon from '../../../static/images/icon-cancel.png';
 import {
@@ -17,7 +16,7 @@ import {
   START_EDITTING,
   END_EDITTING,
   INIT_MODULE,
-} from '../Math/MathInput';
+} from '../../../Constant/investStrategyEmitter';
 
 const styles = {
   btnWrapper: css`
@@ -86,14 +85,6 @@ const styles = {
     }
   `,
 };
-
-export const sharedEmitter = new EventEmitter();
-
-sharedEmitter.setMaxListeners(300);
-
-export const ENTER_EVENT = 'E/MOUSE_ENTER';
-export const LEAVE_EVENT = 'E/MOUSE_LEAVE';
-export const CLICK_EVENT = 'E/ONCLICK';
 
 type Props = {
   label: string,
@@ -181,37 +172,46 @@ function ModuleGridUnit({
     };
   }, []);
 
-  useEffect(() => {
-    const enterHandler = ({ activedRowId, activedColumnId }) => {
-      const { current } = moduleGridUnit;
-      const { current: mathHandlerCurrent } = mathEditHandler;
+  const onMouseEnter = useCallback(() => {
+    const { current } = moduleGridUnit;
+    const { current: mathHandlerCurrent } = mathEditHandler;
 
-      if (current) {
-        // clean up
-        if (current.classList.contains('hovered')) {
-          current.classList.remove('hovered');
-        }
-
-        if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
-          mathHandlerCurrent.classList.remove('hovered');
-        }
-
-        if (activedColumnId === columnId) {
-          if (activedRowId === rowId) {
-            current.classList.add('hovered');
-
-            if (isMathModuleEditting && mathHandlerCurrent) {
-              mathHandlerCurrent.classList.add('hovered');
-            }
-          }
-        }
+    if (current) {
+      // clean up
+      if (current.classList.contains('hovered')) {
+        current.classList.remove('hovered');
       }
-    };
 
-    const leaveHandler = () => {
-      const { current } = moduleGridUnit;
-      const { current: mathHandlerCurrent } = mathEditHandler;
+      if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
+        mathHandlerCurrent.classList.remove('hovered');
+      }
 
+      // hover feature
+      if (rowId === 'header') {
+        const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
+
+        childrenNodes.forEach((child) => {
+          if (child.className !== 'module-grid-unit' && child.className !== 'module-math-edit-handler') {
+            child.style.setProperty('top', '43px');
+
+            child.style.setProperty('opacity', 1);
+          }
+        });
+      }
+
+      current.classList.add('hovered');
+
+      if (isMathModuleEditting && mathHandlerCurrent) {
+        mathHandlerCurrent.classList.add('hovered');
+      }
+    }
+  }, [isMathModuleEditting, rowId]);
+
+  const onMouseLeave = useCallback(() => {
+    const { current } = moduleGridUnit;
+    const { current: mathHandlerCurrent } = mathEditHandler;
+
+    if (current) {
       if (current && current.classList.contains('hovered')) {
         current.classList.remove('hovered');
       }
@@ -219,51 +219,20 @@ function ModuleGridUnit({
       if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
         mathHandlerCurrent.classList.remove('hovered');
       }
-    };
 
-    sharedEmitter.on(ENTER_EVENT, enterHandler);
-    sharedEmitter.on(LEAVE_EVENT, leaveHandler);
+      if (rowId === 'header') {
+        const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
 
-    return () => {
-      sharedEmitter.removeListener(ENTER_EVENT, enterHandler);
-      sharedEmitter.removeListener(LEAVE_EVENT, leaveHandler);
-    };
-  }, [rowId, columnId, isMathModuleEditting]);
+        childrenNodes.forEach((child) => {
+          if (child.className !== 'module-grid-unit' && child.className !== 'module-math-edit-handler') {
+            child.style.setProperty('top', '50px');
 
-  const onMouseEnter = useCallback(() => {
-    if (moduleGridUnit.current && rowId === 'header') {
-      const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
-
-      childrenNodes.forEach((child) => {
-        if (child.className !== 'module-grid-unit' && child.className !== 'module-math-edit-handler') {
-          child.style.setProperty('top', '43px');
-
-          child.style.setProperty('opacity', 1);
-        }
-      });
+            child.style.setProperty('opacity', 0);
+          }
+        });
+      }
     }
-
-    sharedEmitter.emit(ENTER_EVENT, {
-      activedRowId: rowId,
-      activedColumnId: columnId,
-    });
-  }, [rowId, columnId]);
-
-  const onMouseLeave = useCallback(() => {
-    if (moduleGridUnit.current && rowId === 'header') {
-      const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
-
-      childrenNodes.forEach((child) => {
-        if (child.className !== 'module-grid-unit hovered' && child.className !== 'module-math-edit-handler hovered') {
-          child.style.setProperty('top', '50px');
-
-          child.style.setProperty('opacity', 0);
-        }
-      });
-    }
-
-    sharedEmitter.emit(LEAVE_EVENT);
-  }, [rowId]);
+  }, [rowId, isMathModuleEditting]);
 
   const setHeaderUpdateBlock = useCallback(() => {
     if (typeof (setHeaderUpdateBlockOpen) === 'function') {
@@ -271,13 +240,13 @@ function ModuleGridUnit({
     }
   }, [setHeaderUpdateBlockOpen]);
 
-  const onClick = useCallback(() => {
-    sharedEmitter.emit(CLICK_EVENT, {
-      rowId,
-      columnId,
-      name: (headerName || label),
-    });
-  }, [rowId, columnId, headerName, label]);
+  // const onClick = useCallback(() => {
+  //   moduleGridSharedEmitter.emit(CLICK_EVENT, {
+  //     rowId,
+  //     columnId,
+  //     name: (headerName || label),
+  //   });
+  // }, [rowId, columnId, headerName, label]);
 
   if (rowId === 'header') {
     return (
@@ -289,7 +258,7 @@ function ModuleGridUnit({
           ref={moduleGridUnit}
           className="module-grid-unit"
           style={styles.headerBtn}
-          onClick={onClick}
+          // onClick={onClick}
           type="button">
           {label}
         </button>
@@ -319,7 +288,7 @@ function ModuleGridUnit({
         ref={moduleGridUnit}
         className="module-grid-unit"
         css={styles.headerBtn}
-        onClick={onClick}
+        // onClick={onClick}
         type="button">
         {label}
       </button>

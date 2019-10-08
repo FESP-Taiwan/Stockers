@@ -12,7 +12,7 @@ import {
 } from 'redux-form';
 import TextArea from '../../Form/TextArea';
 import Editor from '../ArtiboxEditor/Editor';
-import { sharedEmitter, CLICK_EVENT } from './Module/ModuleGridUnit';
+import { moduleGridSharedEmitter, CLICK_EVENT } from '../../Constant/investStrategyEmitter';
 import { FORM_STRATEGY_COMMENT } from '../../Constant/form';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
 
@@ -66,10 +66,10 @@ function CommentBlock() {
       setFormOpened(true);
     };
 
-    sharedEmitter.on(CLICK_EVENT, clickHandler);
+    moduleGridSharedEmitter.on(CLICK_EVENT, clickHandler);
 
     return () => {
-      sharedEmitter.removeListener(CLICK_EVENT, clickHandler);
+      moduleGridSharedEmitter.removeListener(CLICK_EVENT, clickHandler);
     };
   }, []);
 

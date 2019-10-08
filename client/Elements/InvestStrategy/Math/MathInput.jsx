@@ -7,8 +7,13 @@ import React, {
   useContext,
   useRef,
 } from 'react';
-import EventEmitter from 'events';
 import { MathInitDataContext } from '../../../Constant/context';
+import {
+  mathSharedEmitter,
+  START_EDITTING,
+  END_EDITTING,
+  INIT_MODULE,
+} from '../../../Constant/investStrategyEmitter';
 
 const styles = {
   wrapper: {
@@ -27,14 +32,6 @@ const styles = {
     letterSpacing: 3,
   },
 };
-
-export const mathSharedEmitter = new EventEmitter();
-
-mathSharedEmitter.setMaxListeners(1000);
-
-export const START_EDITTING = 'MATH/START_EDITTING';
-export const END_EDITTING = 'MATH/END_EDITTING';
-export const INIT_MODULE = 'MATH/INIT_MODULE';
 
 function MathInput() {
   const inputRef = useRef();
@@ -63,6 +60,8 @@ function MathInput() {
 
     if (current && isEditting) {
       current.focus();
+
+
     }
   }, [isEditting]);
 
