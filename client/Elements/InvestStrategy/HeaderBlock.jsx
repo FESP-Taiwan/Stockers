@@ -7,6 +7,7 @@ import { reduxForm, Field } from 'redux-form';
 import ModuleBtn from './ModuleBtn';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
 import strategyIcon from '../../static/images/icon-strategy.png';
+import addIcon from '../../static/images/icon-white-add.png'
 
 const styles = {
   wrapper: {
@@ -23,18 +24,17 @@ const styles = {
   },
   modules: {
     position: 'relative',
-    alignItems: 'center',
+    display: 'flex',
     height: 80,
-    width: 164,
+    width: 360,
     borderRadius: 40,
     backgroundColor: Colors.LAYER_FIRST,
     transition: '0.5s ease-out',
     fontSize: 13,
   },
   btn: css`
-    position: absolute;
     height: 80px;
-    width: 100%;
+    width: 132px;
     border-radius: 40px;
     display: flex;
     justify-content: center;
@@ -49,13 +49,9 @@ const styles = {
     backgroundColor: '#707070',
     margin: '0 20px',
   },
-  modulesActived: {
-    height: 360,
-  },
   icon: {
     height: 24,
     width: 24,
-    margin: '0 20px 0 0',
   },
   finishBtn: css`
     opacity: 0;
@@ -65,6 +61,17 @@ const styles = {
   actived: css`
     opacity: 1;
     transition: opacity 0.5s 1s;
+  `,
+  circleBtn: css`
+    height: 80px;
+    width: 80px;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${Colors.LAYER_FIRST};
+    color: #FFF;
+    font-size: 13px;
   `,
 };
 
@@ -80,36 +87,32 @@ function HeaderBlock() {
   const [actived, active] = useState(false);
 
   const onClick = useCallback(() => active(!actived), [actived]);
-  const modulesStyle = useMemo(() => ({
-    ...styles.modules,
-    ...(actived ? styles.modulesActived : {}),
-  }), [actived]);
 
   return (
     <div css={styles.wrapper}>
-      <span css={styles.title}>買</span>
-      {mockModules.map(module => (<ModuleBtn module={module} actived={actived} />))}
-      <div css={modulesStyle}>
+      <div css={styles.modules}>
+        <span css={styles.title}>買</span>
         <button
           onClick={onClick}
           type="button"
-          css={[styles.btn, css`top: 0; z-index: 10;`]}>
-          <img src={strategyIcon} css={styles.icon} alt="strategy" />
-          <span>調整比重</span>
+          css={styles.btn}>
+          <img src={strategyIcon} css={[styles.icon, css`margin: 0 20px 0 0;`]} alt="strategy" />
+          <span>{actived ? '完成調整' : '調整比重'}</span>
         </button>
         <button
           onClick={onClick}
           type="button"
-          css={[styles.btn, styles.finishBtn, actived && styles.actived]}>
-          完成
+          css={[styles.btn, css`background-color: #464646;`]}>
+          測試績效
         </button>
       </div>
+      {mockModules.map(module => (<ModuleBtn module={module} actived={actived} />))}
       <span css={styles.line} />
       <button
         onClick={() => console.log('add modules')}
         type="button"
-        css={styles.modules}>
-        新增計算模型
+        css={styles.circleBtn}>
+        <img src={addIcon} css={styles.icon} alt="Add" />
       </button>
     </div>
   );

@@ -71,6 +71,8 @@ function Editor() {
   const [curFocusBlock, setFocusBlock] = useState(null);
   const [state, dispatch] = useReducer(reducer, fromJSON(), initializer);
 
+  console.log(state);
+
   const prevState = usePreviosState(state);
 
   useEffect(() => {
@@ -114,8 +116,6 @@ function Editor() {
       <span style={styles.placeholderTxt}>請在此輸入內容</span>
     );
   }, [state]);
-
-  console.log(state);
 
   return (
     <DispatchContext.Provider value={dispatch}>

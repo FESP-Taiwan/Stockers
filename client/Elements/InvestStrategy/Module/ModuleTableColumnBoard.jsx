@@ -47,14 +47,17 @@ function ModuleTableColumnBoard({
   const moduleMainBoard = useMemo(() => {
     if (!sortedData.length) return null;
 
+    console.log(sortedData);
+
     return (
       <>
-        {sortedData.map(({ value, id: elemId }, id) => (
+        {sortedData.map(({ value, id: elemId, timeStamp }, id) => (
           <ModuleGridUnit
             key={elemId}
             rowId={id}
             columnId={columnId}
             headerName={name}
+            timeStamp={timeStamp}
             label={value} />
         ))}
       </>

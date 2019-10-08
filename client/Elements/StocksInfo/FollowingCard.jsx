@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { flex } from '../../../Constant/emotion';
+import { flex } from '../../Constant/emotion';
 
 const styles = {
   wrapper: css`

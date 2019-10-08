@@ -19,6 +19,7 @@ const styles = {
     flexDirection: 'row',
     maxHeight: 'calc(100vh - 130px)',
     overflow: 'auto',
+    backgroundColor: Colors.LAYER_SECOND,
   },
   columnBoard: {
     display: 'flex',
@@ -52,6 +53,7 @@ function ChipHeaderUpdateBlock({
   isOpen,
   setOpen,
 }: Props) {
+  console.log('ACTIVED');
   const moduleData = useContext(ModuleDataContext);
 
   const [headerChips, setHeaderChips] = useState([]);
