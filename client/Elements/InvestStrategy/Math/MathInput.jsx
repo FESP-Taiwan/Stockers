@@ -13,6 +13,7 @@ import {
   START_EDITTING,
   END_EDITTING,
   INIT_MODULE,
+  CLICK_EVENT,
 } from '../../../Constant/investStrategy';
 
 const styles = {
@@ -58,11 +59,19 @@ function MathInput() {
   useEffect(() => {
     const { current } = inputRef;
 
+    function clickEventHandler(el) {
+      console.log('el->', el);
+    }
+
     if (current && isEditting) {
       current.focus();
 
-
+      investStrategySharedEmitter.on(CLICK_EVENT, clickEventHandler);
     }
+
+    return () => {
+      investStrategySharedEmitter.removeListener(CLICK_EVENT, clickEventHandler);
+    };
   }, [isEditting]);
 
   useEffect(() => {
