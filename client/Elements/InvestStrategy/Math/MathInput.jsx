@@ -6,7 +6,9 @@ import React, {
   useCallback,
   useContext,
   useRef,
+  useMemo,
 } from 'react';
+import moment from 'moment';
 import { MathInitDataContext } from '../../../Constant/context';
 import {
   investStrategySharedEmitter,
@@ -14,6 +16,7 @@ import {
   END_EDITTING,
   INIT_MODULE,
   CLICK_EVENT,
+  MATH_META_TYPES,
 } from '../../../Constant/investStrategy';
 
 const styles = {
@@ -21,6 +24,7 @@ const styles = {
     width: '100%',
     height: '100%',
     backgroundColor: 'transparent',
+    position: 'relative',
   },
   input: {
     width: '100%',
@@ -32,6 +36,14 @@ const styles = {
     fontSize: 16,
     letterSpacing: 3,
   },
+  displayer: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+  },
 };
 
 function MathInput() {
@@ -41,12 +53,32 @@ function MathInput() {
 
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [isEditting, setIsEditting] = useState(false);
+  const [caretPosition, setCaretPosition] = useState(0);
   const [inputState, setInputState] = useState({
     content: '',
     meta: {},
   });
 
   console.log(inputState);
+
+  const getMetaTypeContent = useCallback((type, date, rowId) => {
+    switch (type) {
+      case MATH_META_TYPES.NUMEROUS:
+        return '眾數';
+
+      case MATH_META_TYPES.AVERAGE:
+        return '平均';
+
+      case MATH_META_TYPES.DATE:
+        return (date ? `${moment(date).format('YYYY/MM')}季` : '??');
+
+      case MATH_META_TYPES.GRID:
+        return (rowId + 1 || '??');
+
+      default:
+        return '?';
+    }
+  }, []);
 
   useEffect(() => {
     if (!firstLoaded) {
@@ -57,13 +89,43 @@ function MathInput() {
   }, [firstLoaded, mathInitData]);
 
   useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.setSelectionRange(caretPosition, caretPosition);
+    }
+  }, [caretPosition]);
+
+  useEffect(() => {
     const { current } = inputRef;
 
-    function clickEventHandler(el) {
-      console.log('el->', el);
+    if (!current) return () => {};
+
+    function clickEventHandler({
+      name,
+      type,
+      rowId,
+      columnId,
+      date,
+    }) {
+      const {
+        content,
+        meta,
+      } = inputState;
+
+      const currentCaret = current.selectionEnd;
+
+      const metaTypeContent = getMetaTypeContent(type, date, rowId);
+
+      const newContent = `${content.substring(0, currentCaret)}${name}-${metaTypeContent}${content.substring(currentCaret)}`;
+
+      setCaretPosition(newContent.length - content.substring(currentCaret).length);
+
+      setInputState({
+        content: newContent,
+        meta,
+      });
     }
 
-    if (current && isEditting) {
+    if (isEditting) {
       current.focus();
 
       investStrategySharedEmitter.on(CLICK_EVENT, clickEventHandler);
@@ -72,24 +134,18 @@ function MathInput() {
     return () => {
       investStrategySharedEmitter.removeListener(CLICK_EVENT, clickEventHandler);
     };
-  }, [isEditting]);
+  }, [isEditting, getMetaTypeContent, inputState]);
 
   useEffect(() => {
     function startEditHandler() {
-      console.log('EDIT START');
-
       setIsEditting(true);
     }
 
     function endEditHandler() {
-      console.log('EDIT END');
-
       setIsEditting(false);
     }
 
     function initModuleHandler() {
-      console.log('INITTED MODULE');
-
       setIsEditting(false);
     }
 
@@ -110,6 +166,10 @@ function MathInput() {
     });
   }, []);
 
+  const contentDisplayer = useMemo(() => {
+    return null;
+  }, []);
+
   return (
     <div
       style={styles.wrapper}>
@@ -119,6 +179,9 @@ function MathInput() {
         value={inputState.content}
         onChange={onChangeHandler}
         style={styles.input} />
+      <div style={styles.displayer}>
+        {contentDisplayer}
+      </div>
     </div>
   );
 }
