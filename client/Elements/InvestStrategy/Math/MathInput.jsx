@@ -121,21 +121,49 @@ function MathInput() {
       console.log('selectionStart', selectionStart);
       console.log('selectionEnd', selectionEnd);
 
-      const newSelectionRange = chipInfos.map(chipInfo => {
-        if (selectionStart < chipInfo.FROM) {
-          if (selectionEnd < chipInfo.FROM) {
-            return {
-              from: selectionStart,
-              to: selectionEnd,
+      let tempSelectionRange = {
+        from: selectionStart,
+        to: selectionEnd,
+      };
+
+      if (tempSelectionRange) {
+        chipInfos.some((chipInfo) => {
+          if (selectionStart < chipInfo.FROM) {
+            if (selectionEnd < chipInfo.FROM) {
+              tempSelectionRange = {
+                from: selectionStart,
+                to: selectionEnd,
+              };
+
+              return true;
+            }
+
+            tempSelectionRange = {
+              from: chipInfo.FROM,
+              to: chipInfo.TO,
             };
+
+            return true;
           }
 
-          return {
-            from: chipInfo.FROM,
-            to: chipInfo.TO,
-          };
-        }
-      });
+          if (selectionStart < chipInfo.TO) {
+            tempSelectionRange = {
+              from: chipInfo.FROM,
+              to: chipInfo.TO,
+            };
+
+            return true;
+          }
+
+          return false;
+        });
+
+        current.setSelectionRange(tempSelectionRange.from, tempSelectionRange.to);
+      }
+
+      tempSelectionRange = null;
+
+      console.log('tempSelectionRange-->', tempSelectionRange);
     }
 
     document.addEventListener('selectionchange', onSelectionChangeHandler, false);
@@ -177,7 +205,7 @@ function MathInput() {
         ...chipInfos,
         {
           FROM: currentCaret,
-          TO: newCaretPosition - 1,
+          TO: newCaretPosition,
           chipData: {
             name,
             type,
