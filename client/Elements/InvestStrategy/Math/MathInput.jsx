@@ -53,15 +53,14 @@ function MathInput() {
 
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [isEditting, setIsEditting] = useState(false);
+  const [caretPositionAfterClickEvent, setCaretPositionAfterClickEvent] = useState(0);
   const [caretPosition, setCaretPosition] = useState(0);
   const [inputState, setInputState] = useState({
     content: '',
     chipInfos: [],
   });
 
-  console.log(caretPosition);
-
-  console.log(inputState);
+  console.log('inputState--->', inputState);
 
   const getMetaTypeContent = useCallback((type, date, rowId) => {
     switch (type) {
@@ -90,11 +89,14 @@ function MathInput() {
     }
   }, [firstLoaded, mathInitData]);
 
+  // triggered after click event
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.setSelectionRange(caretPosition, caretPosition);
+      inputRef.current.setSelectionRange(
+        caretPositionAfterClickEvent, caretPositionAfterClickEvent
+      );
     }
-  }, [caretPosition]);
+  }, [caretPositionAfterClickEvent]);
 
   // for selectionchange range determination
   useEffect(() => {
@@ -207,7 +209,7 @@ function MathInput() {
         },
       ].sort((elem1, elem2) => elem1.FROM - elem2.FROM);
 
-      setCaretPosition(newCaretPosition);
+      setCaretPositionAfterClickEvent(newCaretPosition);
 
       setInputState({
         content: newContent,
@@ -252,21 +254,49 @@ function MathInput() {
   }, []);
 
   const onChangeHandler = useCallback(({ target }) => {
-    console.log('target->', target.value);
+    const diff = target.selectionStart - caretPosition;
 
     const { chipInfos } = inputState;
 
+    console.log('selectionStart', target.selectionStart);
+
+    console.log('caretPosition', caretPosition);
+
+    console.log(inputState);
+
+    const newChipInfos = chipInfos.reduce((accum, chipInfo) => {
+      if (target.selectionStart >= chipInfo.TO) {
+        return [
+          ...accum,
+          chipInfo,
+        ];
+      }
+
+      return [
+        ...accum,
+        {
+          ...chipInfo,
+          FROM: chipInfo.FROM + diff,
+          TO: chipInfo.TO + diff,
+        },
+      ];
+    }, []);
+
     setInputState({
       content: target.value,
-      chipInfos,
+      chipInfos: newChipInfos,
     });
-  }, [inputState]);
+
+    setCaretPosition(target.selectionEnd);
+  }, [inputState, caretPosition]);
 
   const onKeyDownHandler = useCallback((e) => {
     const {
       keyCode,
       target,
     } = e;
+
+    setCaretPosition(target.selectionEnd);
 
     const { selectionEnd } = target;
 
