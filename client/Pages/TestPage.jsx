@@ -1,13 +1,11 @@
 // @flow
 /** @jsx jsx */
 
-import { useState, useCallback } from 'react';
 import { jsx, css } from '@emotion/core';
 import { reduxForm } from 'redux-form';
-import ModuleBtn from './ModuleBtn';
-import { FORM_STRATEGY_HEADER } from '../../Constant/form';
-import strategyIcon from '../../static/images/icon-strategy.png';
-import addIcon from '../../static/images/icon-white-add.png';
+import { FORM_STRATEGY_HEADER } from '../Constant/form';
+import ModuleBtn from '../Elements/InvestStrategy/ModuleBtn';
+import edditIcon from '../static/images/icon-edit.png';
 
 const styles = {
   wrapper: {
@@ -20,13 +18,15 @@ const styles = {
     textAlign: 'center',
     lineHeight: '80px',
     color: Colors.PRIMARY,
-    margin: '0 20px 0 0',
+    fontSize: 19,
   },
-  modules: {
+  edditModules: {
     position: 'relative',
     display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 80,
-    width: 360,
+    width: 190,
     borderRadius: 40,
     backgroundColor: Colors.LAYER_FIRST,
     transition: '0.5s ease-out',
@@ -52,6 +52,7 @@ const styles = {
   icon: {
     height: 24,
     width: 24,
+    margin: '0 20px 0 0',
   },
   finishBtn: css`
     opacity: 0;
@@ -72,6 +73,7 @@ const styles = {
     background-color: ${Colors.LAYER_FIRST};
     color: #FFF;
     font-size: 13px;
+    margin: 0 20px 0 0;
   `,
 };
 
@@ -83,36 +85,23 @@ const mockModules = [{
   name: 'B',
 }];
 
-function HeaderBlock() {
-  const [actived, active] = useState(false);
-
-  const onClick = useCallback(() => active(!actived), [actived]);
-
+function TestPage() {
   return (
     <div css={styles.wrapper}>
-      <div css={styles.modules}>
+      <button
+        onClick={() => console.log('buy')}
+        type="button"
+        css={styles.circleBtn}>
         <span css={styles.title}>買</span>
-        <button
-          onClick={onClick}
-          type="button"
-          css={styles.btn}>
-          <img src={strategyIcon} css={[styles.icon, css`margin: 0 20px 0 0;`]} alt="strategy" />
-          <span>{actived ? '完成調整' : '調整比重'}</span>
-        </button>
-        <button
-          onClick={onClick}
-          type="button"
-          css={[styles.btn, css`background-color: #464646;`]}>
-          測試績效
-        </button>
-      </div>
-      {mockModules.map(module => (<ModuleBtn module={module} actived={actived} />))}
+      </button>
+      {mockModules.map(module => (<ModuleBtn key={module.id} module={module} />))}
       <span css={styles.line} />
       <button
         onClick={() => console.log('add modules')}
         type="button"
-        css={styles.circleBtn}>
-        <img src={addIcon} css={styles.icon} alt="Add" />
+        css={styles.edditModules}>
+        <img src={edditIcon} css={styles.icon} alt="eddit" />
+        <span>編輯計算模型</span>
       </button>
     </div>
   );
@@ -122,4 +111,4 @@ const reduxHook = reduxForm({
   form: FORM_STRATEGY_HEADER,
 });
 
-export default reduxHook(HeaderBlock);
+export default reduxHook(TestPage);
