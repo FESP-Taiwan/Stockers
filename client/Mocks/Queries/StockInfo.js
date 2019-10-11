@@ -1,22 +1,5 @@
 // @flow
 
-import gql from 'graphql-tag';
-
-export const INDUSTRY_STICKERS = gql`
-  query IndustryStickers {
-    industryStickers {
-      id
-      industryName
-      industryRiseFall
-      monthRiseFallList {
-        id
-        dataDate
-        value
-      }
-    }
-  }
-`;
-
 export const followingStocks = [{
   id: 1,
   name: '台積電',
