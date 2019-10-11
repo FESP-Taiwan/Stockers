@@ -59,6 +59,8 @@ function MathInput() {
     chipInfos: [],
   });
 
+  console.log(caretPosition);
+
   console.log(inputState);
 
   const getMetaTypeContent = useCallback((type, date, rowId) => {
@@ -250,16 +252,43 @@ function MathInput() {
   }, []);
 
   const onChangeHandler = useCallback(({ target }) => {
-    console.log('INPUT ONCHANGED');
-    setInputState({
-      content: target.value,
-      chipInfos: [],
-    });
+    // console.log('INPUT ONCHANGED');
+    // setInputState({
+    //   content: target.value,
+    //   chipInfos: [],
+    // });
   }, []);
 
-  const onKeyDownHandler = useCallback(() => {
+  const onKeyDownHandler = useCallback(({ keyCode, target }) => {
     console.log('KEY DOWN ACTIONED');
-  }, []);
+
+    const { selectionEnd } = target;
+
+    const {
+      content,
+      chipInfos,
+    } = inputState;
+
+    if (keyCode === 8) {
+      const removeChipInfoIndex = chipInfos.findIndex(chip => chip.TO === selectionEnd);
+
+      if (~removeChipInfoIndex) {
+        const newContent = `${content.substring(0, chipInfos[removeChipInfoIndex].FROM)}${content.substring(chipInfos[removeChipInfoIndex].TO)}`;
+
+        const newChipInfos = [
+          ...chipInfos.slice(0, removeChipInfoIndex),
+          ...chipInfos.slice(removeChipInfoIndex + 1),
+        ];
+
+        console.log('key down ACTIONED', newContent, newChipInfos);
+
+        setInputState({
+          content: newContent,
+          chipInfos: newChipInfos,
+        });
+      }
+    }
+  }, [inputState]);
 
   const contentDisplayer = useMemo(() => {
     return null;
