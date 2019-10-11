@@ -94,22 +94,18 @@ function MathInput() {
     }
   }, [caretPosition]);
 
+  // for selectionchange range determination
   useEffect(() => {
     const { current } = inputRef;
 
     if (!isEditting || !current) return () => {};
 
-    console.log('passed');
-
     function onSelectionChangeHandler() {
-      console.log('SELECTION CHANGED');
-
       if (document.activeElement !== current) {
         return;
       }
 
       const {
-        content,
         chipInfos,
       } = inputState;
 
@@ -118,9 +114,6 @@ function MathInput() {
         selectionEnd,
       } = current;
 
-      console.log('selectionStart', selectionStart);
-      console.log('selectionEnd', selectionEnd);
-
       let tempSelectionRange = {
         from: selectionStart,
         to: selectionEnd,
@@ -128,8 +121,8 @@ function MathInput() {
 
       if (tempSelectionRange) {
         chipInfos.some((chipInfo) => {
-          if (selectionStart < chipInfo.FROM) {
-            if (selectionEnd < chipInfo.FROM) {
+          if (selectionStart <= chipInfo.FROM) {
+            if (selectionEnd <= chipInfo.FROM) {
               tempSelectionRange = {
                 from: selectionStart,
                 to: selectionEnd,
@@ -162,8 +155,6 @@ function MathInput() {
       }
 
       tempSelectionRange = null;
-
-      console.log('tempSelectionRange-->', tempSelectionRange);
     }
 
     document.addEventListener('selectionchange', onSelectionChangeHandler, false);
@@ -190,8 +181,6 @@ function MathInput() {
         content,
         chipInfos,
       } = inputState;
-
-      console.log(chipInfos);
 
       const currentCaret = current.selectionEnd;
 
@@ -261,14 +250,15 @@ function MathInput() {
   }, []);
 
   const onChangeHandler = useCallback(({ target }) => {
+    console.log('INPUT ONCHANGED');
     setInputState({
       content: target.value,
       chipInfos: [],
     });
   }, []);
 
-  const onFocusHandler = useCallback(() => {
-    console.log('input FOCUSED');
+  const onKeyDownHandler = useCallback(() => {
+    console.log('KEY DOWN ACTIONED');
   }, []);
 
   const contentDisplayer = useMemo(() => {
@@ -282,6 +272,7 @@ function MathInput() {
         ref={inputRef}
         disabled={!isEditting}
         value={inputState.content}
+        onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
         style={styles.input} />
       <div style={styles.displayer}>
