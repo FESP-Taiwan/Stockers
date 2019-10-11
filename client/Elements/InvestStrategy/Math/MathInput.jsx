@@ -252,15 +252,14 @@ function MathInput() {
   }, []);
 
   const onChangeHandler = useCallback(({ target }) => {
-    // console.log('INPUT ONCHANGED');
-    // setInputState({
-    //   content: target.value,
-    //   chipInfos: [],
-    // });
+    console.log('target->', target.value);
   }, []);
 
-  const onKeyDownHandler = useCallback(({ keyCode, target }) => {
-    console.log('KEY DOWN ACTIONED');
+  const onKeyDownHandler = useCallback((e) => {
+    const {
+      keyCode,
+      target,
+    } = e;
 
     const { selectionEnd } = target;
 
@@ -270,6 +269,8 @@ function MathInput() {
     } = inputState;
 
     if (keyCode === 8) {
+      e.preventDefault();
+
       const removeChipInfoIndex = chipInfos.findIndex(chip => chip.TO === selectionEnd);
 
       if (~removeChipInfoIndex) {
