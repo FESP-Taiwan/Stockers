@@ -188,7 +188,7 @@ function MathInput() {
 
       const metaTypeContent = getMetaTypeContent(type, date, rowId);
 
-      const newContent = `${content.substring(0, currentCaret)}${name}-${metaTypeContent}${content.substring(currentCaret)}`;
+      const newContent = `${content.substring(0, currentCaret)}${name}_${metaTypeContent}${content.substring(currentCaret)}`;
 
       const newCaretPosition = newContent.length - content.substring(currentCaret).length;
 
@@ -253,7 +253,14 @@ function MathInput() {
 
   const onChangeHandler = useCallback(({ target }) => {
     console.log('target->', target.value);
-  }, []);
+
+    const { chipInfos } = inputState;
+
+    setInputState({
+      content: target.value,
+      chipInfos,
+    });
+  }, [inputState]);
 
   const onKeyDownHandler = useCallback((e) => {
     const {
@@ -269,11 +276,11 @@ function MathInput() {
     } = inputState;
 
     if (keyCode === 8) {
-      e.preventDefault();
-
       const removeChipInfoIndex = chipInfos.findIndex(chip => chip.TO === selectionEnd);
 
       if (~removeChipInfoIndex) {
+        e.preventDefault();
+
         const newContent = `${content.substring(0, chipInfos[removeChipInfoIndex].FROM)}${content.substring(chipInfos[removeChipInfoIndex].TO)}`;
 
         const newChipInfos = [
