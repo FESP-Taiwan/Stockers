@@ -186,28 +186,73 @@ function MathInput() {
         chipInfos,
       } = inputState;
 
-      const currentCaret = current.selectionEnd;
+      const currentCaret = {
+        from: current.selectionStart,
+        to: current.selectionEnd,
+      };
+
+      const selectionDiff = currentCaret.to - currentCaret.from;
 
       const metaTypeContent = getMetaTypeContent(type, date, rowId);
+      const addContent = `${name}_${metaTypeContent}`;
 
-      const newContent = `${content.substring(0, currentCaret)}${name}_${metaTypeContent}${content.substring(currentCaret)}`;
+      const newContent = `${content.substring(0, currentCaret.from)}${addContent}${content.substring(currentCaret.to)}`;
 
-      const newCaretPosition = newContent.length - content.substring(currentCaret).length;
+      const newCaretPosition = (
+        newContent.length - content.substring(currentCaret.from).length + addContent.length
+      );
 
-      const newChipInfos = [
-        ...chipInfos,
-        {
-          FROM: currentCaret,
-          TO: newCaretPosition,
-          chipData: {
-            name,
-            type,
-            rowId,
-            columnId,
-            date,
-          },
-        },
-      ].sort((elem1, elem2) => elem1.FROM - elem2.FROM);
+      const newChipInfos = chipInfos.reduce((chips, chipInfo) => {
+        if (chipInfo.TO <= currentCaret.from) {
+          return [
+            ...chips,
+            chipInfo,
+          ];
+        }
+
+        if (chipInfo.FROM === currentCaret.from && chipInfo.TO === currentCaret.to) {
+          return [
+            ...chips,
+            {
+              FROM: currentCaret,
+              TO: newCaretPosition,
+              chipData: {
+                name,
+                type,
+                rowId,
+                columnId,
+                date,
+              },
+            },
+          ];
+        }
+
+        if (chipInfo.FROM >= currentCaret.to) {
+          return [
+            ...chips,
+            {
+              ...chipInfo,
+              FROM: chipInfo.FROM - selectionDiff + addContent.length,
+              TO: chipInfo.TO - selectionDiff + addContent.length,
+            },
+          ];
+        }
+      }, []);
+
+      // const newChipInfos = [
+      //   ...chipInfos,
+      //   {
+      //     FROM: currentCaret,
+      //     TO: newCaretPosition,
+      //     chipData: {
+      //       name,
+      //       type,
+      //       rowId,
+      //       columnId,
+      //       date,
+      //     },
+      //   },
+      // ].sort((elem1, elem2) => elem1.FROM - elem2.FROM);
 
       setCaretPositionAfterClickEvent(newCaretPosition);
 
@@ -258,12 +303,6 @@ function MathInput() {
 
     const { chipInfos } = inputState;
 
-    console.log('selectionStart', target.selectionStart);
-
-    console.log('caretPosition', caretPosition);
-
-    console.log(inputState);
-
     const newChipInfos = chipInfos.reduce((accum, chipInfo) => {
       if (target.selectionStart >= chipInfo.TO) {
         return [
@@ -298,7 +337,10 @@ function MathInput() {
 
     setCaretPosition(target.selectionEnd);
 
-    const { selectionEnd } = target;
+    const {
+      selectionStart,
+      selectionEnd,
+    } = target;
 
     const {
       content,
@@ -306,19 +348,39 @@ function MathInput() {
     } = inputState;
 
     if (keyCode === 8) {
-      const removeChipInfoIndex = chipInfos.findIndex(chip => chip.TO === selectionEnd);
+      const removeChipInfoIndex = chipInfos.findIndex(
+        chip => chip.TO === selectionEnd && chip.TO === selectionStart
+      );
 
       if (~removeChipInfoIndex) {
         e.preventDefault();
 
         const newContent = `${content.substring(0, chipInfos[removeChipInfoIndex].FROM)}${content.substring(chipInfos[removeChipInfoIndex].TO)}`;
 
-        const newChipInfos = [
-          ...chipInfos.slice(0, removeChipInfoIndex),
-          ...chipInfos.slice(removeChipInfoIndex + 1),
-        ];
+        const newChipInfos = chipInfos.reduce((chips, chipInfo, index) => {
+          if (index < removeChipInfoIndex) {
+            return [
+              ...chips,
+              chipInfo,
+            ];
+          }
 
-        console.log('key down ACTIONED', newContent, newChipInfos);
+          if (index === removeChipInfoIndex) {
+            return chips;
+          }
+
+          const subtractLength = chipInfos[removeChipInfoIndex].TO
+            - chipInfos[removeChipInfoIndex].FROM;
+
+          return [
+            ...chips,
+            {
+              ...chipInfo,
+              FROM: chipInfo.FROM - subtractLength,
+              TO: chipInfo.TO - subtractLength,
+            },
+          ];
+        }, []);
 
         setInputState({
           content: newContent,
