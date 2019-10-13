@@ -391,6 +391,7 @@ function Text({
   return (
     <div style={wrapperStyles}>
       <textarea
+        value={content}
         onPaste={onPasteHandler}
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}

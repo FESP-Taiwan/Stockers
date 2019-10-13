@@ -1,6 +1,6 @@
 // @flow
 
-export const industries = [{
+export const industries = {
   id: 1,
   industryName: '半導體',
   subIndustries: [{
@@ -55,6 +55,6 @@ export const industries = [{
       }],
     }],
   }],
-}];
+};
 
 export default null;

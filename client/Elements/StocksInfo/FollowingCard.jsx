@@ -55,30 +55,25 @@ function FollowingCard({
 }: Props) {
   return (
     <div css={styles.wrapper}>
-      <div css={styles.leftPart}>
-        <div css={styles.title}>
-          <span>
-            {number}
-          </span>
-          <span>
-            {name}
-          </span>
-        </div>
-        <div>
-          <span css={styles.status}>
-            {status}
-          </span>
-          {following.map(s => (
-            <span
-              key={s.id}
-              css={styles.word}>
-              {s.name}
-            </span>
-          ))}
-        </div>
+      <div css={styles.title}>
+        <span>
+          {number}
+        </span>
+        <span>
+          {name}
+        </span>
       </div>
-      <div css={styles.rightPart}>
-        Photo
+      <div>
+        <span css={styles.status}>
+          {status}
+        </span>
+        {following.map(s => (
+          <span
+            key={s.id}
+            css={styles.word}>
+            {s.name}
+          </span>
+        ))}
       </div>
     </div>
   );

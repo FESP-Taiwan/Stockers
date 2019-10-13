@@ -71,6 +71,8 @@ function Editor() {
   const [curFocusBlock, setFocusBlock] = useState(null);
   const [state, dispatch] = useReducer(reducer, fromJSON(), initializer);
 
+  console.log(state);
+
   const prevState = usePreviosState(state);
 
   useEffect(() => {

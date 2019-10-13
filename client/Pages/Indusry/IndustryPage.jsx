@@ -1,7 +1,11 @@
 // @flow
 /** @jsx jsx */
 
+import {
+  useState,
+} from 'react';
 import { jsx, css } from '@emotion/core';
+import { Link } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
 import { industries } from '../../Mocks/Queries/IndustryDetails';
 
@@ -18,12 +22,13 @@ const styles = {
   `,
   blockWrapper: css`
     ${flex}
+    max-width: 1200px;
     justify-content: flex-start;
     align-items: flex-start;
     flex-grow: 1;
     flex-basis: 0;
     flex-shrink: 0;
-    margin: 0 0 50px 0;
+    margin: 0 auto 50px auto;
   `,
   industryBlock: css`
     ${flex}
@@ -50,15 +55,60 @@ const styles = {
   `,
   button: css`
     ${button}
-    margin: 0 10px;
+    margin: 0 20px 0 0;
   `,
   buttonTitle: css`
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800,
+  `,
+  subIndustryWrapper: css`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 40px 0 0 0;
+  `,
+  subIndustry: css`
+    ${flex}
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 0 0 20px 0;
+  `,
+  subTitle: css`
+    font-size: 18px;
+    font-weight: 500;
+  `,
+  subBtnWrapper: css`
+    ${flex}
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 20px 20px 0 0;
+  `,
+  subBtn: css`
+    width: 100px;
+    height: 30px;
+    margin: 0 20px 0 0;
+    border-radius: 40px;
+    background-color: ${Colors.LAYER_FIRST};
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  `,
+  subBtnTitle: css`
+    font-size: 13px;
+    color: ${Colors.PRIMARY};
   `,
 };
 
 function IndustryPage() {
+  const [industry, setIndustry] = useState();
+
+  console.log('i', industries.subIndustries);
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.blockWrapper}>
@@ -94,27 +144,20 @@ function IndustryPage() {
       </div>
       <div css={styles.blockWrapper}>
         <div css={styles.btnWrapper}>
-          <button
-            css={styles.firstButton}
-            type="button">
-            <span css={styles.buttonTitle}>
-              上游
-            </span>
-          </button>
-          <button
-            css={styles.button}
-            type="button">
-            <span css={styles.buttonTitle}>
-              中游
-            </span>
-          </button>
-          <button
-            css={styles.button}
-            type="button">
-            <span css={styles.buttonTitle}>
-              下游
-            </span>
-          </button>
+          {industries.subIndustries.map(sub => (
+            <button
+              key={sub.id}
+              css={styles.button}
+              type="button">
+              <span css={styles.buttonTitle}>
+                {sub.type}
+              </span>
+              <span css={styles.buttonTitle}>
+                &nbsp;
+                {sub.header}
+              </span>
+            </button>
+          ))}
         </div>
         <div css={styles.industryBlock}>
           <span css={styles.article}>
@@ -126,18 +169,31 @@ function IndustryPage() {
           </span>
         </div>
         <div css={styles.subIndustryWrapper}>
-          <div css={styles.subIndustry}>
-            <span css={styles.subTitle}>
-              IP/IC
-            </span>
-            <div css={styles.subBtnWrapper}>
-              <button
-                css={styles.subBtn}
-                type="button">
-                2401 凌陽
-              </button>
+          {industries.subIndustries.map(sub => sub.stocks.map(s => (
+            <div
+              key={s.id}
+              css={styles.subIndustry}>
+              <span css={styles.subTitle}>
+                {s.name}
+              </span>
+              <div css={styles.subBtnWrapper}>
+                {s.companies.map(company => (
+                  <Link
+                    to="/industry/stock"
+                    key={company.id}
+                    css={styles.subBtn}>
+                    <span css={styles.subBtnTitle}>
+                      {company.number}
+                    </span>
+                    <span css={styles.subBtnTitle}>
+                      &nbsp;
+                      {company.name}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )))}
         </div>
       </div>
     </div>

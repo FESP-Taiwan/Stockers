@@ -29,6 +29,8 @@ module.exports = {
         BULL_MARKET: '#FF7E72',
         BEAR_MARKET: '#5EF28F',
         PRIMARY: '#FF9500',
+        PRIMARY_SECOND: '#834C00',
+        PRIMARY_THIRD: '#4D2D00',
         MAIN: '#1CC1D0',
         CALL_ACTION: '#44B582',
         GOOD: '#7ED321',
