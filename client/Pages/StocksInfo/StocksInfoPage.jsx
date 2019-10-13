@@ -1,13 +1,19 @@
 // @flow
 /** @jsx jsx */
 
+import {
+  useEffect,
+} from 'react';
 import { jsx, css } from '@emotion/core';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { flex } from '../../Constant/emotion';
-import FollowingCard from './Form/FollowingCard';
-import LineChartWrapper from '../Form/Chart/LineChartWrapper';
-import IndustryCard from './Form/IndustryCard';
+import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
+import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
+import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
 import { followingStocks, industryCard } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
+import * as IndustryActions from '../../actions/Industry';
 
 const styles = {
   wrapper: css`
@@ -22,7 +28,9 @@ const styles = {
     margin: 0 0 40px 0;
   `,
   industry: css`
-    ${flex}
+    display: flex;
+    width: 100%;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     flex-grow: 1;
@@ -30,7 +38,6 @@ const styles = {
   industryCardWrapper: css`
     ${flex}
     flex-direction: row;
-    align-items: flex-start;
     flex-grow: 3;
     flex-wrap: wrap;
   `,
@@ -48,10 +55,30 @@ const styles = {
   `,
   kLine: css`
     ${flex}
+    height: 225px;
+    border-radius: 40px;
+    background-color: ${Colors.LAYER_FIRST};
+    margin: 0 0 20px 0;
   `,
 };
 
-function StockersInfo() {
+type Props = {
+  fetchIndustryCardData: Function,
+  // industryCardData: Array,
+};
+
+function StockersInfoPage({
+  fetchIndustryCardData,
+  // industryCardData,
+}: Props) {
+  // useEffect(() => {
+  //   fetchIndustryCardData();
+  // }, [fetchIndustryCardData]);
+
+  // console.log('industryCardData', industryCardData);
+
+  console.log(fetchIndustryCardData);
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.following}>
@@ -90,4 +117,13 @@ function StockersInfo() {
   );
 }
 
-export default StockersInfo;
+const reduxHook = connect(
+  state => ({
+    // industryCardData: state.industryCardData,
+  }),
+  dispatch => bindActionCreators({
+    ...IndustryActions,
+  }, dispatch),
+);
+
+export default reduxHook(StockersInfoPage);

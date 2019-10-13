@@ -39,9 +39,6 @@ type Props = {
 function IndustryCardChart({
   data,
 }: Props) {
-  console.log('d', data);
-  console.log('xxx', xxx);
-
   return (
     <div style={styles.wrapper}>
       <AreaChart width={235} height={120} data={data}>

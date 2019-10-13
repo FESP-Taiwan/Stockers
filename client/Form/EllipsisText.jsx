@@ -6,8 +6,8 @@ import React, {
   useMemo,
   Fragment,
 } from 'react';
-import TextareaEditorModal from '../Modal/TextareaEditorModal';
-import useMouseHover from '../../helper/useMouseHover';
+import TextareaEditorModal from './TextareaEditorModal';
+import useMouseHover from '../helper/useMouseHover';
 
 const styles = {
   wrapper: {
