@@ -70,6 +70,9 @@ function ModuleTable() {
         type="button">
         <img src={addIcon} alt="add" style={styles.addBtnImg} />
       </button>
+      <ChipHeaderUpdateBlock
+        isOpen={isHeaderUpdateBlockOpen}
+        setOpen={setHeaderUpdateBlockOpen} />
     </div>
   );
 }
