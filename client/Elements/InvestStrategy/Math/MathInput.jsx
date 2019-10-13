@@ -60,7 +60,7 @@ function MathInput() {
     chipInfos: [],
   });
 
-  console.log('inputState--->', inputState);
+  // console.log('inputState--->', inputState);
 
   const getMetaTypeContent = useCallback((type, date, rowId) => {
     switch (type) {
@@ -202,7 +202,31 @@ function MathInput() {
         newContent.length - content.substring(currentCaret.from).length + addContent.length
       );
 
-      const newChipInfos = chipInfos.reduce((chips, chipInfo) => {
+      const newChipInfos = !chipInfos.length ? [{
+        FROM: currentCaret.from,
+        TO: newCaretPosition,
+        chipData: {
+          name,
+          type,
+          rowId,
+          columnId,
+          date,
+        },
+      }] : (chipInfos.reduce((chips, chipInfo, index) => {
+        if (!chipInfos.length) {
+          return [{
+            FROM: currentCaret.from,
+            TO: newCaretPosition,
+            chipData: {
+              name,
+              type,
+              rowId,
+              columnId,
+              date,
+            },
+          }];
+        }
+
         if (chipInfo.TO <= currentCaret.from) {
           return [
             ...chips,
@@ -210,7 +234,25 @@ function MathInput() {
           ];
         }
 
-        if (chipInfo.FROM === currentCaret.from && chipInfo.TO === currentCaret.to) {
+        // insert emit data
+        if (chipInfos[index - 1].TO <= currentCaret.from && chipInfo.FROM >= currentCaret.from) {
+          if (chipInfo.FROM === currentCaret.from && chipInfo.TO === currentCaret.to) {
+            return [
+              ...chips,
+              {
+                FROM: currentCaret.from,
+                TO: newCaretPosition,
+                chipData: {
+                  name,
+                  type,
+                  rowId,
+                  columnId,
+                  date,
+                },
+              },
+            ];
+          }
+
           return [
             ...chips,
             {
@@ -224,12 +266,6 @@ function MathInput() {
                 date,
               },
             },
-          ];
-        }
-
-        if (chipInfo.FROM >= currentCaret.to) {
-          return [
-            ...chips,
             {
               ...chipInfo,
               FROM: chipInfo.FROM - selectionDiff + addContent.length,
@@ -237,22 +273,18 @@ function MathInput() {
             },
           ];
         }
-      }, []);
 
-      // const newChipInfos = [
-      //   ...chipInfos,
-      //   {
-      //     FROM: currentCaret,
-      //     TO: newCaretPosition,
-      //     chipData: {
-      //       name,
-      //       type,
-      //       rowId,
-      //       columnId,
-      //       date,
-      //     },
-      //   },
-      // ].sort((elem1, elem2) => elem1.FROM - elem2.FROM);
+        return [
+          ...chips,
+          {
+            ...chipInfo,
+            FROM: chipInfo.FROM - selectionDiff + addContent.length,
+            TO: chipInfo.TO - selectionDiff + addContent.length,
+          },
+        ];
+      }, []));
+
+      console.log('newChipInfos->', newChipInfos);
 
       setCaretPositionAfterClickEvent(newCaretPosition);
 
