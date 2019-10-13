@@ -13,10 +13,12 @@ import {
   connectRouter,
   routerMiddleware,
 } from 'connected-react-router';
+import reducers from './reducer';
 
 export const history = createBrowserHistory();
 
 const store = createStore(combineReducers({
+  ...reducers,
   form,
   router: connectRouter(history),
 }), {}, compose(
