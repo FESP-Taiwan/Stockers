@@ -199,8 +199,11 @@ function MathInput() {
       const newContent = `${content.substring(0, currentCaret.from)}${addContent}${content.substring(currentCaret.to)}`;
 
       const newCaretPosition = (
-        newContent.length - content.substring(currentCaret.from).length + addContent.length
+        newContent.length - newContent.substring(currentCaret.from).length + addContent.length
       );
+
+      console.log('newContent', newContent);
+      console.log('newCaretPosition', newCaretPosition);
 
       const newChipInfos = !chipInfos.length ? [{
         FROM: currentCaret.from,
@@ -213,7 +216,15 @@ function MathInput() {
           date,
         },
       }] : (chipInfos.reduce((chips, chipInfo, index) => {
-        if (!chipInfos.length) {
+        if (chipInfo.TO <= currentCaret.from) {
+          return [
+            ...chips,
+            chipInfo,
+          ];
+        }
+
+        // insert emit data
+        if (index === 0 && chipInfo.FROM >= currentCaret.from) {
           return [{
             FROM: currentCaret.from,
             TO: newCaretPosition,
@@ -224,18 +235,16 @@ function MathInput() {
               columnId,
               date,
             },
+          }, {
+            ...chipInfo,
+            FROM: chipInfo.FROM - selectionDiff + addContent.length,
+            TO: chipInfo.TO - selectionDiff + addContent.length,
           }];
         }
 
-        if (chipInfo.TO <= currentCaret.from) {
-          return [
-            ...chips,
-            chipInfo,
-          ];
-        }
-
-        // insert emit data
-        if (chipInfos[index - 1].TO <= currentCaret.from && chipInfo.FROM >= currentCaret.from) {
+        if (chipInfos[index - 1]
+          && chipInfos[index - 1].TO <= currentCaret.from
+          && chipInfo.FROM >= currentCaret.from) {
           if (chipInfo.FROM === currentCaret.from && chipInfo.TO === currentCaret.to) {
             return [
               ...chips,
