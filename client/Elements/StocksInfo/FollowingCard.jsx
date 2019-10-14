@@ -7,12 +7,13 @@ import { flex } from '../../Constant/emotion';
 const styles = {
   wrapper: css`
     ${flex}
-    min-width: 225px;
+    align-items: flex-start;
+    min-width: 150px;
     height: 130px;
-    flex-direction: row;
     border-radius: 40px;
     background-color: #262626;
     margin: 0 10px;
+    padding: 0 30px;
   `,
   leftPart: css`
     ${flex}
@@ -30,11 +31,13 @@ const styles = {
   title: css`
     display: flex;
     flex-direction: row;
-    margin: 0 0 18px;
   `,
   status: css`
     font-size: 13px;
     color: #FF9500;
+  `,
+  followingWrapper: css`
+    margin: 10px 0 0 0;
   `,
 };
 
@@ -63,9 +66,10 @@ function FollowingCard({
           {name}
         </span>
       </div>
-      <div>
+      <div css={styles.followingWrapper}>
         <span css={styles.status}>
           {status}
+          &nbsp;
         </span>
         {following.map(s => (
           <span
