@@ -74,3 +74,9 @@ textarea.Artibox-input::placeholder {
   font-weight: 300;
   letter-spacing: 1px;
 }
+
+/* Math Module Item */
+
+input.math-module-input::selection {
+  background: #FF9500;
+}

@@ -1,6 +1,7 @@
 // @flow
 
 import React, {
+  Fragment,
   useState,
   useEffect,
   useCallback,
@@ -44,6 +45,11 @@ const styles = {
     width: '100%',
     height: '100%',
     pointerEvents: 'none',
+    letterSpacing: 3,
+    lineHeight: 1,
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: 16,
   },
 };
 
@@ -402,13 +408,87 @@ function MathInput() {
   }, [showErrorMessage]);
 
   const contentDisplayer = useMemo(() => {
-    return null;
-  }, []);
+    const tags = [];
+
+    const {
+      content,
+      chipInfos,
+    } = inputState;
+
+    if (!chipInfos.length) return content;
+
+    chipInfos.forEach((chipInfo, index) => {
+      if (index === 0) {
+        tags.push(
+          <span
+            key={`0:${chipInfo.FROM}`}>
+            {content.substring(0, chipInfo.FROM)}
+          </span>
+        );
+
+        tags.push(
+          <button
+            key={`${chipInfo.FROM}:${chipInfo.TO}`}
+            style={styles.blockBtn}
+            type="button">
+            {content.substring(chipInfo.FROM, chipInfo.TO)}
+          </button>
+        );
+
+        if (chipInfos.length === 1) {
+          tags.push(
+            <span
+              key={`${chipInfo.TO}:`}>
+              {content.substring(chipInfo.TO)}
+            </span>
+          );
+        }
+
+        return;
+      }
+
+      const prevChip = chipInfos[index - 1];
+
+      if (prevChip.TO !== chipInfo.FROM) {
+        tags.push(
+          <span
+            key={`${prevChip.TO}:${chipInfo.FROM}`}>
+            {content.substring(prevChip.TO, chipInfo.FROM)}
+          </span>
+        );
+      }
+
+      tags.push(
+        <button
+          key={`${chipInfo.FROM}:${chipInfo.TO}`}
+          style={styles.blockBtn}
+          type="button">
+          {content.substring(chipInfo.FROM, chipInfo.TO)}
+        </button>
+      );
+
+      if (index === chipInfos.length - 1) {
+        tags.push(
+          <span
+            key={`${chipInfo.TO}:`}>
+            {content.substring(chipInfo.TO)}
+          </span>
+        );
+      }
+    });
+
+    return (
+      <Fragment>
+        {tags}
+      </Fragment>
+    );
+  }, [inputState]);
 
   return (
     <div
       style={styles.wrapper}>
       <input
+        className="math-module-input"
         ref={inputRef}
         disabled={!isEditting}
         value={inputState.content}
