@@ -51,6 +51,11 @@ const styles = {
     alignItems: 'center',
     fontSize: 16,
   },
+  blockBtn: {
+    fontSize: 16,
+    pointerEvents: 'auto',
+    letterSpacing: 3,
+  },
 };
 
 function MathInput() {
@@ -497,7 +502,7 @@ function MathInput() {
         onPaste={onPasteHandler}
         style={styles.input} />
       <div style={styles.displayer}>
-        {contentDisplayer}
+        {/* {contentDisplayer} */}
       </div>
     </div>
   );
