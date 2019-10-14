@@ -55,6 +55,17 @@ const styles = {
     fontSize: 16,
     pointerEvents: 'auto',
     letterSpacing: 3,
+    position: 'relative',
+  },
+  arrow: {
+    width: 0,
+    height: 0,
+    borderLeft: '7px solid transparent',
+    borderRight: '7px solid transparent',
+    borderTop: `10px solid ${Colors.PRIMARY}`,
+    position: 'absolute',
+    right: 0,
+    top: 6,
   },
 };
 
@@ -208,7 +219,7 @@ function MathInput() {
       const selectionDiff = currentCaret.to - currentCaret.from;
 
       const metaTypeContent = getMetaTypeContent(type, date, rowId);
-      const addContent = `${name}_${metaTypeContent}`;
+      const addContent = `  ${name}_${metaTypeContent}  `;
 
       const newContent = `${content.substring(0, currentCaret.from)}${addContent}${content.substring(currentCaret.to)}`;
 
@@ -436,7 +447,10 @@ function MathInput() {
             key={`${chipInfo.FROM}:${chipInfo.TO}`}
             style={styles.blockBtn}
             type="button">
+            &nbsp;
             {content.substring(chipInfo.FROM, chipInfo.TO)}
+            &nbsp;
+            <div style={styles.arrow} />
           </button>
         );
 
@@ -468,7 +482,10 @@ function MathInput() {
           key={`${chipInfo.FROM}:${chipInfo.TO}`}
           style={styles.blockBtn}
           type="button">
+          &nbsp;
           {content.substring(chipInfo.FROM, chipInfo.TO)}
+          &nbsp;
+          <div style={styles.arrow} />
         </button>
       );
 
@@ -502,7 +519,7 @@ function MathInput() {
         onPaste={onPasteHandler}
         style={styles.input} />
       <div style={styles.displayer}>
-        {/* {contentDisplayer} */}
+        {contentDisplayer}
       </div>
     </div>
   );
