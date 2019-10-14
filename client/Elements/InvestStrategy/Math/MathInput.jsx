@@ -60,7 +60,7 @@ function MathInput() {
     chipInfos: [],
   });
 
-  // console.log('inputState--->', inputState);
+  console.log('inputState--->', inputState);
 
   const getMetaTypeContent = useCallback((type, date, rowId) => {
     switch (type) {
@@ -309,6 +309,10 @@ function MathInput() {
         ];
       }
 
+      if (target.selectionStart >= chipInfo.FROM && caretPosition === chipInfo.TO) {
+        return accum;
+      }
+
       return [
         ...accum,
         {
@@ -388,6 +392,12 @@ function MathInput() {
     }
   }, [inputState]);
 
+  const onPasteHandler = useCallback((e) => {
+    e.preventDefault();
+
+    alert('此項目禁止使用貼上功能');
+  }, []);
+
   const contentDisplayer = useMemo(() => {
     return null;
   }, []);
@@ -401,6 +411,7 @@ function MathInput() {
         value={inputState.content}
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
+        onPaste={onPasteHandler}
         style={styles.input} />
       <div style={styles.displayer}>
         {contentDisplayer}
