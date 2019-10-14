@@ -246,6 +246,8 @@ function MathInput() {
           && chipInfos[index - 1].TO <= currentCaret.from
           && chipInfo.FROM >= currentCaret.from) {
           if (chipInfo.FROM === currentCaret.from && chipInfo.TO === currentCaret.to) {
+            console.log('EXCHANGED');
+
             return [
               ...chips,
               {
@@ -262,10 +264,12 @@ function MathInput() {
             ];
           }
 
+          console.log('INSERTED');
+
           return [
             ...chips,
             {
-              FROM: currentCaret,
+              FROM: currentCaret.from,
               TO: newCaretPosition,
               chipData: {
                 name,
