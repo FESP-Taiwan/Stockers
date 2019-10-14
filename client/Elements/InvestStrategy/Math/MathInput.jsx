@@ -202,10 +202,20 @@ function MathInput() {
         newContent.length - newContent.substring(currentCaret.from).length + addContent.length
       );
 
-      console.log('newContent', newContent);
-      console.log('newCaretPosition', newCaretPosition);
+      const chipInfosMap = chipInfos.reduce((map, chipInfo) => {
+        if (chipInfo.FROM === currentCaret.from && chipInfo.TO === currentCaret.to) {
+          return map;
+        }
 
-      const newChipInfos = !chipInfos.length ? [{
+        map.set(chipInfo.FROM, {
+          ...chipInfo,
+          isInsertData: false,
+        });
+
+        return map;
+      }, new Map());
+
+      const chipInfosMapAfterInsertedData = chipInfosMap.set(currentCaret.from, {
         FROM: currentCaret.from,
         TO: newCaretPosition,
         chipData: {
@@ -215,89 +225,32 @@ function MathInput() {
           columnId,
           date,
         },
-      }] : (chipInfos.reduce((chips, chipInfo, index) => {
-        if (chipInfo.TO <= currentCaret.from) {
-          return [
-            ...chips,
-            chipInfo,
-          ];
-        }
+        isInsertData: true,
+      });
 
-        // insert emit data
-        if (index === 0 && chipInfo.FROM >= currentCaret.from) {
-          return [{
-            FROM: currentCaret.from,
-            TO: newCaretPosition,
-            chipData: {
-              name,
-              type,
-              rowId,
-              columnId,
-              date,
-            },
-          }, {
-            ...chipInfo,
-            FROM: chipInfo.FROM - selectionDiff + addContent.length,
-            TO: chipInfo.TO - selectionDiff + addContent.length,
-          }];
-        }
-
-        if (chipInfos[index - 1]
-          && chipInfos[index - 1].TO <= currentCaret.from
-          && chipInfo.FROM >= currentCaret.from) {
-          if (chipInfo.FROM === currentCaret.from && chipInfo.TO === currentCaret.to) {
-            console.log('EXCHANGED');
-
+      const newChipInfos = Array.from(chipInfosMapAfterInsertedData.entries())
+        .sort((cursorA, cursorB) => cursorA[0] - cursorB[0])
+        .reduce((chips, chip) => {
+          if (chip[0] < currentCaret.from || chip[1].isInsertData) {
             return [
               ...chips,
               {
-                FROM: currentCaret.from,
-                TO: newCaretPosition,
-                chipData: {
-                  name,
-                  type,
-                  rowId,
-                  columnId,
-                  date,
-                },
+                FROM: chip[1].FROM,
+                TO: chip[1].TO,
+                chipData: chip[1].chipData,
               },
             ];
           }
 
-          console.log('INSERTED');
-
           return [
             ...chips,
             {
-              FROM: currentCaret.from,
-              TO: newCaretPosition,
-              chipData: {
-                name,
-                type,
-                rowId,
-                columnId,
-                date,
-              },
-            },
-            {
-              ...chipInfo,
-              FROM: chipInfo.FROM - selectionDiff + addContent.length,
-              TO: chipInfo.TO - selectionDiff + addContent.length,
+              FROM: chip[1].FROM - selectionDiff + addContent.length,
+              TO: chip[1].TO - selectionDiff + addContent.length,
+              chipData: chip[1].chipData,
             },
           ];
-        }
-
-        return [
-          ...chips,
-          {
-            ...chipInfo,
-            FROM: chipInfo.FROM - selectionDiff + addContent.length,
-            TO: chipInfo.TO - selectionDiff + addContent.length,
-          },
-        ];
-      }, []));
-
-      console.log('newChipInfos->', newChipInfos);
+        }, []);
 
       setCaretPositionAfterClickEvent(newCaretPosition);
 
