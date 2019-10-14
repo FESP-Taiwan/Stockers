@@ -18,6 +18,7 @@ import {
   CLICK_EVENT,
   MATH_META_TYPES,
 } from '../../../Constant/investStrategy';
+import { useGlobalErrorMessage } from '../../../helper/useGlobalMessage';
 
 const styles = {
   wrapper: {
@@ -50,6 +51,8 @@ function MathInput() {
   const inputRef = useRef();
 
   const mathInitData = useContext(MathInitDataContext);
+
+  const showErrorMessage = useGlobalErrorMessage();
 
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [isEditting, setIsEditting] = useState(false);
@@ -395,8 +398,8 @@ function MathInput() {
   const onPasteHandler = useCallback((e) => {
     e.preventDefault();
 
-    alert('此項目禁止使用貼上功能');
-  }, []);
+    showErrorMessage('此項目禁止使用貼上功能');
+  }, [showErrorMessage]);
 
   const contentDisplayer = useMemo(() => {
     return null;
