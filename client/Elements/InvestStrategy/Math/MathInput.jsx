@@ -36,6 +36,7 @@ const styles = {
     border: 'none',
     outline: 'none',
     fontSize: 16,
+    // opacity: 0,
     letterSpacing: 3,
   },
   displayer: {
@@ -55,17 +56,24 @@ const styles = {
     fontSize: 16,
     pointerEvents: 'auto',
     letterSpacing: 3,
+    color: '#FFF',
+    // height: 40,
+    borderBottom: `1px solid ${Colors.PRIMARY}`,
+    // borderRadius: 4,
     position: 'relative',
+  },
+  invisibleTxt: {
+    // opacity: 0,
   },
   arrow: {
     width: 0,
     height: 0,
-    borderLeft: '7px solid transparent',
-    borderRight: '7px solid transparent',
-    borderTop: `10px solid ${Colors.PRIMARY}`,
+    borderLeft: '4px solid transparent',
+    borderRight: '4px solid transparent',
+    borderTop: `6px solid ${Colors.PRIMARY}`,
     position: 'absolute',
-    right: 0,
-    top: 6,
+    right: 3,
+    top: 9,
   },
 };
 
@@ -114,22 +122,49 @@ function MathInput() {
     }
   }, [firstLoaded, mathInitData]);
 
-  // triggered after click event
+  // emitter listener
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.setSelectionRange(
-        caretPositionAfterClickEvent, caretPositionAfterClickEvent
-      );
+    function startEditHandler() {
+      setIsEditting(true);
     }
-  }, [caretPositionAfterClickEvent]);
 
-  // for selectionchange range determination
+    function endEditHandler() {
+      setIsEditting(false);
+    }
+
+    function initModuleHandler() {
+      setIsEditting(false);
+    }
+
+    investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
+    investStrategySharedEmitter.on(END_EDITTING, endEditHandler);
+    investStrategySharedEmitter.on(INIT_MODULE, initModuleHandler);
+
+    return () => {
+      investStrategySharedEmitter.removeListener(START_EDITTING, startEditHandler);
+      investStrategySharedEmitter.removeListener(END_EDITTING, endEditHandler);
+      investStrategySharedEmitter.removeListener(INIT_MODULE, initModuleHandler);
+    };
+  }, []);
+
+  // selectionchange range determination
   useEffect(() => {
     const { current } = inputRef;
 
     if (!isEditting || !current) return () => {};
 
     function onSelectionChangeHandler() {
+      // clear block button 'hovered' class
+      const wrapper = current.parentNode;
+
+      const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
+
+      blockButtonList.forEach((blockButton) => {
+        if (blockButton.classList.contains('hovered')) {
+          blockButton.classList.remove('hovered');
+        }
+      });
+
       if (document.activeElement !== current) {
         return;
       }
@@ -193,6 +228,37 @@ function MathInput() {
     };
   }, [isEditting, inputState]);
 
+  // selectionRange and blockBtn class connection
+  useEffect(() => {
+    const { current: input } = inputRef;
+
+    if (!input) return () => {};
+
+    function onSelectHandler() {
+      const {
+        selectionStart,
+        selectionEnd,
+      } = input;
+
+      const selectedChipInfoIndex = inputState.chipInfos
+        .findIndex(chipInfo => chipInfo.FROM === selectionStart && chipInfo.TO === selectionEnd);
+
+      if (~selectedChipInfoIndex) {
+        const wrapper = input.parentNode;
+
+        const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
+
+        blockButtonList[selectedChipInfoIndex].classList.add('hovered');
+      }
+    }
+
+    input.addEventListener('select', onSelectHandler, false);
+
+    return () => {
+      input.removeEventListener('select', onSelectHandler, false);
+    };
+  }, [inputState]);
+
   // click emitter effect
   useEffect(() => {
     const { current } = inputRef;
@@ -219,7 +285,7 @@ function MathInput() {
       const selectionDiff = currentCaret.to - currentCaret.from;
 
       const metaTypeContent = getMetaTypeContent(type, date, rowId);
-      const addContent = `  ${name}_${metaTypeContent}  `;
+      const addContent = `${name}_${metaTypeContent}  `;
 
       const newContent = `${content.substring(0, currentCaret.from)}${addContent}${content.substring(currentCaret.to)}`;
 
@@ -296,30 +362,14 @@ function MathInput() {
     };
   }, [isEditting, getMetaTypeContent, inputState]);
 
-  // emitter listener
+  // triggered after click event
   useEffect(() => {
-    function startEditHandler() {
-      setIsEditting(true);
+    if (inputRef.current) {
+      inputRef.current.setSelectionRange(
+        caretPositionAfterClickEvent, caretPositionAfterClickEvent
+      );
     }
-
-    function endEditHandler() {
-      setIsEditting(false);
-    }
-
-    function initModuleHandler() {
-      setIsEditting(false);
-    }
-
-    investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
-    investStrategySharedEmitter.on(END_EDITTING, endEditHandler);
-    investStrategySharedEmitter.on(INIT_MODULE, initModuleHandler);
-
-    return () => {
-      investStrategySharedEmitter.removeListener(START_EDITTING, startEditHandler);
-      investStrategySharedEmitter.removeListener(END_EDITTING, endEditHandler);
-      investStrategySharedEmitter.removeListener(INIT_MODULE, initModuleHandler);
-    };
-  }, []);
+  }, [caretPositionAfterClickEvent]);
 
   const onChangeHandler = useCallback(({ target }) => {
     const diff = target.selectionStart - caretPosition;
@@ -374,6 +424,12 @@ function MathInput() {
       chipInfos,
     } = inputState;
 
+    if (keyCode === 32) {
+      e.preventDefault();
+
+      showErrorMessage('此項目禁止輸入空白鍵');
+    }
+
     if (keyCode === 8) {
       const removeChipInfoIndex = chipInfos.findIndex(
         chip => chip.TO === selectionEnd && chip.TO === selectionStart
@@ -415,13 +471,40 @@ function MathInput() {
         });
       }
     }
-  }, [inputState]);
+  }, [inputState, showErrorMessage]);
 
   const onPasteHandler = useCallback((e) => {
     e.preventDefault();
 
     showErrorMessage('此項目禁止使用貼上功能');
   }, [showErrorMessage]);
+
+  const onDropHandler = useCallback((e) => {
+    e.preventDefault();
+  }, []);
+
+  const blockBtnMouseEnterHandler = useCallback(({ target }) => {
+    if (target) {
+      // clear
+      const wrapper = target.parentNode;
+
+      const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
+
+      blockButtonList.forEach((blockButton) => {
+        if (blockButton.classList.contains('hovered')) {
+          blockButton.classList.remove('hovered');
+        }
+      });
+
+      target.classList.add('hovered');
+    }
+  }, []);
+
+  const blockBtnMouseLeaveHandler = useCallback(({ target }) => {
+    if (target && target.classList.contains('hovered')) {
+      target.classList.remove('hovered');
+    }
+  }, []);
 
   const contentDisplayer = useMemo(() => {
     const tags = [];
@@ -431,12 +514,19 @@ function MathInput() {
       chipInfos,
     } = inputState;
 
-    if (!chipInfos.length) return content;
+    if (!chipInfos.length) {
+      return (
+        <span style={styles.invisibleTxt}>
+          {content}
+        </span>
+      );
+    }
 
     chipInfos.forEach((chipInfo, index) => {
       if (index === 0) {
         tags.push(
           <span
+            style={styles.invisibleTxt}
             key={`0:${chipInfo.FROM}`}>
             {content.substring(0, chipInfo.FROM)}
           </span>
@@ -444,10 +534,12 @@ function MathInput() {
 
         tags.push(
           <button
+            className="math-module-block-button"
+            onMouseEnter={blockBtnMouseEnterHandler}
+            onMouseLeave={blockBtnMouseLeaveHandler}
             key={`${chipInfo.FROM}:${chipInfo.TO}`}
             style={styles.blockBtn}
             type="button">
-            &nbsp;
             {content.substring(chipInfo.FROM, chipInfo.TO)}
             &nbsp;
             <div style={styles.arrow} />
@@ -457,6 +549,7 @@ function MathInput() {
         if (chipInfos.length === 1) {
           tags.push(
             <span
+              style={styles.invisibleTxt}
               key={`${chipInfo.TO}:`}>
               {content.substring(chipInfo.TO)}
             </span>
@@ -471,6 +564,7 @@ function MathInput() {
       if (prevChip.TO !== chipInfo.FROM) {
         tags.push(
           <span
+            style={styles.invisibleTxt}
             key={`${prevChip.TO}:${chipInfo.FROM}`}>
             {content.substring(prevChip.TO, chipInfo.FROM)}
           </span>
@@ -479,10 +573,12 @@ function MathInput() {
 
       tags.push(
         <button
+          className="math-module-block-button"
+          onMouseEnter={blockBtnMouseEnterHandler}
+          onMouseLeave={blockBtnMouseLeaveHandler}
           key={`${chipInfo.FROM}:${chipInfo.TO}`}
           style={styles.blockBtn}
           type="button">
-          &nbsp;
           {content.substring(chipInfo.FROM, chipInfo.TO)}
           &nbsp;
           <div style={styles.arrow} />
@@ -492,6 +588,7 @@ function MathInput() {
       if (index === chipInfos.length - 1) {
         tags.push(
           <span
+            style={styles.invisibleTxt}
             key={`${chipInfo.TO}:`}>
             {content.substring(chipInfo.TO)}
           </span>
@@ -504,7 +601,7 @@ function MathInput() {
         {tags}
       </Fragment>
     );
-  }, [inputState]);
+  }, [inputState, blockBtnMouseEnterHandler, blockBtnMouseLeaveHandler]);
 
   return (
     <div
@@ -512,6 +609,7 @@ function MathInput() {
       <input
         className="math-module-input"
         ref={inputRef}
+        onDrop={onDropHandler}
         disabled={!isEditting}
         value={inputState.content}
         onKeyDown={onKeyDownHandler}
