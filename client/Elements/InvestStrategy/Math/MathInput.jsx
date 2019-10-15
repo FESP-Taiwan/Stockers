@@ -277,9 +277,6 @@ function MathInput() {
             text.classList.add('selected');
           }
         });
-
-        console.log('selection-->', selectionStart, selectionEnd);
-        console.log('textList', textList);
       }
     }
 
@@ -516,26 +513,36 @@ function MathInput() {
 
   const blockBtnMouseEnterHandler = useCallback(({ target }) => {
     if (target) {
-      // clear
-      // const wrapper = target.parentNode;
-      //
-      // const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
-      //
-      // blockButtonList.forEach((blockButton) => {
-      //   if (blockButton.classList.contains('hovered')) {
-      //     blockButton.classList.remove('hovered');
-      //   }
-      // });
-
       target.classList.add('hovered');
     }
   }, []);
 
   const blockBtnMouseLeaveHandler = useCallback(({ target }) => {
-    if (target && target.classList.contains('hovered')) {
-      target.classList.remove('hovered');
+    const { current } = inputRef;
+
+    if (current && target) {
+      const {
+        selectionStart,
+        selectionEnd,
+      } = current;
+
+      const { chipInfos } = inputState;
+
+      const blockButtonList = current.parentNode.querySelectorAll('.math-module-block-button');
+
+      const chipInfoIndex = Array.from(blockButtonList)
+        .findIndex(blockButton => blockButton === target);
+
+      const {
+        FROM: from,
+        TO: to,
+      } = chipInfos[chipInfoIndex];
+
+      if (target.classList.contains('hovered') && (from !== selectionStart || to !== selectionEnd)) {
+        target.classList.remove('hovered');
+      }
     }
-  }, []);
+  }, [inputState]);
 
   const contentDisplayer = useMemo(() => {
     const tags = [];
