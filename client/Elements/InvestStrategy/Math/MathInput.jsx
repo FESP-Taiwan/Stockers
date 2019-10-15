@@ -133,7 +133,7 @@ function MathInput() {
     }
   }, [firstLoaded, mathInitData]);
 
-  // clear when isEditting triggered
+  // clear when !isEditting
   useEffect(() => {
     if (!isEditting) {
       const { current } = inputRef;
