@@ -78,10 +78,13 @@ textarea.Artibox-input::placeholder {
 /* Math Module Item */
 
 input.math-module-input::selection {
-  background: #transparent;
-  color: #FF9500 !important;
+  background: transparent;
 }
 
 button.math-module-block-button.hovered {
+  color: #FF9500 !important;
+}
+
+span.math-module-text.selected {
   color: #FF9500 !important;
 }

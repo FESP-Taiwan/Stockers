@@ -36,8 +36,9 @@ const styles = {
     border: 'none',
     outline: 'none',
     fontSize: 16,
-    // opacity: 0,
+    color: Colors.PRIMARY_THIRD,
     letterSpacing: 3,
+    caretColor: '#FFF',
   },
   displayer: {
     position: 'absolute',
@@ -61,9 +62,6 @@ const styles = {
     borderBottom: `1px solid ${Colors.PRIMARY}`,
     // borderRadius: 4,
     position: 'relative',
-  },
-  invisibleTxt: {
-    // opacity: 0,
   },
   arrow: {
     width: 0,
@@ -117,7 +115,10 @@ function MathInput() {
   const addSpanToTags = useCallback((tags, subContent, from) => {
     Array.from(Array(subContent.length)).forEach((n, index) => {
       tags.push(
-        <span key={`${from + index}:${from + index + 1}`}>
+        <span
+          className="math-module-text"
+          data-from={from + index}
+          key={`${from + index}:${from + index + 1}`}>
           {subContent.substring(index, index + 1)}
         </span>
       );
@@ -164,14 +165,21 @@ function MathInput() {
     if (!isEditting || !current) return () => {};
 
     function onSelectionChangeHandler() {
-      // clear block button 'hovered' class
+      // clear class
       const wrapper = current.parentNode;
 
       const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
+      const textList = wrapper.querySelectorAll('.math-module-text');
 
       blockButtonList.forEach((blockButton) => {
         if (blockButton.classList.contains('hovered')) {
           blockButton.classList.remove('hovered');
+        }
+      });
+
+      textList.forEach((text) => {
+        if (text.classList.contains('selected')) {
+          text.classList.remove('selected');
         }
       });
 
@@ -253,12 +261,25 @@ function MathInput() {
       const selectedChipInfoIndex = inputState.chipInfos
         .findIndex(chipInfo => chipInfo.FROM === selectionStart && chipInfo.TO === selectionEnd);
 
-      if (~selectedChipInfoIndex) {
-        const wrapper = input.parentNode;
+      const wrapper = input.parentNode;
 
+      if (~selectedChipInfoIndex) {
         const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
 
         blockButtonList[selectedChipInfoIndex].classList.add('hovered');
+      } else {
+        const textList = wrapper.querySelectorAll('.math-module-text');
+
+        textList.forEach((text) => {
+          const dataAttribute = text.dataset.from;
+
+          if (dataAttribute >= selectionStart && dataAttribute < selectionEnd) {
+            text.classList.add('selected');
+          }
+        });
+
+        console.log('selection-->', selectionStart, selectionEnd);
+        console.log('textList', textList);
       }
     }
 
