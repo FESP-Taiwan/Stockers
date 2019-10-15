@@ -114,6 +114,16 @@ function MathInput() {
     }
   }, []);
 
+  const addSpanToTags = useCallback((tags, subContent, from) => {
+    Array.from(Array(subContent.length)).forEach((n, index) => {
+      tags.push(
+        <span key={`${from + index}:${from + index + 1}`}>
+          {subContent.substring(index, index + 1)}
+        </span>
+      );
+    });
+  }, []);
+
   useEffect(() => {
     if (!firstLoaded) {
       setInputState(mathInitData);
@@ -486,15 +496,15 @@ function MathInput() {
   const blockBtnMouseEnterHandler = useCallback(({ target }) => {
     if (target) {
       // clear
-      const wrapper = target.parentNode;
-
-      const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
-
-      blockButtonList.forEach((blockButton) => {
-        if (blockButton.classList.contains('hovered')) {
-          blockButton.classList.remove('hovered');
-        }
-      });
+      // const wrapper = target.parentNode;
+      //
+      // const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
+      //
+      // blockButtonList.forEach((blockButton) => {
+      //   if (blockButton.classList.contains('hovered')) {
+      //     blockButton.classList.remove('hovered');
+      //   }
+      // });
 
       target.classList.add('hovered');
     }
@@ -515,22 +525,38 @@ function MathInput() {
     } = inputState;
 
     if (!chipInfos.length) {
-      return (
-        <span style={styles.invisibleTxt}>
-          {content}
-        </span>
-      );
-    }
+      addSpanToTags(tags, content, 0);
+    } else {
+      chipInfos.forEach((chipInfo, index) => {
+        if (index === 0) {
+          addSpanToTags(tags, content.substring(0, chipInfo.FROM), 0);
 
-    chipInfos.forEach((chipInfo, index) => {
-      if (index === 0) {
-        tags.push(
-          <span
-            style={styles.invisibleTxt}
-            key={`0:${chipInfo.FROM}`}>
-            {content.substring(0, chipInfo.FROM)}
-          </span>
-        );
+          tags.push(
+            <button
+              className="math-module-block-button"
+              onMouseEnter={blockBtnMouseEnterHandler}
+              onMouseLeave={blockBtnMouseLeaveHandler}
+              key={`${chipInfo.FROM}:${chipInfo.TO}`}
+              style={styles.blockBtn}
+              type="button">
+              {content.substring(chipInfo.FROM, chipInfo.TO)}
+              &nbsp;
+              <div style={styles.arrow} />
+            </button>
+          );
+
+          if (chipInfos.length === 1) {
+            addSpanToTags(tags, content.substring(chipInfo.TO), chipInfo.TO);
+          }
+
+          return;
+        }
+
+        const prevChip = chipInfos[index - 1];
+
+        if (prevChip.TO !== chipInfo.FROM) {
+          addSpanToTags(tags, content.substring(prevChip.TO, chipInfo.FROM), prevChip.TO);
+        }
 
         tags.push(
           <button
@@ -546,62 +572,18 @@ function MathInput() {
           </button>
         );
 
-        if (chipInfos.length === 1) {
-          tags.push(
-            <span
-              style={styles.invisibleTxt}
-              key={`${chipInfo.TO}:`}>
-              {content.substring(chipInfo.TO)}
-            </span>
-          );
+        if (index === chipInfos.length - 1) {
+          addSpanToTags(tags, content.substring(chipInfo.TO), chipInfo.TO);
         }
-
-        return;
-      }
-
-      const prevChip = chipInfos[index - 1];
-
-      if (prevChip.TO !== chipInfo.FROM) {
-        tags.push(
-          <span
-            style={styles.invisibleTxt}
-            key={`${prevChip.TO}:${chipInfo.FROM}`}>
-            {content.substring(prevChip.TO, chipInfo.FROM)}
-          </span>
-        );
-      }
-
-      tags.push(
-        <button
-          className="math-module-block-button"
-          onMouseEnter={blockBtnMouseEnterHandler}
-          onMouseLeave={blockBtnMouseLeaveHandler}
-          key={`${chipInfo.FROM}:${chipInfo.TO}`}
-          style={styles.blockBtn}
-          type="button">
-          {content.substring(chipInfo.FROM, chipInfo.TO)}
-          &nbsp;
-          <div style={styles.arrow} />
-        </button>
-      );
-
-      if (index === chipInfos.length - 1) {
-        tags.push(
-          <span
-            style={styles.invisibleTxt}
-            key={`${chipInfo.TO}:`}>
-            {content.substring(chipInfo.TO)}
-          </span>
-        );
-      }
-    });
+      });
+    }
 
     return (
       <Fragment>
         {tags}
       </Fragment>
     );
-  }, [inputState, blockBtnMouseEnterHandler, blockBtnMouseLeaveHandler]);
+  }, [inputState, blockBtnMouseEnterHandler, blockBtnMouseLeaveHandler, addSpanToTags]);
 
   return (
     <div
