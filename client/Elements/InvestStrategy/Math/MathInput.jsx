@@ -20,6 +20,7 @@ import {
   MATH_META_TYPES,
 } from '../../../Constant/investStrategy';
 import { useGlobalErrorMessage } from '../../../helper/useGlobalMessage';
+import MathInputBlockButton from './MathInputBlockButton';
 
 const styles = {
   wrapper: {
@@ -52,26 +53,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     fontSize: 16,
-  },
-  blockBtn: {
-    fontSize: 16,
-    pointerEvents: 'auto',
-    letterSpacing: 3,
-    color: '#FFF',
-    // height: 40,
-    borderBottom: `1px solid ${Colors.PRIMARY}`,
-    // borderRadius: 4,
-    position: 'relative',
-  },
-  arrow: {
-    width: 0,
-    height: 0,
-    borderLeft: '4px solid transparent',
-    borderRight: '4px solid transparent',
-    borderTop: `6px solid ${Colors.PRIMARY}`,
-    position: 'absolute',
-    right: 3,
-    top: 9,
   },
 };
 
@@ -534,39 +515,6 @@ function MathInput() {
     e.preventDefault();
   }, []);
 
-  const blockBtnMouseEnterHandler = useCallback(({ target }) => {
-    if (target) {
-      target.classList.add('hovered');
-    }
-  }, []);
-
-  const blockBtnMouseLeaveHandler = useCallback(({ target }) => {
-    const { current } = inputRef;
-
-    if (current && target) {
-      const {
-        selectionStart,
-        selectionEnd,
-      } = current;
-
-      const { chipInfos } = inputState;
-
-      const blockButtonList = current.parentNode.querySelectorAll('.math-module-block-button');
-
-      const chipInfoIndex = Array.from(blockButtonList)
-        .findIndex(blockButton => blockButton === target);
-
-      const {
-        FROM: from,
-        TO: to,
-      } = chipInfos[chipInfoIndex];
-
-      if (target.classList.contains('hovered') && (from !== selectionStart || to !== selectionEnd || !isEditting)) {
-        target.classList.remove('hovered');
-      }
-    }
-  }, [inputState, isEditting]);
-
   const contentDisplayer = useMemo(() => {
     const tags = [];
 
@@ -583,17 +531,12 @@ function MathInput() {
           addSpanToTags(tags, content.substring(0, chipInfo.FROM), 0);
 
           tags.push(
-            <button
-              className="math-module-block-button"
-              onMouseEnter={blockBtnMouseEnterHandler}
-              onMouseLeave={blockBtnMouseLeaveHandler}
+            <MathInputBlockButton
               key={`${chipInfo.FROM}:${chipInfo.TO}`}
-              style={styles.blockBtn}
-              type="button">
-              {content.substring(chipInfo.FROM, chipInfo.TO)}
-              &nbsp;
-              <div style={styles.arrow} />
-            </button>
+              subContent={content.substring(chipInfo.FROM, chipInfo.TO)}
+              isEditting={isEditting}
+              inputState={inputState}
+              inputRef={inputRef} />
           );
 
           if (chipInfos.length === 1) {
@@ -610,17 +553,12 @@ function MathInput() {
         }
 
         tags.push(
-          <button
-            className="math-module-block-button"
-            onMouseEnter={blockBtnMouseEnterHandler}
-            onMouseLeave={blockBtnMouseLeaveHandler}
+          <MathInputBlockButton
             key={`${chipInfo.FROM}:${chipInfo.TO}`}
-            style={styles.blockBtn}
-            type="button">
-            {content.substring(chipInfo.FROM, chipInfo.TO)}
-            &nbsp;
-            <div style={styles.arrow} />
-          </button>
+            subContent={content.substring(chipInfo.FROM, chipInfo.TO)}
+            isEditting={isEditting}
+            inputState={inputState}
+            inputRef={inputRef} />
         );
 
         if (index === chipInfos.length - 1) {
@@ -634,7 +572,7 @@ function MathInput() {
         {tags}
       </Fragment>
     );
-  }, [inputState, blockBtnMouseEnterHandler, blockBtnMouseLeaveHandler, addSpanToTags]);
+  }, [inputState, addSpanToTags, isEditting]);
 
   return (
     <div
