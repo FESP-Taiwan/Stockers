@@ -326,7 +326,7 @@ function MathInput() {
           return map;
         }
 
-        map.set(chipInfo.FROM, {
+        map.set(`${chipInfo.FROM}_old`, {
           ...chipInfo,
           isInsertData: false,
         });
@@ -334,7 +334,7 @@ function MathInput() {
         return map;
       }, new Map());
 
-      const chipInfosMapAfterInsertedData = chipInfosMap.set(currentCaret.from, {
+      const chipInfosMapAfterInsertedData = chipInfosMap.set(`${currentCaret.from}_new`, {
         FROM: currentCaret.from,
         TO: newCaretPosition,
         chipData: {
@@ -347,10 +347,11 @@ function MathInput() {
         isInsertData: true,
       });
 
+      console.log('chipInfosMapAfterInsertedData', chipInfosMapAfterInsertedData);
+
       const newChipInfos = Array.from(chipInfosMapAfterInsertedData.entries())
-        .sort((cursorA, cursorB) => cursorA[0] - cursorB[0])
         .reduce((chips, chip) => {
-          if (chip[0] < currentCaret.from || chip[1].isInsertData) {
+          if (chip[1].FROM < currentCaret.from || chip[1].isInsertData) {
             return [
               ...chips,
               {
@@ -369,7 +370,10 @@ function MathInput() {
               chipData: chip[1].chipData,
             },
           ];
-        }, []);
+        }, [])
+        .sort((cursorA, cursorB) => cursorA.FROM - cursorB.FROM);
+
+      console.log('newChipInfos', newChipInfos);
 
       setCaretPositionAfterClickEvent(newCaretPosition);
 
