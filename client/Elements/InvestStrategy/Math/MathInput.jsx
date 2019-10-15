@@ -133,6 +133,29 @@ function MathInput() {
     }
   }, [firstLoaded, mathInitData]);
 
+  // clear when isEditting triggered
+  useEffect(() => {
+    if (!isEditting) {
+      const { current } = inputRef;
+      const wrapper = current.parentNode;
+
+      const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
+      const textList = wrapper.querySelectorAll('.math-module-text');
+
+      blockButtonList.forEach((blockButton) => {
+        if (blockButton.classList.contains('hovered')) {
+          blockButton.classList.remove('hovered');
+        }
+      });
+
+      textList.forEach((text) => {
+        if (text.classList.contains('selected')) {
+          text.classList.remove('selected');
+        }
+      });
+    }
+  }, [isEditting]);
+
   // emitter listener
   useEffect(() => {
     function startEditHandler() {
@@ -347,8 +370,6 @@ function MathInput() {
         isInsertData: true,
       });
 
-      console.log('chipInfosMapAfterInsertedData', chipInfosMapAfterInsertedData);
-
       const newChipInfos = Array.from(chipInfosMapAfterInsertedData.entries())
         .reduce((chips, chip) => {
           if (chip[1].FROM < currentCaret.from || chip[1].isInsertData) {
@@ -372,8 +393,6 @@ function MathInput() {
           ];
         }, [])
         .sort((cursorA, cursorB) => cursorA.FROM - cursorB.FROM);
-
-      console.log('newChipInfos', newChipInfos);
 
       setCaretPositionAfterClickEvent(newCaretPosition);
 
@@ -542,11 +561,11 @@ function MathInput() {
         TO: to,
       } = chipInfos[chipInfoIndex];
 
-      if (target.classList.contains('hovered') && (from !== selectionStart || to !== selectionEnd)) {
+      if (target.classList.contains('hovered') && (from !== selectionStart || to !== selectionEnd || !isEditting)) {
         target.classList.remove('hovered');
       }
     }
-  }, [inputState]);
+  }, [inputState, isEditting]);
 
   const contentDisplayer = useMemo(() => {
     const tags = [];
