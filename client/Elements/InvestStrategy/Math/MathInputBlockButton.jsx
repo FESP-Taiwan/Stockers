@@ -1,7 +1,10 @@
 // @flow
 
 import React, {
+  useState,
+  useEffect,
   useCallback,
+  useRef,
 } from 'react';
 
 const styles = {
@@ -43,6 +46,28 @@ function MathInputBlockButton({
   inputState,
   inputRef,
 }: Props) {
+  const blockButtonRef = useRef();
+
+  const [buttonChipInfo, setButtonChipInfo] = useState(null);
+
+  console.log('buttonChipInfo', buttonChipInfo);
+
+  useEffect(() => {
+    const { current: input } = inputRef;
+    const { current: button } = blockButtonRef;
+
+    if (input && button) {
+      const { chipInfos } = inputState;
+
+      const blockButtonList = input.parentNode.querySelectorAll('.math-module-block-button');
+
+      const chipInfoIndex = Array.from(blockButtonList)
+        .findIndex(blockButton => blockButton === button);
+
+      setButtonChipInfo(chipInfos[chipInfoIndex]);
+    }
+  }, [inputState, inputRef]);
+
   const blockBtnMouseEnterHandler = useCallback(({ target }) => {
     if (target) {
       target.classList.add('hovered');
@@ -58,27 +83,21 @@ function MathInputBlockButton({
         selectionEnd,
       } = current;
 
-      const { chipInfos } = inputState;
-
-      const blockButtonList = current.parentNode.querySelectorAll('.math-module-block-button');
-
-      const chipInfoIndex = Array.from(blockButtonList)
-        .findIndex(blockButton => blockButton === target);
-
       const {
         FROM: from,
         TO: to,
-      } = chipInfos[chipInfoIndex];
+      } = buttonChipInfo;
 
       if (target.classList.contains('hovered') && (from !== selectionStart || to !== selectionEnd || !isEditting)) {
         target.classList.remove('hovered');
       }
     }
-  }, [inputState, isEditting, inputRef]);
+  }, [isEditting, inputRef, buttonChipInfo]);
 
   return (
     <button
       style={styles.blockBtn}
+      ref={blockButtonRef}
       className="math-module-block-button"
       onMouseEnter={blockBtnMouseEnterHandler}
       onMouseLeave={blockBtnMouseLeaveHandler}
