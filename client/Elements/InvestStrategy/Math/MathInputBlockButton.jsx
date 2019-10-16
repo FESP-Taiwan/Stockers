@@ -44,29 +44,70 @@ function MathInputBlockButton({
   subContent,
   isEditting,
   inputState,
-  inputRef,
+  inputRef: {
+    current: input,
+  },
 }: Props) {
   const blockButtonRef = useRef();
 
   const [buttonChipInfo, setButtonChipInfo] = useState(null);
+  const [buttonIndex, setButtonIndex] = useState(null);
+  const [isInfoModalOpened, setInfoModalOpened] = useState(false);
+
+  console.log('isInfoModalOpened', isInfoModalOpened);
 
   console.log('buttonChipInfo', buttonChipInfo);
+  console.log('buttonIndex', buttonIndex);
 
   useEffect(() => {
-    const { current: input } = inputRef;
     const { current: button } = blockButtonRef;
 
-    if (input && button) {
+    if (button) {
       const { chipInfos } = inputState;
 
-      const blockButtonList = input.parentNode.querySelectorAll('.math-module-block-button');
+      const blockButtonList = button.parentNode.querySelectorAll('.math-module-block-button');
 
       const chipInfoIndex = Array.from(blockButtonList)
         .findIndex(blockButton => blockButton === button);
 
       setButtonChipInfo(chipInfos[chipInfoIndex]);
+
+      setButtonIndex(chipInfoIndex);
     }
-  }, [inputState, inputRef]);
+  }, [inputState]);
+
+  useEffect(() => {
+    const { current: button } = blockButtonRef;
+
+    if (!button) return () => {};
+
+    function onObserveHandler(mutations) {
+      const classList = Array.from(mutations[0].target.classList);
+
+      const isHoveredClassAdded = classList.some(className => className === 'hovered');
+
+      if (isHoveredClassAdded) {
+        setInfoModalOpened(true);
+      } else {
+        setInfoModalOpened(false);
+      }
+
+      console.log('isHoveredClassAdded', isHoveredClassAdded);
+    }
+
+    const buttonObserver = new MutationObserver(onObserveHandler);
+
+    console.log(button);
+
+    buttonObserver.observe(button, {
+      attributeOldValue: true,
+      attributes: true,
+    });
+
+    return () => {
+      buttonObserver.disconnect();
+    };
+  }, []);
 
   const blockBtnMouseEnterHandler = useCallback(({ target }) => {
     if (target) {
@@ -75,13 +116,11 @@ function MathInputBlockButton({
   }, []);
 
   const blockBtnMouseLeaveHandler = useCallback(({ target }) => {
-    const { current } = inputRef;
-
-    if (current && target) {
+    if (input && target) {
       const {
         selectionStart,
         selectionEnd,
-      } = current;
+      } = input;
 
       const {
         FROM: from,
@@ -92,7 +131,7 @@ function MathInputBlockButton({
         target.classList.remove('hovered');
       }
     }
-  }, [isEditting, inputRef, buttonChipInfo]);
+  }, [isEditting, input, buttonChipInfo]);
 
   return (
     <button
