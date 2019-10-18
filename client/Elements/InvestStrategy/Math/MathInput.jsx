@@ -74,25 +74,6 @@ function MathInput() {
 
   console.log('inputState--->', inputState);
 
-  const getMetaTypeContent = useCallback((type, date, rowId) => {
-    switch (type) {
-      case MATH_META_TYPES.NUMEROUS:
-        return '眾數';
-
-      case MATH_META_TYPES.AVERAGE:
-        return '平均';
-
-      case MATH_META_TYPES.DATE:
-        return (date ? `${moment(date).format('YYYY/MM')}季` : '??');
-
-      case MATH_META_TYPES.GRID:
-        return (rowId + 1 || '??');
-
-      default:
-        return '?';
-    }
-  }, []);
-
   const addSpanToTags = useCallback((tags, subContent, from) => {
     Array.from(Array(subContent.length)).forEach((n, index) => {
       tags.push(
@@ -316,8 +297,7 @@ function MathInput() {
 
       const selectionDiff = currentCaret.to - currentCaret.from;
 
-      const metaTypeContent = getMetaTypeContent(type, date, rowId);
-      const addContent = `${name}_${metaTypeContent}  `;
+      const addContent = `${name}  `;
 
       const newContent = `${content.substring(0, currentCaret.from)}${addContent}${content.substring(currentCaret.to)}`;
 
@@ -392,7 +372,7 @@ function MathInput() {
     return () => {
       investStrategySharedEmitter.removeListener(CLICK_EVENT, clickEventHandler);
     };
-  }, [isEditting, getMetaTypeContent, inputState]);
+  }, [isEditting, inputState]);
 
   // triggered after click event
   useEffect(() => {

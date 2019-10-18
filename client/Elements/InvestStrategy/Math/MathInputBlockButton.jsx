@@ -7,6 +7,7 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
+import moment from 'moment';
 import { MATH_META_TYPES } from '../../../Constant/investStrategy';
 
 const styles = {
@@ -49,11 +50,13 @@ const styles = {
     flexDirection: 'column',
     borderRadius: 4,
     backgroundColor: Colors.PRIMARY,
+    minWidth: 112,
   },
   text: {
     fontSize: 13,
     letterSpacing: 1,
     padding: '4px 12px',
+    whiteSpace: 'nowrap',
   },
 };
 
@@ -83,7 +86,7 @@ function MathInputBlockButton({
   const [buttonIndex, setButtonIndex] = useState(null);
   const [isInfoModalOpened, setInfoModalOpened] = useState(false);
 
-  console.log('buttonChipInfo', buttonChipInfo);
+  console.log('inputState', inputState);
 
   useEffect(() => {
     const { current: button } = blockButtonRef;
@@ -91,7 +94,8 @@ function MathInputBlockButton({
     if (button) {
       const { chipInfos } = inputState;
 
-      const blockButtonList = button.parentNode.querySelectorAll('.math-module-block-button');
+      const wrapper = button.parentNode;
+      const blockButtonList = wrapper.parentNode.querySelectorAll('.math-module-block-button');
 
       const chipInfoIndex = Array.from(blockButtonList)
         .findIndex(blockButton => blockButton === button);
@@ -117,13 +121,9 @@ function MathInputBlockButton({
       } else {
         setInfoModalOpened(false);
       }
-
-      console.log('isHoveredClassAdded', isHoveredClassAdded);
     }
 
     const buttonObserver = new MutationObserver(onObserveHandler);
-
-    console.log(button);
 
     buttonObserver.observe(button, {
       attributeOldValue: true,
@@ -206,20 +206,27 @@ function MathInputBlockButton({
         );
 
       case MATH_META_TYPES.DATE:
-        return (
+        return (date ? (
           <span style={styles.text}>
             日期：
-            {date}
+            {moment(date).format('YYYY/MM')}
+            季
           </span>
-        );
+        ) : (
+          <span style={styles.text}>日期：？？季</span>
+        ));
 
       case MATH_META_TYPES.GRID:
-        return (
+        return (~rowId ? (
           <span style={styles.text}>
             格號：
-            {rowId}
+            {rowId + 1}
           </span>
-        );
+        ) : (
+          <span style={styles.text}>
+            格號：??
+          </span>
+        ));
 
       default:
         return null;
