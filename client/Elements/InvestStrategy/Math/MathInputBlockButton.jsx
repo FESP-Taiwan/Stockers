@@ -34,10 +34,16 @@ const styles = {
   infoBlock: {
     position: 'absolute',
     right: 0,
-    bottom: 20,
+    bottom: 24,
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: Colors.LAYER_THIRD,
+    borderRadius: 4,
+    backgroundColor: Colors.PRIMARY,
+  },
+  text: {
+    fontSize: 13,
+    letterSpacing: 1,
+    padding: '4px 12px',
   },
 };
 
@@ -151,25 +157,25 @@ function MathInputBlockButton({
     switch (type) {
       case MATH_META_TYPES.NUMEROUS: {
         return (
-          <span>類型：眾數</span>
+          <span style={styles.text}>類型：眾數</span>
         );
       }
 
       case MATH_META_TYPES.AVERAGE: {
         return (
-          <span>類型：平均</span>
+          <span style={styles.text}>類型：平均</span>
         );
       }
 
       case MATH_META_TYPES.DATE: {
         return (
-          <span>類型：日期</span>
+          <span style={styles.text}>類型：日期</span>
         );
       }
 
       case MATH_META_TYPES.GRID: {
         return (
-          <span>類型：格子</span>
+          <span style={styles.text}>類型：格子</span>
         );
       }
 
@@ -186,17 +192,17 @@ function MathInputBlockButton({
       case MATH_META_TYPES.NUMEROUS:
       case MATH_META_TYPES.AVERAGE:
         return (
-          <span>計算量：10筆</span>
+          <span style={styles.text}>計算量：10筆</span>
         );
 
       case MATH_META_TYPES.DATE:
         return (
-          <span>日期：{date}</span>
+          <span style={styles.text}>日期：{date}</span>
         );
 
       case MATH_META_TYPES.GRID:
         return (
-          <span>格號：{rowId}</span>
+          <span style={styles.text}>格號：{rowId}</span>
         );
 
       default:
