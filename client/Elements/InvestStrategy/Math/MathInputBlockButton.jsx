@@ -2,12 +2,17 @@
 
 import React, {
   useState,
+  useMemo,
   useEffect,
   useCallback,
   useRef,
 } from 'react';
+import { MATH_META_TYPES } from '../../../Constant/investStrategy';
 
 const styles = {
+  wrapper: {
+    position: 'relative',
+  },
   blockBtn: {
     fontSize: 16,
     pointerEvents: 'auto',
@@ -25,6 +30,14 @@ const styles = {
     position: 'absolute',
     right: 3,
     top: 9,
+  },
+  infoBlock: {
+    position: 'absolute',
+    right: 0,
+    bottom: 20,
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: Colors.LAYER_THIRD,
   },
 };
 
@@ -54,10 +67,7 @@ function MathInputBlockButton({
   const [buttonIndex, setButtonIndex] = useState(null);
   const [isInfoModalOpened, setInfoModalOpened] = useState(false);
 
-  console.log('isInfoModalOpened', isInfoModalOpened);
-
   console.log('buttonChipInfo', buttonChipInfo);
-  console.log('buttonIndex', buttonIndex);
 
   useEffect(() => {
     const { current: button } = blockButtonRef;
@@ -133,18 +143,93 @@ function MathInputBlockButton({
     }
   }, [isEditting, input, buttonChipInfo]);
 
+  const buttonMetaType = useMemo(() => {
+    if (!buttonChipInfo) return null;
+
+    const { type } = buttonChipInfo.chipData;
+
+    switch (type) {
+      case MATH_META_TYPES.NUMEROUS: {
+        return (
+          <span>類型：眾數</span>
+        );
+      }
+
+      case MATH_META_TYPES.AVERAGE: {
+        return (
+          <span>類型：平均</span>
+        );
+      }
+
+      case MATH_META_TYPES.DATE: {
+        return (
+          <span>類型：日期</span>
+        );
+      }
+
+      case MATH_META_TYPES.GRID: {
+        return (
+          <span>類型：格子</span>
+        );
+      }
+
+      default: return null;
+    }
+  }, [buttonChipInfo]);
+
+  const buttonMetaSubInfo = useMemo(() => {
+    if (!buttonChipInfo) return null;
+
+    const { type, date, rowId } = buttonChipInfo.chipData;
+
+    switch (type) {
+      case MATH_META_TYPES.NUMEROUS:
+      case MATH_META_TYPES.AVERAGE:
+        return (
+          <span>計算量：10筆</span>
+        );
+
+      case MATH_META_TYPES.DATE:
+        return (
+          <span>日期：{date}</span>
+        );
+
+      case MATH_META_TYPES.GRID:
+        return (
+          <span>格號：{rowId}</span>
+        );
+
+      default:
+        return null;
+    }
+  }, [buttonChipInfo]);
+
+  const buttonInfoBlock = useMemo(() => {
+    if (!isInfoModalOpened) return null;
+
+    return (
+      <div style={styles.infoBlock}>
+        {buttonMetaType}
+        {buttonMetaSubInfo}
+      </div>
+    );
+  }, [isInfoModalOpened, buttonMetaType, buttonMetaSubInfo]);
+
   return (
-    <button
-      style={styles.blockBtn}
-      ref={blockButtonRef}
-      className="math-module-block-button"
-      onMouseEnter={blockBtnMouseEnterHandler}
-      onMouseLeave={blockBtnMouseLeaveHandler}
-      type="button">
-      {subContent}
-      &nbsp;
-      <div style={styles.arrow} />
-    </button>
+    <div style={styles.wrapper}>
+      <button
+        style={styles.blockBtn}
+        ref={blockButtonRef}
+        className="math-module-block-button"
+        onMouseEnter={blockBtnMouseEnterHandler}
+        onMouseLeave={blockBtnMouseLeaveHandler}
+        type="button">
+        {subContent}
+        &nbsp;
+        <div style={styles.arrow} />
+      </button>
+      {buttonInfoBlock}
+    </div>
   );
 }
 
