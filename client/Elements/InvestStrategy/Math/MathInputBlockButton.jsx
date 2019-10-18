@@ -21,7 +21,17 @@ const styles = {
     borderBottom: `1px solid ${Colors.PRIMARY}`,
     position: 'relative',
   },
-  arrow: {
+  arrowUp: {
+    width: 0,
+    height: 0,
+    borderLeft: '4px solid transparent',
+    borderRight: '4px solid transparent',
+    borderBottom: `6px solid ${Colors.PRIMARY}`,
+    position: 'absolute',
+    right: 3,
+    top: 9,
+  },
+  arrowDown: {
     width: 0,
     height: 0,
     borderLeft: '4px solid transparent',
@@ -197,12 +207,18 @@ function MathInputBlockButton({
 
       case MATH_META_TYPES.DATE:
         return (
-          <span style={styles.text}>日期：{date}</span>
+          <span style={styles.text}>
+            日期：
+            {date}
+          </span>
         );
 
       case MATH_META_TYPES.GRID:
         return (
-          <span style={styles.text}>格號：{rowId}</span>
+          <span style={styles.text}>
+            格號：
+            {rowId}
+          </span>
         );
 
       default:
@@ -221,6 +237,10 @@ function MathInputBlockButton({
     );
   }, [isInfoModalOpened, buttonMetaType, buttonMetaSubInfo]);
 
+  const arrowStyle = useMemo(() => ({
+    ...(isInfoModalOpened ? styles.arrowUp : styles.arrowDown),
+  }), [isInfoModalOpened]);
+
   return (
     <div style={styles.wrapper}>
       <button
@@ -232,7 +252,7 @@ function MathInputBlockButton({
         type="button">
         {subContent}
         &nbsp;
-        <div style={styles.arrow} />
+        <div style={arrowStyle} />
       </button>
       {buttonInfoBlock}
     </div>
