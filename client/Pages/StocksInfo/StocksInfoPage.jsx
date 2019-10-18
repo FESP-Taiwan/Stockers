@@ -64,11 +64,16 @@ const styles = {
 
 type Props = {
   fetchIndustryCardData: Function,
+<<<<<<< HEAD:client/Pages/StocksInfo/StocksInfoPage.jsx
   industryCardData: Array,
+=======
+  // industryCardData: Array,
+>>>>>>> ae11b33406bfaf1ca6875c48a8f728f79e85d5f5:client/Pages/StocksInfo/StocksInfoPage.jsx
 };
 
 function StockersInfoPage({
   fetchIndustryCardData,
+<<<<<<< HEAD:client/Pages/StocksInfo/StocksInfoPage.jsx
   industryCardData,
 }: Props) {
   useEffect(() => {
@@ -76,6 +81,17 @@ function StockersInfoPage({
   }, [fetchIndustryCardData]);
 
   console.log('industryCardData', industryCardData);
+=======
+  // industryCardData,
+}: Props) {
+  // useEffect(() => {
+  //   fetchIndustryCardData();
+  // }, [fetchIndustryCardData]);
+
+  // console.log('industryCardData', industryCardData);
+
+  console.log(fetchIndustryCardData);
+>>>>>>> ae11b33406bfaf1ca6875c48a8f728f79e85d5f5:client/Pages/StocksInfo/StocksInfoPage.jsx
 
   return (
     <div css={styles.wrapper}>
@@ -117,7 +133,11 @@ function StockersInfoPage({
 
 const reduxHook = connect(
   state => ({
+<<<<<<< HEAD:client/Pages/StocksInfo/StocksInfoPage.jsx
     industryCardData: state.industryCardData,
+=======
+    // industryCardData: state.industryCardData,
+>>>>>>> ae11b33406bfaf1ca6875c48a8f728f79e85d5f5:client/Pages/StocksInfo/StocksInfoPage.jsx
   }),
   dispatch => bindActionCreators({
     ...IndustryActions,

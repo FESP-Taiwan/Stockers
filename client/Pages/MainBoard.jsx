@@ -43,7 +43,10 @@ function MainBoard() {
         <Switch>
           <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
           <Route exact path="/industry" component={IndustryPage} />
+<<<<<<< HEAD
           <Route exact path="/test" component={TestPage} />
+=======
+>>>>>>> ae11b33406bfaf1ca6875c48a8f728f79e85d5f5
           <Route render={() => (<StocksInfoPage />)} />
         </Switch>
       </div>

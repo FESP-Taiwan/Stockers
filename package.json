@@ -52,6 +52,7 @@
     "recharts": "^1.7.1",
     "redux": "^4.0.4",
     "redux-form": "^8.2.6",
+    "redux-middleware-fetch": "^0.1.15",
     "redux-thunk": "^2.3.0",
     "style-loader": "^1.0.0",
     "uuid": "^3.3.3",
