@@ -102,10 +102,26 @@ const styles = {
     font-size: 13px;
     color: ${Colors.PRIMARY};
   `,
+  btnActive: css`
+    ${button}
+    margin: 0 20px 0 0;
+    background-color: ${Colors.PRIMARY_THIRD};
+  `,
+  btnTitleActive: css`
+    font-size: 18px;
+    font-weight: 800;
+    color: ${Colors.PRIMARY};
+  `,
+};
+
+const INDUSTRY_TYPES = {
+  UPPER: 'UPPER',
+  MIDDLE: 'MIDDLE',
+  LOWER: 'LOWER',
 };
 
 function IndustryPage() {
-  const [industry, setIndustry] = useState();
+  const [industry, setIndustry] = useState('UPPER');
 
   console.log('i', industries.subIndustries);
 
@@ -144,20 +160,75 @@ function IndustryPage() {
       </div>
       <div css={styles.blockWrapper}>
         <div css={styles.btnWrapper}>
-          {industries.subIndustries.map(sub => (
-            <button
-              key={sub.id}
-              css={styles.button}
-              type="button">
-              <span css={styles.buttonTitle}>
-                {sub.type}
-              </span>
-              <span css={styles.buttonTitle}>
-                &nbsp;
-                {sub.header}
-              </span>
-            </button>
-          ))}
+          <button
+            css={{
+              ...styles.button,
+              ...(industry === 'UPPER') ? styles.btnActive : {},
+            }}
+            onClick={() => setIndustry(INDUSTRY_TYPES.UPPER)}
+            type="button">
+            <span
+              css={{
+                ...styles.buttonTitle,
+                ...(industry === 'UPPER') ? styles.btnTitleActive : {},
+              }}>
+              上游產業
+            </span>
+            <span
+              css={{
+                ...styles.buttonTitle,
+                ...(industry === 'UPPER') ? styles.btnTitleActive : {},
+              }}>
+              &nbsp;
+              IP/IC設計
+            </span>
+          </button>
+          <button
+            css={{
+              ...styles.button,
+              ...(industry === 'MIDDLE') ? styles.btnActive : {},
+            }}
+            onClick={() => setIndustry(INDUSTRY_TYPES.MIDDLE)}
+            type="button">
+            <span
+              css={{
+                ...styles.buttonTitle,
+                ...(industry === 'MIDDLE') ? styles.btnTitleActive : {},
+              }}>
+              中游產業
+            </span>
+            <span
+              css={{
+                ...styles.buttonTitle,
+                ...(industry === 'MIDDLE') ? styles.btnTitleActive : {},
+              }}>
+              &nbsp;
+              IC製造、晶圓製造
+            </span>
+          </button>
+          <button
+            css={{
+              ...styles.button,
+              ...(industry === 'LOWER') ? styles.btnActive : {},
+            }}
+            onClick={() => setIndustry(INDUSTRY_TYPES.LOWER)}
+            type="button">
+            <span
+              css={{
+                ...styles.buttonTitle,
+                ...(industry === 'LOWER') ? styles.btnTitleActive : {},
+              }}>
+              下游產業
+            </span>
+            <span
+              css={{
+                ...styles.buttonTitle,
+                ...(industry === 'LOWER') ? styles.btnTitleActive : {},
+              }}>
+              &nbsp;
+              封裝測試、IC模組
+            </span>
+          </button>
         </div>
         <div css={styles.industryBlock}>
           <span css={styles.article}>

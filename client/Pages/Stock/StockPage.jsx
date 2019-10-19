@@ -10,7 +10,8 @@ import {
   LineChart, Line,
 } from 'recharts';
 import { flex } from '../../Constant/emotion';
-import StockStrategyPage from './StockStrategyPage';
+import StockStrategyHeader from './StockStrategyHeader';
+import StockTable from './StockTable';
 
 const styles = {
   wrapper: css`
@@ -24,7 +25,6 @@ const styles = {
   `,
   sharesWrapper: css`
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -49,7 +49,6 @@ const styles = {
   infoTableWrapper: css`
     width: 100%;
     max-width: 1200px;
-    height: 100%;
     margin: 20px auto 0;
     display: flex;
     flex-direction: column;
@@ -81,8 +80,36 @@ const styles = {
   tableWrapper: css`
     width: 100%;
     max-width: 1200px;
-    height: 100%;
-    display:
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: 40px;
+    background-color: ${Colors.LAYER_FIRST};
+    margin: 0 0 30px 0;
+  `,
+  blockWrapper: css`
+    display: flex;
+    flex-direction: column;
+  `,
+  block: css`
+    width: 135px;
+    height: 100px;
+    border: solid 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
+  word: css`
+    font-size: 16px;
+    font-weight: 500;
+  `,
+  tableBtn: css`
+    width: 80px;
+    height: 50px;
+    border-radius: 20px;
+    background-color: ${Colors.LAYER_SECOND};
   `,
 };
 
@@ -104,6 +131,28 @@ const data = [
   },
 ];
 
+const stocks = [{
+  id: 1,
+  year: 2019,
+  value: 1000,
+}, {
+  id: 2,
+  year: 2018,
+  value: 1000,
+}, {
+  id: 3,
+  year: 2017,
+  value: 1000,
+}, {
+  id: 4,
+  year: 2016,
+  value: 1000,
+}, {
+  id: 5,
+  year: 2015,
+  value: 1000,
+}];
+
 const TABLE_TYPES = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   BALANCE_SHEET: 'BALANCE_SHEET',
@@ -112,7 +161,7 @@ const TABLE_TYPES = {
 };
 
 function StockPage() {
-  const [table, setTable] = useState(null);
+  const [table, setTable] = useState('INCOME_STATEMENT');
 
   console.log('table', table);
 
@@ -121,32 +170,160 @@ function StockPage() {
       case 'INCOME_STATEMENT':
         return (
           // 21x4
-          <div css={styles.incomeTable}>
-            INCOME_STATEMENT
+          <div css={styles.tableWrapper}>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                <button
+                  onClick={() => { console.log('換季'); }}
+                  css={styles.tableBtn}
+                  type="button">
+                  年/季
+                </button>
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.year}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                  營業成本
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         );
 
       case 'BALANCE_SHEET':
         return (
           // 11x1
-          <div css={styles.balanceTable}>
-            BALANCE_SHEET
+          <div css={styles.tableWrapper}>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                <button
+                  onClick={() => { console.log('換季'); }}
+                  css={styles.tableBtn}
+                  type="button">
+                  比例/值
+                </button>
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.year}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                  現金及約當現金
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         );
 
       case 'CASH_FLOW':
         return (
           // 9x1
-          <div css={styles.cashTable}>
-            CASH_FLOW
+          <div css={styles.tableWrapper}>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                <button
+                  onClick={() => { console.log('換季'); }}
+                  css={styles.tableBtn}
+                  type="button">
+                  年/季
+                </button>
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.year}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                  平均股本
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         );
 
       case 'DIVIDEND':
         return (
           // 9x1
-          <div css={styles.dividendTable}>
-            DIVIDEND
+          <div css={styles.tableWrapper}>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                <button
+                  onClick={() => { console.log('換季'); }}
+                  css={styles.tableBtn}
+                  type="button">
+                  年度／季度
+                </button>
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.year}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                  董事會日期
+              </div>
+              {stocks.map(stock => (
+                <div
+                  key={stock.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {stock.value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         );
 
@@ -157,7 +334,7 @@ function StockPage() {
 
   return (
     <div css={styles.wrapper}>
-      <StockStrategyPage />
+      <StockStrategyHeader />
       <div css={styles.sharesWrapper}>
         <span css={styles.sharesTitle}>
           股價

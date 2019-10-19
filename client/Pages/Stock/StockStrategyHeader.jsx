@@ -85,7 +85,7 @@ const mockModules = [{
   name: 'B',
 }];
 
-function StockStrategyPage() {
+function StockStrategyHeader() {
   return (
     <div css={styles.wrapper}>
       <button
@@ -111,4 +111,4 @@ const reduxHook = reduxForm({
   form: FORM_STRATEGY_HEADER,
 });
 
-export default reduxHook(StockStrategyPage);
+export default reduxHook(StockStrategyHeader);
