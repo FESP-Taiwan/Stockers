@@ -2,18 +2,20 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { Field, reduxForm } from 'redux-form';
 import { FORM_STOCK_SIMULATION } from '../../Constant/form';
 import Modal from '../Modal/Modal';
 import TextInput from '../../Form/TextInput';
 import Selector from '../../Form/Selector';
 
+const FieldWrapper = styled.div`
+  margin: 12px 0;
+`;
+
 const styles = {
   wrapper: {
     width: '100%',
-  },
-  fieldWrapper: {
-    margin: '12px 0',
   },
   block: css`
     width: 306px;
@@ -50,7 +52,8 @@ function StockSimulationModal() {
   return (
     <Modal>
       <form css={styles.wrapper}>
-        <div css={styles.fieldWrapper}>
+        <h2>測試績效</h2>
+        <FieldWrapper>
           <Field
             inputStyle
             errorInner
@@ -59,8 +62,8 @@ function StockSimulationModal() {
             name="from"
             options={mockData}
             component={Selector} />
-        </div>
-        <div css={styles.fieldWrapper}>
+        </FieldWrapper>
+        <FieldWrapper>
           <Field
             inputStyle
             errorInner
@@ -69,8 +72,8 @@ function StockSimulationModal() {
             name="to"
             options={mockData}
             component={Selector} />
-        </div>
-        <div css={styles.fieldWrapper}>
+        </FieldWrapper>
+        <FieldWrapper>
           <span css={styles.label}>請輸入本金</span>
           <div css={styles.block}>
             <Field
@@ -78,7 +81,7 @@ function StockSimulationModal() {
               name="principle"
               component={TextInput} />
           </div>
-        </div>
+        </FieldWrapper>
         <button
           type="submit"
           css={styles.submit}>
