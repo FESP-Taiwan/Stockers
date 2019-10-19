@@ -64,20 +64,18 @@ const styles = {
 
 type Props = {
   fetchIndustryCardData: Function,
-  // industryCardData: Array,
+  industryCardData: Array,
 };
 
 function StockersInfoPage({
   fetchIndustryCardData,
-  // industryCardData,
+  industryCardData,
 }: Props) {
-  // useEffect(() => {
-  //   fetchIndustryCardData();
-  // }, [fetchIndustryCardData]);
+  useEffect(() => {
+    fetchIndustryCardData();
+  }, [fetchIndustryCardData]);
 
-  // console.log('industryCardData', industryCardData);
-
-  console.log(fetchIndustryCardData);
+  console.log('industryCardData', industryCardData);
 
   return (
     <div css={styles.wrapper}>
@@ -119,7 +117,7 @@ function StockersInfoPage({
 
 const reduxHook = connect(
   state => ({
-    // industryCardData: state.industryCardData,
+    industryCardData: state.industryCardData,
   }),
   dispatch => bindActionCreators({
     ...IndustryActions,

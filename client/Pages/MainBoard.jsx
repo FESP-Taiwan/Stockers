@@ -45,6 +45,7 @@ function MainBoard() {
           <Route exact path="/industry" component={IndustryPage} />
           <Route exact path="/stockSimulation" component={StockSimulationPage} />
           <Route component={StocksInfoPage} />
+          <Route render={() => (<StocksInfoPage />)} />
         </Switch>
       </div>
     </div>
