@@ -9,10 +9,10 @@ import { jsx, css } from '@emotion/core';
 import {
   LineChart, Line,
 } from 'recharts';
-import { flex } from '../../Constant/emotion';
 import StockStrategyHeader from './StockStrategyHeader';
-import StockTable from './StockTable';
-import { incomeStatements } from '../../Mocks/Queries/stocks';
+import {
+  incomeStatements, balanceSheets, cashFlows, dividends
+} from '../../Mocks/Queries/stocks';
 
 const styles = {
   wrapper: css`
@@ -57,9 +57,11 @@ const styles = {
     align-items: flex-start;
   `,
   btnWrapper: css`
-    ${flex}
+    width: 100%;
+    display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    align-items: center;
     margin: 0 0 20px 0;
   `,
   btn: css`
@@ -82,23 +84,23 @@ const styles = {
     width: 100%;
     max-width: 1200px;
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     border-radius: 40px;
     background-color: ${Colors.LAYER_FIRST};
     margin: 0 0 30px 0;
+    overflow-y: auto;
+    cursor: pointer;
   `,
   blockWrapper: css`
     display: flex;
     flex-direction: column;
-    margin: 10px 0;
+    margin: 10px auto;
   `,
   block: css`
     width: 135px;
     height: 100px;
-    border: solid 1px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -110,6 +112,7 @@ const styles = {
   tableBtn: css`
     width: 80px;
     height: 50px;
+    font-size: 16px;
     border-radius: 20px;
     background-color: ${Colors.LAYER_SECOND};
   `,
@@ -191,9 +194,10 @@ function StockPage() {
               ))}
             </div>
             {incomeStatements.map(incomeStatement => (
-              <div css={styles.blockWrapper}>
+              <div
+                key={incomeStatement.id}
+                css={styles.blockWrapper}>
                 <div
-                  key={incomeStatement.id}
                   css={styles.block}>
                   {incomeStatement.name}
                 </div>
@@ -234,20 +238,24 @@ function StockPage() {
                 </div>
               ))}
             </div>
-            <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                  現金及約當現金
-              </div>
-              {stocks.map(stock => (
-                <div
-                  key={stock.id}
-                  css={styles.block}>
-                  <span css={styles.word}>
-                    {stock.value}
-                  </span>
+            {balanceSheets.map(balanceSheet => (
+              <div
+                key={balanceSheet.id}
+                css={styles.blockWrapper}>
+                <div css={styles.block}>
+                  {balanceSheet.name}
                 </div>
-              ))}
-            </div>
+                {stocks.map(stock => (
+                  <div
+                    key={stock.id}
+                    css={styles.block}>
+                    <span css={styles.word}>
+                      {stock.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         );
 
@@ -274,20 +282,24 @@ function StockPage() {
                 </div>
               ))}
             </div>
-            <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                  平均股本
-              </div>
-              {stocks.map(stock => (
-                <div
-                  key={stock.id}
-                  css={styles.block}>
-                  <span css={styles.word}>
-                    {stock.value}
-                  </span>
+            {cashFlows.map(cashFlow => (
+              <div
+                key={cashFlow.id}
+                css={styles.blockWrapper}>
+                <div css={styles.block}>
+                  {cashFlow.name}
                 </div>
-              ))}
-            </div>
+                {stocks.map(stock => (
+                  <div
+                    key={stock.id}
+                    css={styles.block}>
+                    <span css={styles.word}>
+                      {stock.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         );
 
@@ -314,20 +326,24 @@ function StockPage() {
                 </div>
               ))}
             </div>
-            <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                  董事會日期
-              </div>
-              {stocks.map(stock => (
-                <div
-                  key={stock.id}
-                  css={styles.block}>
-                  <span css={styles.word}>
-                    {stock.value}
-                  </span>
+            {dividends.map(dividend => (
+              <div
+                key={dividend.id}
+                css={styles.blockWrapper}>
+                <div css={styles.block}>
+                  {dividend.name}
                 </div>
-              ))}
-            </div>
+                {stocks.map(stock => (
+                  <div
+                    key={stock.id}
+                    css={styles.block}>
+                    <span css={styles.word}>
+                      {stock.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         );
 
