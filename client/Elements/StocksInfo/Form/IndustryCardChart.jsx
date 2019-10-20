@@ -19,19 +19,6 @@ const styles = {
   },
 };
 
-// 這是每個點
-const xxx = [
-  {
-    name: 'Page A', uv: 100,
-  },
-  {
-    name: 'Page B', uv: 50,
-  },
-  {
-    name: 'Page C', uv: 75,
-  },
-];
-
 type Props = {
   data: Array,
 };

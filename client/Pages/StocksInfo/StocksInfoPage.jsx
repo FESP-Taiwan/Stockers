@@ -13,7 +13,7 @@ import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
 import { followingStocks, industryCard } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
-import * as IndustryActions from '../../actions/Industry';
+import * as IndustryCardActions from '../../actions/IndustryCard';
 
 const styles = {
   wrapper: css`
@@ -122,7 +122,7 @@ const reduxHook = connect(
     // industryCardData: state.industryCardData,
   }),
   dispatch => bindActionCreators({
-    ...IndustryActions,
+    ...IndustryCardActions,
   }, dispatch),
 );
 
