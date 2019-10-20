@@ -12,6 +12,7 @@ import {
 import { flex } from '../../Constant/emotion';
 import StockStrategyHeader from './StockStrategyHeader';
 import StockTable from './StockTable';
+import { incomeStatements } from '../../Mocks/Queries/stocks';
 
 const styles = {
   wrapper: css`
@@ -83,7 +84,7 @@ const styles = {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
     border-radius: 40px;
     background-color: ${Colors.LAYER_FIRST};
@@ -92,6 +93,7 @@ const styles = {
   blockWrapper: css`
     display: flex;
     flex-direction: column;
+    margin: 10px 0;
   `,
   block: css`
     width: 135px;
@@ -163,8 +165,6 @@ const TABLE_TYPES = {
 function StockPage() {
   const [table, setTable] = useState('INCOME_STATEMENT');
 
-  console.log('table', table);
-
   const infoTable = useMemo(() => {
     switch (table) {
       case 'INCOME_STATEMENT':
@@ -177,7 +177,7 @@ function StockPage() {
                   onClick={() => { console.log('換季'); }}
                   css={styles.tableBtn}
                   type="button">
-                  年/季
+                  年
                 </button>
               </div>
               {stocks.map(stock => (
@@ -190,20 +190,24 @@ function StockPage() {
                 </div>
               ))}
             </div>
-            <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                  營業成本
-              </div>
-              {stocks.map(stock => (
+            {incomeStatements.map(incomeStatement => (
+              <div css={styles.blockWrapper}>
                 <div
-                  key={stock.id}
+                  key={incomeStatement.id}
                   css={styles.block}>
-                  <span css={styles.word}>
-                    {stock.value}
-                  </span>
+                  {incomeStatement.name}
                 </div>
-              ))}
-            </div>
+                {stocks.map(stock => (
+                  <div
+                    key={stock.id}
+                    css={styles.block}>
+                    <span css={styles.word}>
+                      {stock.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         );
 

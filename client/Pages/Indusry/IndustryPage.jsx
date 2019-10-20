@@ -5,9 +5,12 @@ import {
   useState,
 } from 'react';
 import { jsx, css } from '@emotion/core';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
 import { industries } from '../../Mocks/Queries/IndustryDetails';
+import * as IndustryActions from '../../actions/Industry';
 
 const button = css`
   width: 320px;
@@ -120,10 +123,24 @@ const INDUSTRY_TYPES = {
   LOWER: 'LOWER',
 };
 
-function IndustryPage() {
-  const [industry, setIndustry] = useState('UPPER');
+type Props = {
+  fetchIndustryData: Function,
+  // industryData: Array,
+};
 
-  console.log('i', industries.subIndustries);
+function IndustryPage({
+  fetchIndustryData,
+  // industryData,
+}: Props) {
+  // useEffect(() => {
+  //   fetchIndustryData();
+  // }, [fetchIndustryData]);
+
+  // console.log('industryData', industryData);
+
+  console.log(fetchIndustryData);
+
+  const [industry, setIndustry] = useState('UPPER');
 
   return (
     <div css={styles.wrapper}>
@@ -271,4 +288,13 @@ function IndustryPage() {
   );
 }
 
-export default IndustryPage;
+const reduxHook = connect(
+  state => ({
+    // industryData: state.industryData,
+  }),
+  dispatch => bindActionCreators({
+    ...IndustryActions,
+  }, dispatch),
+);
+
+export default reduxHook(IndustryPage);

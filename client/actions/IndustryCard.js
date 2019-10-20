@@ -2,13 +2,13 @@
 
 import { API_REQUEST } from 'redux-middleware-fetch';
 
-export const FETCH_INDUSTRY_DATA = 'INDUSTRY/FETCH_INDUSTRY_DATA';
+export const FETCH_INDUSTRY_CARD_DATA = 'INDUSTRY/FETCH_INDUSTRY_CARD_DATA';
 
-export function fetchIndustryData() {
+export function fetchIndustryCardData() {
   return {
     [API_REQUEST]: {
-      type: [
-        FETCH_INDUSTRY_DATA,
+      types: [
+        FETCH_INDUSTRY_CARD_DATA,
       ],
       auth: false,
       method: 'GET',
