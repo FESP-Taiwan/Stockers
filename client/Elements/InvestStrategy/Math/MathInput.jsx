@@ -148,11 +148,15 @@ function MathInput() {
 
     if (!isEditting || !current) return () => {};
 
+    console.log('effect triggered');
+
     function onSelectionChangeHandler() {
       const {
         selectionStart,
         selectionEnd,
       } = current;
+
+      console.log('function triggered');
 
       if (MathInput.SelectionRange) {
         const {
@@ -160,78 +164,90 @@ function MathInput() {
           to: prevSelectionEnd,
         } = MathInput.SelectionRange;
 
-        if (selectionStart === prevSelectionStart && selectionEnd === prevSelectionEnd) return;
+        if (selectionStart === prevSelectionStart && selectionEnd === prevSelectionEnd) {
+          console.log('correct');
+
+          return;
+        }
       }
+
+      console.log('selection change handler triggered');
 
       // clear class
-      const wrapper = current.parentNode;
+      if (!MathInput.shouldTriggerSelectionChangeHandler) {
+        MathInput.shouldTriggerSelectionChangeHandler = true;
+      } else {
+        console.log('clear class TRIGGERED');
 
-      const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
-      const textList = wrapper.querySelectorAll('.math-module-text');
+        const wrapper = current.parentNode;
 
-      blockButtonList.forEach((blockButton) => {
-        if (blockButton.classList.contains('hovered')) {
-          blockButton.classList.remove('hovered');
+        const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
+        const textList = wrapper.querySelectorAll('.math-module-text');
+
+        blockButtonList.forEach((blockButton) => {
+          if (blockButton.classList.contains('hovered')) {
+            blockButton.classList.remove('hovered');
+          }
+        });
+
+        textList.forEach((text) => {
+          if (text.classList.contains('selected')) {
+            text.classList.remove('selected');
+          }
+        });
+
+        if (document.activeElement !== current) {
+          return;
         }
-      });
 
-      textList.forEach((text) => {
-        if (text.classList.contains('selected')) {
-          text.classList.remove('selected');
-        }
-      });
+        const {
+          chipInfos,
+        } = inputState;
 
-      if (document.activeElement !== current) {
-        return;
-      }
+        let tempSelectionRange = {
+          from: selectionStart,
+          to: selectionEnd,
+        };
 
-      const {
-        chipInfos,
-      } = inputState;
+        if (tempSelectionRange) {
+          chipInfos.some((chipInfo) => {
+            if (selectionStart <= chipInfo.FROM) {
+              if (selectionEnd <= chipInfo.FROM) {
+                tempSelectionRange = {
+                  from: selectionStart,
+                  to: selectionEnd,
+                };
 
-      let tempSelectionRange = {
-        from: selectionStart,
-        to: selectionEnd,
-      };
+                return true;
+              }
 
-      if (tempSelectionRange) {
-        chipInfos.some((chipInfo) => {
-          if (selectionStart <= chipInfo.FROM) {
-            if (selectionEnd <= chipInfo.FROM) {
               tempSelectionRange = {
-                from: selectionStart,
-                to: selectionEnd,
+                from: chipInfo.FROM,
+                to: chipInfo.TO,
               };
 
               return true;
             }
 
-            tempSelectionRange = {
-              from: chipInfo.FROM,
-              to: chipInfo.TO,
-            };
+            if (selectionStart < chipInfo.TO) {
+              tempSelectionRange = {
+                from: chipInfo.FROM,
+                to: chipInfo.TO,
+              };
 
-            return true;
-          }
+              return true;
+            }
 
-          if (selectionStart < chipInfo.TO) {
-            tempSelectionRange = {
-              from: chipInfo.FROM,
-              to: chipInfo.TO,
-            };
+            return false;
+          });
 
-            return true;
-          }
+          MathInput.SelectionRange = tempSelectionRange;
 
-          return false;
-        });
+          current.setSelectionRange(tempSelectionRange.from, tempSelectionRange.to);
+        }
 
-        MathInput.SelectionRange = tempSelectionRange;
-
-        current.setSelectionRange(tempSelectionRange.from, tempSelectionRange.to);
+        tempSelectionRange = null;
       }
-
-      tempSelectionRange = null;
     }
 
     document.addEventListener('selectionchange', onSelectionChangeHandler, false);
@@ -252,6 +268,8 @@ function MathInput() {
         selectionStart,
         selectionEnd,
       } = input;
+
+      if (selectionStart === selectionEnd) return;
 
       const selectedChipInfoIndex = inputState.chipInfos
         .findIndex(chipInfo => chipInfo.FROM === selectionStart && chipInfo.TO === selectionEnd);
@@ -365,8 +383,6 @@ function MathInput() {
         }, [])
         .sort((cursorA, cursorB) => cursorA.FROM - cursorB.FROM);
 
-      console.log('newCaretPosition', newCaretPosition);
-
       setCaretPositionTriggersRender(newCaretPosition);
 
       setInputState({
@@ -392,6 +408,8 @@ function MathInput() {
       inputRef.current.setSelectionRange(
         caretPositionTriggersRender, caretPositionTriggersRender
       );
+
+      MathInput.shouldTriggerSelectionChangeHandler = false;
     }
   }, [caretPositionTriggersRender]);
 
