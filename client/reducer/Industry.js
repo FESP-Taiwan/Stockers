@@ -8,11 +8,16 @@ import {
 //   type: string,
 //   data: Array<{
 //     id: number,
-//     name: string,
-//     chart: Array<{
+//     name: string, // 半導體
+//     subIndustries: Array<{
 //       id: number,
-//       name: string,
-//       percent: number,
+//       type: string, // 上中下游
+//       name: string, // IP/IC設計
+//       companies: Array<{
+//         id: number,
+//         stockNumber: number, // 2401
+//         name: string, // 凌陽
+//       }>,
 //     }>,
 //   }>,
 // }
