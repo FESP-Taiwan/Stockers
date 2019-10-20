@@ -9,7 +9,6 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import moment from 'moment';
 import { MathInitDataContext } from '../../../Constant/context';
 import {
   investStrategySharedEmitter,
@@ -17,7 +16,6 @@ import {
   END_EDITTING,
   INIT_MODULE,
   CLICK_EVENT,
-  MATH_META_TYPES,
 } from '../../../Constant/investStrategy';
 import { useGlobalErrorMessage } from '../../../helper/useGlobalMessage';
 import MathInputBlockButton from './MathInputBlockButton';
@@ -63,7 +61,7 @@ function MathInput() {
 
   const showErrorMessage = useGlobalErrorMessage();
 
-  const [firstLoaded, setFirstLoaded] = useState(false);
+  const [firstLoadedOrModuleInited, setFirstLoadedOrModuleInited] = useState(false);
   const [isEditting, setIsEditting] = useState(false);
   const [caretPositionAfterClickEvent, setCaretPositionAfterClickEvent] = useState(0);
   const [caretPosition, setCaretPosition] = useState(0);
@@ -88,12 +86,12 @@ function MathInput() {
   }, []);
 
   useEffect(() => {
-    if (!firstLoaded) {
+    if (!firstLoadedOrModuleInited) {
       setInputState(mathInitData);
 
-      setFirstLoaded(true);
+      setFirstLoadedOrModuleInited(true);
     }
-  }, [firstLoaded, mathInitData]);
+  }, [firstLoadedOrModuleInited, mathInitData]);
 
   // clear when !isEditting
   useEffect(() => {
@@ -130,6 +128,7 @@ function MathInput() {
 
     function initModuleHandler() {
       setIsEditting(false);
+      setFirstLoadedOrModuleInited(false);
     }
 
     investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
@@ -150,6 +149,20 @@ function MathInput() {
     if (!isEditting || !current) return () => {};
 
     function onSelectionChangeHandler() {
+      const {
+        selectionStart,
+        selectionEnd,
+      } = current;
+
+      if (MathInput.SelectionRange) {
+        const {
+          from: prevSelectionStart,
+          to: prevSelectionEnd,
+        } = MathInput.SelectionRange;
+
+        if (selectionStart === prevSelectionStart && selectionEnd === prevSelectionEnd) return;
+      }
+
       // clear class
       const wrapper = current.parentNode;
 
@@ -175,11 +188,6 @@ function MathInput() {
       const {
         chipInfos,
       } = inputState;
-
-      const {
-        selectionStart,
-        selectionEnd,
-      } = current;
 
       let tempSelectionRange = {
         from: selectionStart,
@@ -217,6 +225,8 @@ function MathInput() {
 
           return false;
         });
+
+        MathInput.SelectionRange = tempSelectionRange;
 
         current.setSelectionRange(tempSelectionRange.from, tempSelectionRange.to);
       }
