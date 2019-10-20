@@ -6,13 +6,16 @@ import {
   useMemo,
 } from 'react';
 import { jsx, css } from '@emotion/core';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   LineChart, Line,
 } from 'recharts';
 import StockStrategyHeader from './StockStrategyHeader';
 import {
-  incomeStatements, balanceSheets, cashFlows, dividends
-} from '../../Mocks/Queries/stocks';
+  incomeStatements, balanceSheets, cashFlows, dividends,
+} from '../../Constant/stockTable';
+import * as StockActions from '../../actions/Stocks';
 
 const styles = {
   wrapper: css`
@@ -104,6 +107,8 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-right: solid 2px ${Colors.LAYER_SECOND};
+    border-bottom: solid 2px ${Colors.LAYER_SECOND};
   `,
   word: css`
     font-size: 16px;
@@ -165,7 +170,19 @@ const TABLE_TYPES = {
   DIVIDEND: 'DIVIDEND',
 };
 
-function StockPage() {
+type Props = {
+  fetchStockData: Function,
+  // stockData: Array,
+};
+
+function StockPage({
+  fetchStockData,
+  // stockData,
+}: Props) {
+  // useEffect(() => {
+  //   fetchStockData();
+  // }, [fetchStockData]);
+
   const [table, setTable] = useState('INCOME_STATEMENT');
 
   const infoTable = useMemo(() => {
@@ -418,4 +435,13 @@ function StockPage() {
   );
 }
 
-export default StockPage;
+const reduxHook = connect(
+  state => ({
+    // stockData: state.stockData,
+  }),
+  dispatch => bindActionCreators({
+    ...StockActions,
+  }, dispatch),
+);
+
+export default reduxHook(StockPage);
