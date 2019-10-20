@@ -63,7 +63,7 @@ function MathInput() {
 
   const [firstLoadedOrModuleInited, setFirstLoadedOrModuleInited] = useState(false);
   const [isEditting, setIsEditting] = useState(false);
-  const [caretPositionAfterClickEvent, setCaretPositionAfterClickEvent] = useState(0);
+  const [caretPositionTriggersRender, setCaretPositionTriggersRender] = useState(0);
   const [caretPosition, setCaretPosition] = useState(0);
   const [inputState, setInputState] = useState({
     content: '',
@@ -365,7 +365,9 @@ function MathInput() {
         }, [])
         .sort((cursorA, cursorB) => cursorA.FROM - cursorB.FROM);
 
-      setCaretPositionAfterClickEvent(newCaretPosition);
+      console.log('newCaretPosition', newCaretPosition);
+
+      setCaretPositionTriggersRender(newCaretPosition);
 
       setInputState({
         content: newContent,
@@ -388,10 +390,10 @@ function MathInput() {
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.setSelectionRange(
-        caretPositionAfterClickEvent, caretPositionAfterClickEvent
+        caretPositionTriggersRender, caretPositionTriggersRender
       );
     }
-  }, [caretPositionAfterClickEvent]);
+  }, [caretPositionTriggersRender]);
 
   const onChangeHandler = useCallback(({ target }) => {
     const diff = target.selectionStart - caretPosition;
@@ -486,6 +488,8 @@ function MathInput() {
             },
           ];
         }, []);
+
+        setCaretPositionTriggersRender(chipInfos[removeChipInfoIndex].FROM);
 
         setInputState({
           content: newContent,
