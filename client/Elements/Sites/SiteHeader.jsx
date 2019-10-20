@@ -74,7 +74,7 @@ function SiteHeader() {
         <Switch>
           <Route exact path="/" render={() => null} />
           <Route exact path="/industry" component={HeaderIndustry} />
-          <Route exact paht="/stock" component={HeaderStock} />
+          <Route exact paht="/industry/stock" component={HeaderStock} />
         </Switch>
       </div>
       <div style={styles.searchBar}>

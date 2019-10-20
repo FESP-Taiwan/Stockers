@@ -12,6 +12,7 @@ import StocksInfoPage from './StocksInfo/StocksInfoPage';
 import IndustryPage from './Indusry/IndustryPage';
 import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
 import StockSimulationPage from './StockSimulation/StockSimulationPage';
+import StockPage from './Stock/StockPage';
 
 const styles = {
   wrapper: {
@@ -45,6 +46,7 @@ function MainBoard() {
           <Route exact path="/industry" component={IndustryPage} />
           <Route exact path="/stockSimulation" component={StockSimulationPage} />
           <Route component={StocksInfoPage} />
+          <Route exact path="/industry/stock" component={StockPage} />
           <Route render={() => (<StocksInfoPage />)} />
         </Switch>
       </div>

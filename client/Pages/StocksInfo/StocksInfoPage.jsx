@@ -13,7 +13,7 @@ import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
 import { followingStocks, industryCard } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
-import * as IndustryActions from '../../actions/Industry';
+import * as IndustryCardActions from '../../actions/IndustryCard';
 
 const styles = {
   wrapper: css`
@@ -64,18 +64,20 @@ const styles = {
 
 type Props = {
   fetchIndustryCardData: Function,
-  industryCardData: Array,
+  // industryCardData: Array,
 };
 
 function StockersInfoPage({
   fetchIndustryCardData,
-  industryCardData,
+  // industryCardData,
 }: Props) {
-  useEffect(() => {
-    fetchIndustryCardData();
-  }, [fetchIndustryCardData]);
+  // useEffect(() => {
+  //   fetchIndustryCardData();
+  // }, [fetchIndustryCardData]);
 
-  console.log('industryCardData', industryCardData);
+  // console.log('industryCardData', industryCardData);
+
+  console.log(fetchIndustryCardData);
 
   return (
     <div css={styles.wrapper}>
@@ -117,10 +119,10 @@ function StockersInfoPage({
 
 const reduxHook = connect(
   state => ({
-    industryCardData: state.industryCardData,
+    // industryCardData: state.industryCardData,
   }),
   dispatch => bindActionCreators({
-    ...IndustryActions,
+    ...IndustryCardActions,
   }, dispatch),
 );
 

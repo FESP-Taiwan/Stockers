@@ -1,10 +1,10 @@
 // @flow
 
 import {
-  FETCH_INDUSTRY_DATA,
-} from '../actions/Industry';
+  FETCH_INDUSTRY_CARD_DATA,
+} from '../actions/IndustryCard';
 
-// type FetchIndustryDataAction = {
+// type FetchIndustryCardDataAction = {
 //   type: string,
 //   data: Array<{
 //     id: number,
@@ -18,7 +18,7 @@ import {
 // }
 //
 // type IndustryActions = (
-//   FetchIndustryDataAction
+//   FetchIndustryCardDataAction
 // );
 
 type State = {
@@ -26,13 +26,13 @@ type State = {
 }
 
 export default (state: State = {
-  IndustryData: [],
+  IndustryCardData: [],
 }, action: any) => {
   switch (action.type) {
-    case FETCH_INDUSTRY_DATA:
+    case FETCH_INDUSTRY_CARD_DATA:
       return {
         ...state,
-        industryData: action.data,
+        industryCardData: action.data,
       };
 
     default:

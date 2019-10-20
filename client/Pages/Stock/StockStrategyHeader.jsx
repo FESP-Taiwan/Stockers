@@ -3,9 +3,9 @@
 
 import { jsx, css } from '@emotion/core';
 import { reduxForm } from 'redux-form';
-import { FORM_STRATEGY_HEADER } from '../Constant/form';
-import ModuleBtn from '../Elements/InvestStrategy/ModuleBtn';
-import edditIcon from '../static/images/icon-edit.png';
+import { FORM_STRATEGY_HEADER } from '../../Constant/form';
+import ModuleBtn from '../../Elements/InvestStrategy/ModuleBtn';
+import edditIcon from '../../static/images/icon-edit.png';
 
 const styles = {
   wrapper: {
@@ -85,7 +85,7 @@ const mockModules = [{
   name: 'B',
 }];
 
-function TestPage() {
+function StockStrategyHeader() {
   return (
     <div css={styles.wrapper}>
       <button
@@ -111,4 +111,4 @@ const reduxHook = reduxForm({
   form: FORM_STRATEGY_HEADER,
 });
 
-export default reduxHook(TestPage);
+export default reduxHook(StockStrategyHeader);
