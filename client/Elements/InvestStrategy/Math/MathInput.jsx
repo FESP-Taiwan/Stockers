@@ -70,7 +70,7 @@ function MathInput() {
     chipInfos: [],
   });
 
-  console.log('inputState--->', inputState);
+  console.log('caretPositionTriggersRender', caretPositionTriggersRender);
 
   const addSpanToTags = useCallback((tags, subContent, from) => {
     Array.from(Array(subContent.length)).forEach((n, index) => {
@@ -148,37 +148,33 @@ function MathInput() {
 
     if (!isEditting || !current) return () => {};
 
-    console.log('effect triggered');
-
     function onSelectionChangeHandler() {
       const {
         selectionStart,
         selectionEnd,
       } = current;
 
-      console.log('function triggered');
-
+      // block multiple event triggered
       if (MathInput.SelectionRange) {
         const {
           from: prevSelectionStart,
           to: prevSelectionEnd,
         } = MathInput.SelectionRange;
 
-        if (selectionStart === prevSelectionStart && selectionEnd === prevSelectionEnd) {
-          console.log('correct');
+        MathInput.SelectionRange = {
+          from: selectionStart,
+          to: selectionEnd,
+        };
 
+        if (selectionStart === prevSelectionStart && selectionEnd === prevSelectionEnd) {
           return;
         }
       }
-
-      console.log('selection change handler triggered');
 
       // clear class
       if (!MathInput.shouldTriggerSelectionChangeHandler) {
         MathInput.shouldTriggerSelectionChangeHandler = true;
       } else {
-        console.log('clear class TRIGGERED');
-
         const wrapper = current.parentNode;
 
         const blockButtonList = wrapper.querySelectorAll('.math-module-block-button');
@@ -385,6 +381,8 @@ function MathInput() {
 
       setCaretPositionTriggersRender(newCaretPosition);
 
+      MathInput.shouldTriggerSelectionChangeHandler = false;
+
       setInputState({
         content: newContent,
         chipInfos: newChipInfos,
@@ -408,8 +406,6 @@ function MathInput() {
       inputRef.current.setSelectionRange(
         caretPositionTriggersRender, caretPositionTriggersRender
       );
-
-      MathInput.shouldTriggerSelectionChangeHandler = false;
     }
   }, [caretPositionTriggersRender]);
 
@@ -439,6 +435,11 @@ function MathInput() {
         },
       ];
     }, []);
+
+    MathInput.SelectionRange = {
+      from: target.selectionStart,
+      to: target.selectionEnd,
+    };
 
     setInputState({
       content: target.value,
