@@ -4,10 +4,12 @@
 import {
   useState,
   useMemo,
+  useEffect,
 } from 'react';
 import { jsx, css } from '@emotion/core';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import type { ContextRouter } from 'react-router';
 import {
   LineChart, Line,
 } from 'recharts';
@@ -171,17 +173,38 @@ const TABLE_TYPES = {
 };
 
 type Props = {
-  fetchStockData: Function,
-  // stockData: Array,
-};
+  storeStockData: Function,
+} & ContextRouter;
 
 function StockPage({
-  fetchStockData,
-  // stockData,
+  storeStockData,
+  match: {
+    params: {
+      stockId,
+    },
+  },
 }: Props) {
-  // useEffect(() => {
-  //   fetchStockData();
-  // }, [fetchStockData]);
+  useEffect(() => {
+    let isCurrentApiFetch = true;
+
+    async function fetchStockData() {
+      const resData = await fetch(`${API_HOST}/stocker/individualStock/${stockId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => res.json());
+
+      console.log(resData);
+    }
+
+    fetchStockData();
+    // storeStockData(stockId);
+
+    return () => {
+      isCurrentApiFetch = false;
+    };
+  }, [storeStockData, stockId]);
 
   const [table, setTable] = useState('INCOME_STATEMENT');
 
@@ -189,7 +212,6 @@ function StockPage({
     switch (table) {
       case 'INCOME_STATEMENT':
         return (
-          // 21x4
           <div css={styles.tableWrapper}>
             <div css={styles.blockWrapper}>
               <div css={styles.block}>
@@ -437,7 +459,6 @@ function StockPage({
 
 const reduxHook = connect(
   state => ({
-    // stockData: state.stockData,
   }),
   dispatch => bindActionCreators({
     ...StockActions,

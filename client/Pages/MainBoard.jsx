@@ -43,7 +43,7 @@ function MainBoard() {
         <Switch>
           <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
           <Route exact path="/industry" component={IndustryPage} />
-          <Route exact path="/industry/stock" component={StockPage} />
+          <Route exact path="/industry/stocks/:stockId" component={StockPage} />
           <Route render={() => (<StocksInfoPage />)} />
         </Switch>
       </div>

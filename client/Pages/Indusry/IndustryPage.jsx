@@ -267,7 +267,7 @@ function IndustryPage({
               <div css={styles.subBtnWrapper}>
                 {s.companies.map(company => (
                   <Link
-                    to="/industry/stock"
+                    to="/industry/stocks/2330"
                     key={company.id}
                     css={styles.subBtn}>
                     <span css={styles.subBtnTitle}>
