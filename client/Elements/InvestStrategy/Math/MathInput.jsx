@@ -70,7 +70,7 @@ function MathInput() {
     chipInfos: [],
   });
 
-  console.log('caretPositionTriggersRender', caretPositionTriggersRender);
+  console.log('inputState', inputState);
 
   const addSpanToTags = useCallback((tags, subContent, from) => {
     Array.from(Array(subContent.length)).forEach((n, index) => {
