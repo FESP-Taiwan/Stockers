@@ -1,0 +1,155 @@
+// @flow
+
+export const incomeStatements = [{
+  id: 1,
+  name: '營業成本',
+}, {
+  id: 2,
+  name: '毛利',
+}, {
+  id: 3,
+  name: '銷售費用',
+}, {
+  id: 4,
+  name: '管理費用',
+}, {
+  id: 5,
+  name: '研發費用',
+}, {
+  id: 6,
+  name: '營業外收益',
+}, {
+  id: 7,
+  name: '稅前淨利',
+}, {
+  id: 8,
+  name: '歸屬於母公司淨利',
+}, {
+  id: 9,
+  name: '每股盈餘',
+}, {
+  id: 10,
+  name: '營業活動',
+}, {
+  id: 11,
+  name: '投資活動',
+}, {
+  id: 12,
+  name: '自由現金流',
+}, {
+  id: 13,
+  name: '經營績效',
+}, {
+  id: 14,
+  name: '股東權益報酬率',
+}, {
+  id: 15,
+  name: '毛利率',
+}, {
+  id: 16,
+  name: '營業利益率',
+}, {
+  id: 17,
+  name: '淨利率',
+}, {
+  id: 18,
+  name: '股息',
+}, {
+  id: 19,
+  name: '現金股利',
+}, {
+  id: 20,
+  name: '股票股利',
+}, {
+  id: 21,
+  name: '股利合計',
+}];
+
+export const balanceSheets = [{
+  id: 1,
+  name: '現金及約當現金',
+}, {
+  id: 2,
+  name: '短期投資',
+}, {
+  id: 3,
+  name: '應收帳款',
+}, {
+  id: 4,
+  name: '存貨',
+}, {
+  id: 5,
+  name: '長期資產',
+}, {
+  id: 6,
+  name: '固定資產',
+}, {
+  id: 7,
+  name: '其他資產',
+}, {
+  id: 8,
+  name: '短期借款',
+}, {
+  id: 9,
+  name: '應付帳款',
+}, {
+  id: 10,
+  name: '長期負債',
+}, {
+  id: 11,
+  name: '其他負債',
+}];
+
+export const cashFlows = [{
+  id: 1,
+  name: '平均股本',
+}, {
+  id: 2,
+  name: '營業活動',
+}, {
+  id: 3,
+  name: '投資活動',
+}, {
+  id: 4,
+  name: '融資活動',
+}, {
+  id: 5,
+  name: '其他活動',
+}, {
+  id: 6,
+  name: '淨現金流',
+}, {
+  id: 7,
+  name: '自由現金流',
+}, {
+  id: 8,
+  name: '期初餘額',
+}, {
+  id: 9,
+  name: '期末餘額',
+}];
+
+export const dividends = [{
+  id: 1,
+  name: '董事會日期',
+}, {
+  id: 2,
+  name: '股東會日期',
+}, {
+  id: 3,
+  name: '除息日',
+}, {
+  id: 4,
+  name: '除權日',
+}, {
+  id: 5,
+  name: '現金股利發放日',
+}, {
+  id: 6,
+  name: '現金股利(元/股)',
+}, {
+  id: 7,
+  name: '股票股利(元/股)',
+}];
+
+export default null;

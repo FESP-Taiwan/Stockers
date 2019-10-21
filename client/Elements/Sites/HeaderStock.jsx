@@ -4,6 +4,7 @@
 import { jsx, css } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
+import { SITE_HEADER_INDEX } from '../../Constant/zIndex';
 import arrow from '../../static/images/arrow.png';
 
 const styles = {
@@ -21,6 +22,7 @@ const styles = {
     font-size: 20px;
     font-weight: 800;
     text-decoration: none;
+    z-index: ${SITE_HEADER_INDEX};
   `,
   stock: css`
     display: flex;
@@ -54,14 +56,13 @@ function HeaderIndustry() {
     <div css={styles.wrapper}>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <Link
-        to="industry"
+        to="/industry"
         css={styles.industryName}>
         半導體
       </Link>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <div css={styles.stock}>
         <span
-          to="industry"
           css={styles.stockName}>
           2200
           台積電

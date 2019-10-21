@@ -1,24 +1,29 @@
 // @flow
 
 import {
-  FETCH_INDUSTRY_CARD_DATA,
+  FETCH_INDUSTRY_DATA,
 } from '../actions/Industry';
 
-// type FetchIndustryCardDataAction = {
+// type FetchIndustryDataAction = {
 //   type: string,
 //   data: Array<{
 //     id: number,
-//     name: string,
-//     chart: Array<{
+//     name: string, // 半導體
+//     subIndustries: Array<{
 //       id: number,
-//       name: string,
-//       percent: number,
+//       type: string, // 上中下游
+//       name: string, // IP/IC設計
+//       companies: Array<{
+//         id: number,
+//         stockNumber: number, // 2401
+//         name: string, // 凌陽
+//       }>,
 //     }>,
 //   }>,
 // }
 //
 // type IndustryActions = (
-//   FetchIndustryCardDataAction
+//   FetchIndustryDataAction
 // );
 
 type State = {
@@ -26,13 +31,13 @@ type State = {
 }
 
 export default (state: State = {
-  IndustryCardData: [],
+  IndustryData: [],
 }, action: any) => {
   switch (action.type) {
-    case FETCH_INDUSTRY_CARD_DATA:
+    case FETCH_INDUSTRY_DATA:
       return {
         ...state,
-        industryCardData: action.data,
+        industryData: action.data,
       };
 
     default:
