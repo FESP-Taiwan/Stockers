@@ -1,9 +1,10 @@
 // @flow
 
-export const FETCH_STOCK_DATA = 'STOCK/FETCH_STOCK_DATA';
+export const STORE_STOCK_DATA = 'STOCK/STORE_STOCK_DATA';
 
-export function storeStockData(stockId) {
+export function storeStockData(stockData) {
   return {
-
+    type: STORE_STOCK_DATA,
+    stockData,
   };
 }

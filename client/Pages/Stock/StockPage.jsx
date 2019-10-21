@@ -18,6 +18,7 @@ import {
   incomeStatements, balanceSheets, cashFlows, dividends,
 } from '../../Constant/stockTable';
 import * as StockActions from '../../actions/Stocks';
+import prettifyStockData from '../../helper/stocks';
 
 const styles = {
   wrapper: css`
@@ -185,7 +186,7 @@ function StockPage({
   },
 }: Props) {
   useEffect(() => {
-    let isCurrentApiFetch = true;
+    let canceled = false;
 
     async function fetchStockData() {
       const resData = await fetch(`${API_HOST}/stocker/individualStock/${stockId}`, {
@@ -193,16 +194,18 @@ function StockPage({
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(res => res.json());
+      }).then(res => (!canceled ? res.json() : null));
 
       console.log(resData);
+
+      const prettifiedStockData = prettifyStockData(resData);
     }
 
     fetchStockData();
     // storeStockData(stockId);
 
     return () => {
-      isCurrentApiFetch = false;
+      canceled = true;
     };
   }, [storeStockData, stockId]);
 
