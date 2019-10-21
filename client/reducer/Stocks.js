@@ -9,13 +9,13 @@ type State = {
 }
 
 export default (state: State = {
-  StockData: [],
+  stockData: {},
 }, action: any) => {
   switch (action.type) {
     case STORE_STOCK_DATA:
       return {
         ...state,
-        stockData: action.data,
+        stockData: action.stockData,
       };
 
     default:

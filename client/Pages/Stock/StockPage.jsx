@@ -184,7 +184,9 @@ function StockPage({
       stockId,
     },
   },
+  stockData,
 }: Props) {
+  console.log('stockData', stockData);
   useEffect(() => {
     let canceled = false;
 
@@ -199,12 +201,11 @@ function StockPage({
       if (resData) {
         const prettifiedStockData = prettifyStockData(resData);
 
-        console.log('prettifiedStockData', prettifiedStockData);
+        storeStockData(prettifiedStockData);
       }
     }
 
     fetchStockData();
-    // storeStockData(stockId);
 
     return () => {
       canceled = true;
@@ -464,6 +465,7 @@ function StockPage({
 
 const reduxHook = connect(
   state => ({
+    stockData: state.Stocks.stockData,
   }),
   dispatch => bindActionCreators({
     ...StockActions,
