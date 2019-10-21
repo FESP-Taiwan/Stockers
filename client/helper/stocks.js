@@ -18,29 +18,39 @@ function formatDateValue(value) {
   return moment(formatedDate);
 }
 
-export function prettifyStockData(data) {
-  console.log('data', data);
+function prettifyBalanceSheet(balanceSheetData) {
+  const removeChipNames = ['_id', 'code', 'report_date', 'year', 'season', 'ticker'];
 
-  const balanceSheetChipsSet = data.BalanceSheet.reduce((set, el) => {
+  const balanceSheetChipsSet = balanceSheetData.reduce((set, el) => {
     const chipNames = Object.keys(el);
 
-    chipNames.forEach(chipName => set.add(chipName));
+    chipNames.forEach((chipName) => {
+      if (!~removeChipNames.indexOf(chipName)) {
+        set.add(chipName);
+      }
+    });
 
     return set;
   }, new Set());
 
   const balanceSheetChips = Array.from(balanceSheetChipsSet);
 
-  const balanceSheet = {
+  return {
     name: '資產負債表',
     chipInfos: balanceSheetChips.map(chip => ({
       chipName: chip,
-      chipData: data.BalanceSheet.map(info => ({
+      chipData: balanceSheetData.map(info => ({
         date: formatDateValue(info.report_date),
         value: info[chip],
       })),
     })),
   };
+}
+
+export function prettifyStockData(data) {
+  console.log('data', data);
+
+  const balanceSheet = prettifyBalanceSheet(data.BalanceSheet);
 
   console.log('balanceSheet', balanceSheet);
 
