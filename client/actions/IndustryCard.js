@@ -12,7 +12,7 @@ export function fetchIndustryCardData() {
       ],
       auth: false,
       method: 'GET',
-      entrypoint: '/stocker/mainpage_1',
+      entrypoint: '/stocker/industryStickers',
     },
   };
 }
