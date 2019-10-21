@@ -2,59 +2,100 @@
 
 import moment from 'moment';
 
-function formatDateValue(value) {
-  const formatChars = ['年', '月', '日'];
+const SHEET_TYPES = {
+  BALANCE_SHEET: '資產負債表',
+  CASH_FLOW: '現金流量表',
+  COMPREHENSIVE_INCOME: '綜合損益表',
+  DIVIDEND: '配股配息與除權息',
+};
 
-  const charsPostitions = formatChars.map(char => value.indexOf(char));
+const dividendDataTypes = [{
+  id: 'cash_dividend',
+  name: '現金股利',
+}, {
+  id: 'ex_dividend_date',
+  name: '除息日',
+}, {
+  id: 'ex_right_date',
+  name: '除權日',
+}, {
+  id: 'pay_year',
+  name: '支付年',
+}, {
+  id: 'price_before_dividend',
+  name: '除權息前之股價',
+}, {
+  id: 'stock_dividend',
+  name: '股票股利',
+}];
 
-  const formatedDate = charsPostitions.reduce((formatingValue, pos) => {
-    if (!formatingValue.substring(pos + 1)) {
-      return `${formatingValue.substring(0, pos)}`;
-    }
+function prettifySheetData(sheetData, typeName) {
+  const removeChipNames = ['_id', 'code', 'report_date', 'year', 'season', 'ticker', 'belongs_year'];
 
-    return `${formatingValue.substring(0, pos)}-${formatingValue.substring(pos + 1)}`;
-  }, value);
-
-  return moment(formatedDate);
-}
-
-function prettifyBalanceSheet(balanceSheetData) {
-  const removeChipNames = ['_id', 'code', 'report_date', 'year', 'season', 'ticker'];
-
-  const balanceSheetChipsSet = balanceSheetData.reduce((set, el) => {
+  const sheetChipsSet = sheetData.reduce((set, el) => {
     const chipNames = Object.keys(el);
 
     chipNames.forEach((chipName) => {
       if (!~removeChipNames.indexOf(chipName)) {
-        set.add(chipName);
+        if (typeName === SHEET_TYPES.DIVIDEND) {
+          set.add(dividendDataTypes.find(type => type.id === chipName).name);
+        } else {
+          set.add(chipName);
+        }
       }
     });
 
     return set;
   }, new Set());
 
-  const balanceSheetChips = Array.from(balanceSheetChipsSet);
+  const sheetChips = Array.from(sheetChipsSet);
+
+  if (typeName === SHEET_TYPES.DIVIDEND) {
+    return {
+      name: typeName,
+      isProgression: false,
+      chipInfos: sheetChips.map(chip => ({
+        chipName: chip,
+        chipData: sheetData.map(info => ({
+          date: moment(info.belongs_year).format('YYYY'),
+          value: info[dividendDataTypes.find(type => type.name === chip).id],
+        })).sort((cursorA, cursorB) => moment(cursorB.date).format('x') - moment(cursorA.date).format('x')),
+      })),
+    };
+  }
 
   return {
-    name: '資產負債表',
-    chipInfos: balanceSheetChips.map(chip => ({
+    name: typeName,
+    isProgression: !(typeName === SHEET_TYPES.BALANCE_SHEET),
+    chipInfos: sheetChips.map(chip => ({
       chipName: chip,
-      chipData: balanceSheetData.map(info => ({
-        date: formatDateValue(info.report_date),
+      chipData: sheetData.map(info => ({
+        date: moment(`${info.year}-${info.season * 3}`).format('YYYY-MM'),
         value: info[chip],
-      })),
+      })).sort((cursorA, cursorB) => moment(cursorB.date).format('x') - moment(cursorA.date).format('x')),
     })),
   };
 }
 
 export function prettifyStockData(data) {
-  console.log('data', data);
+  const balanceSheet = prettifySheetData(data.BalanceSheet, SHEET_TYPES.BALANCE_SHEET);
 
-  const balanceSheet = prettifyBalanceSheet(data.BalanceSheet);
+  const cashFlow = prettifySheetData(data.CashFlow, SHEET_TYPES.CASH_FLOW);
 
-  console.log('balanceSheet', balanceSheet);
+  const comprehensiveIncome = prettifySheetData(
+    data.ComprehensiveIncom, SHEET_TYPES.COMPREHENSIVE_INCOME
+  );
 
-  return data;
+  const dividend = prettifySheetData(data.Dividend, SHEET_TYPES.DIVIDEND);
+
+  return {
+    companyId: data.company_id,
+    companyName: data.company_name,
+    balanceSheet,
+    cashFlow,
+    comprehensiveIncome,
+    dividend,
+  };
 }
 
 export default prettifyStockData;

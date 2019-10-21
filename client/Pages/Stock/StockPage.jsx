@@ -196,9 +196,11 @@ function StockPage({
         },
       }).then(res => (!canceled ? res.json() : null));
 
-      console.log(resData);
+      if (resData) {
+        const prettifiedStockData = prettifyStockData(resData);
 
-      const prettifiedStockData = prettifyStockData(resData);
+        console.log('prettifiedStockData', prettifiedStockData);
+      }
     }
 
     fetchStockData();
