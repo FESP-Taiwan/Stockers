@@ -2,10 +2,13 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import type { ContextRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
 import ModuleBtn from '../../Elements/InvestStrategy/ModuleBtn';
-import edditIcon from '../../static/images/icon-edit.png';
+import editIcon from '../../static/images/icon-edit.png';
 
 const styles = {
   wrapper: {
@@ -20,7 +23,7 @@ const styles = {
     color: Colors.PRIMARY,
     fontSize: 19,
   },
-  edditModules: {
+  editModules: {
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
@@ -85,7 +88,13 @@ const mockModules = [{
   name: 'B',
 }];
 
-function StockStrategyHeader() {
+function StockStrategyHeader({
+  match: {
+    params: {
+      stockId,
+    },
+  },
+}: ContextRouter) {
   return (
     <div css={styles.wrapper}>
       <button
@@ -96,13 +105,12 @@ function StockStrategyHeader() {
       </button>
       {mockModules.map(module => (<ModuleBtn key={module.id} module={module} />))}
       <span css={styles.line} />
-      <button
-        onClick={() => console.log('add modules')}
-        type="button"
-        css={styles.edditModules}>
-        <img src={edditIcon} css={styles.icon} alt="eddit" />
+      <Link
+        to={`/industry/stocks/${stockId}/modules`}
+        css={styles.editModules}>
+        <img src={editIcon} css={styles.icon} alt="eddit" />
         <span>編輯計算模型</span>
-      </button>
+      </Link>
     </div>
   );
 }
@@ -111,4 +119,4 @@ const reduxHook = reduxForm({
   form: FORM_STRATEGY_HEADER,
 });
 
-export default reduxHook(StockStrategyHeader);
+export default withRouter(reduxHook(StockStrategyHeader));
