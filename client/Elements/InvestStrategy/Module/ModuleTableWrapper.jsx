@@ -45,10 +45,6 @@ function ModuleTableWrapper({
           }).slice(0, 10)
           : chipDataBeforeProgressionDetermine.slice(0, 10));
 
-        console.log('newChipData', newChipData);
-
-        console.log('chipDataBeforeProgressionDetermine', chipDataBeforeProgressionDetermine);
-
         return {
           id: data.id,
           name: data.headerName,
