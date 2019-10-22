@@ -86,6 +86,9 @@ const styles = {
       background-color: ${Colors.LAYER_FOURTH};
     }
   `,
+  redTxt: {
+    color: Colors.ERROR,
+  },
 };
 
 type Props = {
@@ -254,6 +257,11 @@ function ModuleGridUnit({
     }
   }, [setHeaderUpdateBlockOpen]);
 
+  const headerBtnStyles = useMemo(() => ({
+    ...styles.headerBtn,
+    ...(!label ? styles.redTxt : {}),
+  }), [label]);
+
   if (rowId === 'header') {
     return (
       <div
@@ -295,11 +303,11 @@ function ModuleGridUnit({
       <button
         ref={moduleGridUnit}
         className="module-grid-unit"
-        css={styles.headerBtn}
+        css={headerBtnStyles}
         onClick={onClick}
         // disabled={isMathModuleEditting}
         type="button">
-        {label}
+        {label || '資料從缺'}
       </button>
       {mathEmitHandlerBlock}
     </div>
