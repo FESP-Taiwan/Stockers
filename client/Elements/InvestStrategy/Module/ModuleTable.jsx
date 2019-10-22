@@ -44,6 +44,8 @@ function ModuleTable() {
   const [isHeaderUpdateBlockOpen, setHeaderUpdateBlockOpen] = useState(false);
   const moduleData = useContext(ModuleDataContext);
 
+  console.log('moduleData', moduleData);
+
   const moduleMainBlock = useMemo(() => {
     if (!moduleData) return null;
 
