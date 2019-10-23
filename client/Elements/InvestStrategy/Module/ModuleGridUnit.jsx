@@ -108,6 +108,7 @@ function ModuleGridUnit({
   timeStamp,
   setHeaderUpdateBlockOpen,
 }: Props) {
+  console.log('timeStamp', timeStamp);
   const moduleGridUnit = useRef();
   const mathEmitHandler = useRef();
 
@@ -140,9 +141,9 @@ function ModuleGridUnit({
           </button>
           <button
             css={styles.mathEditBtn}
-            onClick={() => onClick(MATH_META_TYPES.NUMEROUS)}
+            onClick={() => onClick(MATH_META_TYPES.LARGE)}
             type="button">
-            取眾數
+            最大值
           </button>
         </div>
       );

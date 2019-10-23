@@ -49,7 +49,7 @@ function ModuleTableColumnBoard({
 
     return (
       <>
-        {sortedData.map(({ value, id: elemId, timeStamp }, id) => (
+        {sortedData.map(({ value, id: elemId, date: timeStamp }, id) => (
           <ModuleGridUnit
             key={elemId}
             rowId={id}
