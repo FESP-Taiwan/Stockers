@@ -6,14 +6,14 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import {
-  reduxForm,
-  Field,
-} from 'redux-form';
-import TextArea from '../../Form/TextArea';
 import Editor from '../ArtiboxEditor/Editor';
-import { investStrategySharedEmitter, CLICK_EVENT } from '../../Constant/investStrategy';
-import { FORM_STRATEGY_COMMENT } from '../../Constant/form';
+import {
+  investStrategySharedEmitter,
+  CLICK_EVENT,
+  START_EDITTING,
+  END_EDITTING,
+  INIT_MODULE,
+} from '../../Constant/investStrategy';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
 
 const styles = {
@@ -60,18 +60,41 @@ const styles = {
 
 function CommentBlock() {
   const [isFormOpened, setFormOpened] = useState(false);
+  const [isMathModuleEditting, setMathModuleEditting] = useState(false);
 
-  // useEffect(() => {
-  //   const clickHandler = () => {
-  //     setFormOpened(true);
-  //   };
-  //
-  //   investStrategySharedEmitter.on(CLICK_EVENT, clickHandler);
-  // 
-  //   return () => {
-  //     investStrategySharedEmitter.removeListener(CLICK_EVENT, clickHandler);
-  //   };
-  // }, []);
+  useEffect(() => {
+    function mathStartEditHandler() {
+      setMathModuleEditting(true);
+    }
+
+    function mathEndEditHandler() {
+      setMathModuleEditting(false);
+    }
+
+    investStrategySharedEmitter.on(START_EDITTING, mathStartEditHandler);
+    investStrategySharedEmitter.on(END_EDITTING, mathEndEditHandler);
+    investStrategySharedEmitter.on(INIT_MODULE, mathEndEditHandler);
+
+    return () => {
+      investStrategySharedEmitter.removeListener(START_EDITTING, mathStartEditHandler);
+      investStrategySharedEmitter.removeListener(END_EDITTING, mathEndEditHandler);
+      investStrategySharedEmitter.removeListener(INIT_MODULE, mathEndEditHandler);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isMathModuleEditting) return () => {};
+
+    function clickHandler() {
+      setFormOpened(true);
+    }
+
+    investStrategySharedEmitter.on(CLICK_EVENT, clickHandler);
+
+    return () => {
+      investStrategySharedEmitter.removeListener(CLICK_EVENT, clickHandler);
+    };
+  }, [isMathModuleEditting]);
 
   const onClick = useCallback(() => {
     setFormOpened(!isFormOpened);
@@ -97,8 +120,4 @@ function CommentBlock() {
   );
 }
 
-const formHook = reduxForm({
-  form: FORM_STRATEGY_COMMENT,
-});
-
-export default formHook(CommentBlock);
+export default CommentBlock;
