@@ -2,20 +2,44 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/core';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip
+} from 'recharts';
+
+const data = [
+  {
+    name: 'Page A', share: 400,
+  },
+  {
+    name: 'Page B', share: 200,
+  },
+  {
+    name: 'Page C', share: 1000,
+  },
+  {
+    name: 'Page A', share: 400,
+  },
+  {
+    name: 'Page B', share: 800,
+  },
+];
 
 const styles = {
   wrapper: {
-    backgroundColor: Colors.LAYER_FIRST,
     width: '100%',
-    height: 600,
-    borderRadius: 20,
   },
 };
 
 function StockSimulationCahrt() {
   return (
     <div css={styles.wrapper}>
-      (⁎⁍̴̛ᴗ⁍̴̛⁎)
+      <LineChart width={800} height={180} data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <XAxis dataKey="name" />
+        <YAxis dataKey="share" />
+        <Line type="monotone" dataKey="share" stroke="#8884d8" />
+      </LineChart>
     </div>
   );
 }
