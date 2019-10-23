@@ -88,16 +88,6 @@ function TypeSelectorMenu({
         type="button">
         <Icons.LINE />
       </button>
-      <button
-        style={{
-          ...styles.btn,
-          ...(curFocusType === BLOCK_TYPES.QUOTE ? styles.btnFocused : {}),
-        }}
-        onClick={() => onClick(BLOCK_TYPES.QUOTE)}
-        className="Artibox-type-selector-btn"
-        type="button">
-        <Icons.QUOTE />
-      </button>
     </div>
   );
 }

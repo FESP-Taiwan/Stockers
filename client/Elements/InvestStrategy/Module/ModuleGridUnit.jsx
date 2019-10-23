@@ -114,15 +114,23 @@ function ModuleGridUnit({
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
 
   const onClick = useCallback((type: null) => {
-    investStrategySharedEmitter.emit(CLICK_EVENT, {
-      rowId,
-      columnId,
-      type,
-      date: (type === MATH_META_TYPES.DATE ? timeStamp : null),
-      name: (headerName || label),
-      value: (type === MATH_META_TYPES.DATE || type === MATH_META_TYPES.GRID) ? label : null,
-    });
-  }, [rowId, columnId, headerName, label, timeStamp]);
+    if (!isMathModuleEditting) {
+      investStrategySharedEmitter.emit(CLICK_EVENT, {
+        rowId,
+        columnId,
+        name: (headerName || label),
+      });
+    } else if (type) {
+      investStrategySharedEmitter.emit(CLICK_EVENT, {
+        rowId,
+        columnId,
+        type,
+        date: (type === MATH_META_TYPES.DATE ? timeStamp : null),
+        name: (headerName || label),
+        value: (type === MATH_META_TYPES.DATE || type === MATH_META_TYPES.GRID) ? label : null,
+      });
+    }
+  }, [rowId, columnId, headerName, label, timeStamp, isMathModuleEditting]);
 
   const mathEmitHandlerBlock = useMemo(() => {
     if (!isMathModuleEditting) return null;
@@ -273,7 +281,7 @@ function ModuleGridUnit({
           ref={moduleGridUnit}
           className="module-grid-unit"
           style={styles.headerBtn}
-          onClick={onClick}
+          onClick={() => onClick()}
           type="button">
           {label}
         </button>
@@ -305,8 +313,7 @@ function ModuleGridUnit({
         ref={moduleGridUnit}
         className="module-grid-unit"
         css={headerBtnStyles}
-        onClick={onClick}
-        // disabled={isMathModuleEditting}
+        onClick={() => onClick()}
         type="button">
         {label || '資料從缺'}
       </button>

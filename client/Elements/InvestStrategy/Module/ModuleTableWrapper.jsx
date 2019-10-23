@@ -48,6 +48,7 @@ function ModuleTableWrapper({
         return {
           id: data.id,
           name: data.headerName,
+          parentName: data.parentName,
           isProgression: dataBelongSheetInfo.isProgression,
           chipData: newChipData,
         };
