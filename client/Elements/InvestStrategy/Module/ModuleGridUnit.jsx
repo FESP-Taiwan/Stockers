@@ -108,7 +108,6 @@ function ModuleGridUnit({
   timeStamp,
   setHeaderUpdateBlockOpen,
 }: Props) {
-  console.log('timeStamp', timeStamp);
   const moduleGridUnit = useRef();
   const mathEmitHandler = useRef();
 
@@ -121,6 +120,7 @@ function ModuleGridUnit({
       type,
       date: (type === MATH_META_TYPES.DATE ? timeStamp : null),
       name: (headerName || label),
+      value: (type === MATH_META_TYPES.DATE || type === MATH_META_TYPES.GRID) ? label : null,
     });
   }, [rowId, columnId, headerName, label, timeStamp]);
 

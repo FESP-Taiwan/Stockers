@@ -12,6 +12,7 @@ import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
 
 const styles = {
   wrapper: {
+    width: '100%',
     padding: 16,
     backgroundColor: Colors.LAYER_FIRST,
     display: 'flex',
@@ -27,6 +28,8 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    backgroundColor: Colors.LAYER_FOURTH,
+    borderRadius: 16,
   },
   addBtn: {
     flexBasis: 140,
@@ -44,8 +47,7 @@ const styles = {
   dateBlockHeader: {
     height: 100,
     margin: '0 0 10px 0',
-    backgroundColor: Colors.PRIMARY,
-    borderRadius: 4,
+    borderRadius: 16,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
