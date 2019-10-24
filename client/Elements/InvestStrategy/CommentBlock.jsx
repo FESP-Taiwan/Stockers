@@ -13,6 +13,7 @@ import {
   START_EDITTING,
   END_EDITTING,
   INIT_MODULE,
+  EDITTER_GET_GRID,
 } from '../../Constant/investStrategy';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
 
@@ -85,8 +86,11 @@ function CommentBlock() {
   useEffect(() => {
     if (isMathModuleEditting) return () => {};
 
-    function clickHandler() {
+    function clickHandler(gridInfo) {
       setFormOpened(true);
+
+      console.log('gridInfo', gridInfo);
+      investStrategySharedEmitter.emit(EDITTER_GET_GRID, gridInfo);
     }
 
     investStrategySharedEmitter.on(CLICK_EVENT, clickHandler);

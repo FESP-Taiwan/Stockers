@@ -15,6 +15,10 @@ import Actions from '../../Constant/ArtiboxEditor/actions';
 import Text from './Blocks/Text';
 import Line from './Blocks/Line';
 import TypeSelectorMenu from './Elements/TypeSelectorMenu';
+import {
+  investStrategySharedEmitter,
+  EDITTER_GET_GRID,
+} from '../../Constant/investStrategy';
 
 const styles = {
   wrapper: {
@@ -74,6 +78,18 @@ function Editor() {
   console.log(state);
 
   const prevState = usePreviosState(state);
+
+  useEffect(() => {
+    function getGridHandler(gridInfo) {
+      
+    }
+
+    investStrategySharedEmitter.on(EDITTER_GET_GRID, getGridHandler);
+
+    return () => {
+      investStrategySharedEmitter.removeListener(EDITTER_GET_GRID, getGridHandler);
+    };
+  }, []);
 
   useEffect(() => {
     if (!state) return;

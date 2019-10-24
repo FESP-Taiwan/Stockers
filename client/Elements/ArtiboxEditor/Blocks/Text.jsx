@@ -398,7 +398,6 @@ function Text({
         onInput={onInputHandler}
         onFocus={onFocusHandler}
         style={inputStyles}
-        placeholder={placeholder}
         className="Artibox-input"
         ref={textarea} />
       <div
