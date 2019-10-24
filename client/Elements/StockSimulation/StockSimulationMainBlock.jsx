@@ -47,7 +47,7 @@ const styles = {
 function StockSimulationMainBlock() {
   return (
     <div css={styles.wrapper}>
-      <h4>用回歸分析測試績效</h4>
+      <h4>用迴歸分析測試績效</h4>
       <StockSimulationChart />
       <div css={styles.block}>
         <button
