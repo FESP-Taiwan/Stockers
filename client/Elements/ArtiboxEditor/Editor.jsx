@@ -14,6 +14,7 @@ import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/types';
 import Actions from '../../Constant/ArtiboxEditor/actions';
 import Text from './Blocks/Text';
 import Line from './Blocks/Line';
+import Grid from './Blocks/Grid';
 import TypeSelectorMenu from './Elements/TypeSelectorMenu';
 import {
   investStrategySharedEmitter,
@@ -81,7 +82,7 @@ function Editor() {
 
   useEffect(() => {
     function getGridHandler(gridInfo) {
-      
+
     }
 
     investStrategySharedEmitter.on(EDITTER_GET_GRID, getGridHandler);
@@ -149,7 +150,6 @@ function Editor() {
                     type={block.type}
                     key={block.id} />
                 );
-              case BLOCK_TYPES.QUOTE:
               case BLOCK_TYPES.TITLE:
               case BLOCK_TYPES.SUBTITLE:
               case BLOCK_TYPES.TEXT:
@@ -165,6 +165,11 @@ function Editor() {
                       type={block.type}
                       content={block.content} />
                   </div>
+                );
+
+              case BLOCK_TYPES.GRID:
+                return (
+                  <Grid />
                 );
 
               default:
