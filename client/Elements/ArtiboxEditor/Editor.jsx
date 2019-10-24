@@ -169,7 +169,11 @@ function Editor() {
 
               case BLOCK_TYPES.GRID:
                 return (
-                  <Grid />
+                  <Grid
+                    id={block.id}
+                    focus={block.focus}
+                    type={block.type}
+                    meta={block.meta} />
                 );
 
               default:

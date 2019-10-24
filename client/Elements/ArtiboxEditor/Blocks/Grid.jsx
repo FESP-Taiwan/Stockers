@@ -1,16 +1,44 @@
 // @flow
 
-import React from 'react';
+import React, {
+  useMemo,
+} from 'react';
 
 const styles = {
   wrapper: {
-
-  }
+    width: '100%',
+    borderLeft: '2px solid transparent',
+    padding: '0 12px',
+    height: 30,
+  },
+  focusWrapper: {
+    width: '100%',
+    borderLeft: `2px solid ${Colors.PRIMARY}`,
+    padding: '0 12px',
+    height: 30,
+  },
 };
 
-function Grid() {
+type Props = {
+  type: symbol,
+  focus: boolean,
+  meta: Object,
+  id: string,
+}
+
+function Grid({
+  type,
+  content,
+  focus,
+  meta,
+  id,
+}: Props) {
+  const wrapperStyles = useMemo(() => ({
+    ...(focus ? styles.focusWrapper : styles.wrapper),
+  }), [focus]);
+
   return (
-    <div style={styles.wrapper}>
+    <div style={wrapperStyles}>
 
     </div>
   );
