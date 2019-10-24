@@ -5,6 +5,7 @@ export const BLOCK_TYPES = {
   TITLE: Symbol('Artibox/Block/TITLE'),
   SUBTITLE: Symbol('Artibox/Block/SUBTITLE'),
   TEXT: Symbol('Artibox/Block/TEXT'),
+  GRID: Symbol('Artibox/Block/GRID'),
   HIGHLIGHT_AREA: Symbol('Artibox/Block/HIGHLIGHT_AREA'),
 };
 

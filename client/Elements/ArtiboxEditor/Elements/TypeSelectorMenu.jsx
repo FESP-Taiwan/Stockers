@@ -26,6 +26,9 @@ const styles = {
     width: 30,
     margin: '0 9px',
     borderRadius: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   btnFocused: {
     backgroundColor: Colors.PRIMARY,
@@ -87,6 +90,16 @@ function TypeSelectorMenu({
         className="Artibox-type-selector-btn"
         type="button">
         <Icons.LINE />
+      </button>
+      <button
+        style={{
+          ...styles.btn,
+          ...(curFocusType === BLOCK_TYPES.GRID ? styles.btnFocused : {}),
+        }}
+        onClick={() => onClick(BLOCK_TYPES.GRID)}
+        className="Artibox-type-selector-btn"
+        type="button">
+        <Icons.GRID />
       </button>
     </div>
   );
