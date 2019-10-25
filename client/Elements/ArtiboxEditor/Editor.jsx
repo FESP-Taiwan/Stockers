@@ -82,7 +82,20 @@ function Editor() {
 
   useEffect(() => {
     function getGridHandler(gridInfo) {
+      const { blocks } = state;
 
+      if (blocks) {
+        const focusBlock = blocks.find(block => block.focus);
+
+        if (focusBlock && focusBlock.type === BLOCK_TYPES.GRID) {
+
+        } else {
+          dispatch({
+            type: Actions.NEW_GRID,
+            gridInfo,
+          });
+        }
+      }
     }
 
     investStrategySharedEmitter.on(EDITTER_GET_GRID, getGridHandler);
@@ -90,7 +103,7 @@ function Editor() {
     return () => {
       investStrategySharedEmitter.removeListener(EDITTER_GET_GRID, getGridHandler);
     };
-  }, []);
+  }, [dispatch, state]);
 
   useEffect(() => {
     if (!state) return;
@@ -193,7 +206,9 @@ function Editor() {
               const lastBlock = (blocks.length && blocks[blocks.length - 1]);
 
               if (!lastBlock || (lastBlock
-                && (lastBlock.type === BLOCK_TYPES.LINE ? true : !!lastBlock.content))
+                && ((
+                  lastBlock.type === BLOCK_TYPES.LINE || lastBlock.type === BLOCK_TYPES.GRID
+                ) ? true : !!lastBlock.content))
               ) {
                 dispatch({
                   type: Actions.NEW_LINE,

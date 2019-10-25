@@ -15,16 +15,25 @@ const styles = {
     borderLeft: '2px solid transparent',
     padding: '0 12px',
     height: 30,
+    position: 'relative',
+    outline: 'none',
   },
-  buttonsWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
+  invisibleTxtButton: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    left: 0,
+    top: 0,
+    fontSize: 0,
+    padding: 0,
   },
   focusWrapper: {
     width: '100%',
     borderLeft: `2px solid ${Colors.PRIMARY}`,
     padding: '0 12px',
     height: 30,
+    position: 'relative',
+    outline: 'none',
   },
 };
 
@@ -89,12 +98,15 @@ function Grid({
   }), [focus]);
 
   return (
-    <button
-      onFocus={onFocusHandler}
-      style={wrapperStyles}
-      type="button">
+    <div style={wrapperStyles}>
       {gridButtons}
-    </button>
+      <button
+        style={styles.invisibleTxtButton}
+        onClick={onFocusHandler}
+        type="button">
+        focusHandler
+      </button>
+    </div>
   );
 }
 

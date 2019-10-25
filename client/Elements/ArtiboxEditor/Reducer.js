@@ -65,6 +65,31 @@ export default function reducer(state, action) {
       };
     }
 
+    case Actions.NEW_GRID: {
+      return {
+        ...state,
+        blocks: [
+          ...state.blocks.map(block => (block.focus ? {
+            ...block,
+            focus: false,
+          } : block)),
+          {
+            id: uuid(),
+            type: BLOCK_TYPES.GRID,
+            content: '',
+            meta: {
+              GRIDS: [{
+                rowId: action.gridInfo.rowId,
+                columnId: action.gridInfo.columnId,
+                name: action.gridInfo.name,
+              }],
+            },
+            focus: true,
+          },
+        ],
+      };
+    }
+
     case Actions.UPDATE_META_AND_CONTENT: {
       const updateIndex = state.blocks.findIndex(block => block.id === action.id);
 
@@ -158,6 +183,7 @@ export default function reducer(state, action) {
 
       return state;
     }
+
     default:
       return state;
   }
