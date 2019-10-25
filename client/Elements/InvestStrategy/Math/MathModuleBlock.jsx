@@ -30,7 +30,7 @@ const styles = {
   header: {
     fontSize: 14,
     color: Colors.PRIMARY,
-    margin: '0 40px 0 0',
+    margin: '0 22px 0 0',
     flexShrink: 0,
     position: 'relative',
   },
@@ -68,7 +68,7 @@ const styles = {
     backgroundColor: Colors.LAYER_THIRD,
     position: 'absolute',
     right: 14,
-    bottom: -18,
+    bottom: 2,
     borderRadius: 50,
     fontWeight: 500,
   },
@@ -180,7 +180,7 @@ function MathModuleBlock() {
   return (
     <div style={styles.wrapper}>
       <h2 style={styles.header}>
-        數學模型：
+        數學模型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：
         <button
           style={hintModalBtnStyles}
           onClick={() => setHintModalActived(!isHintModalActived)}

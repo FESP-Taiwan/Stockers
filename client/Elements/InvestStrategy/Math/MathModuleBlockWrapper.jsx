@@ -7,7 +7,7 @@ import { MathInitDataContext } from '../../../Constant/context';
 // Mock data
 const MOCK = {
   content: 'asfasdf',
-  meta: {},
+  chipInfos: [],
 };
 
 function MathModuleBlockWrapper() {
