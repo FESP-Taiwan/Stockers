@@ -70,8 +70,6 @@ function MathInput() {
     chipInfos: [],
   });
 
-  console.log('inputState', inputState);
-
   const addSpanToTags = useCallback((tags, subContent, from) => {
     Array.from(Array(subContent.length)).forEach((n, index) => {
       tags.push(

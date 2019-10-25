@@ -139,8 +139,8 @@ function LoginPage({
   handleSubmit,
 }: FormProps) {
   // const [register, { loading }] = useMutation();
-  const [logIn, { data }] = useMutation(LOGIN);
-  // const [loading, data] = useQuery(LOGIN)
+  // const [logIn, { data }] = useMutation(LOGIN);
+  // const [loading, data] = useQuery(LOGIN);
 
   const {
     messageHub,
@@ -154,32 +154,32 @@ function LoginPage({
 
   // useEffect(() => () => messageHub.emit(MESSAGE, '登入成功！'), [MESSAGE, messageHub]);
 
-  const onSubmit = useCallback(async ({
-    email,
-    password,
-  }) => {
-    try {
-      await logIn({
-        variables: {
-          email,
-          password,
-        },
-      });
+  // const onSubmit = useCallback(async ({
+  //   email,
+  //   password,
+  // }) => {
+  //   try {
+      // await logIn({
+      //   variables: {
+      //     email,
+      //     password,
+      //   },
+      // });
 
-      await localStorage.setItem('token', data.logIn.token);
-    } catch {
-      errorHub.emit(ERROR, '登入失敗');
-    }
-
-    console.log('data', data);
-    errorHub.emit(ERROR, '登入失敗');
-  }, [MESSAGE, messageHub, ERROR, errorHub, data, logIn]);
+      // await localStorage.setItem('token', data.logIn.token);
+  //   } catch {
+  //     errorHub.emit(ERROR, '登入失敗');
+  //   }
+  //
+  //   console.log('data', data);
+  //   errorHub.emit(ERROR, '登入失敗');
+  // }, [MESSAGE, messageHub, ERROR, errorHub, data, logIn]);
 
   // messageHub.emit(MESSAGE, '登入成功！');
   errorHub.emit(ERROR, '登入失敗');
 
   return (
-    <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
+    <Form css={styles.wrapper} onSubmit={handleSubmit(() => console.llog("click"))}>
       <div css={styles.main}>
         <div css={styles.brandWrapper}>
           <img css={styles.brandLogo} src={stockersLogo} alt="logo" />

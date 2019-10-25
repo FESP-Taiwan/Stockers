@@ -141,23 +141,19 @@ const data = [
 
 const stocks = [{
   id: 1,
-  year: 2019,
+  season: 'Q1',
   value: 1000,
 }, {
   id: 2,
-  year: 2018,
+  season: 'Q2',
   value: 1000,
 }, {
   id: 3,
-  year: 2017,
+  season: 'Q3',
   value: 1000,
 }, {
   id: 4,
-  year: 2016,
-  value: 1000,
-}, {
-  id: 5,
-  year: 2015,
+  season: 'Q4',
   value: 1000,
 }];
 
@@ -169,13 +165,18 @@ const TABLE_TYPES = {
 };
 
 type Props = {
-  stockData: {},
+  stockData: Object,
 };
 
 function StockPage({
   stockData,
 }: Props) {
   console.log('stockData', stockData);
+
+  const stockTableDatas = useMemo(() => {
+    const chipNames = stockData?.comprehensiveIncome.chipInfos.map(chip => chip.chipName);
+  }, [stockData]);
+
   const [table, setTable] = useState('INCOME_STATEMENT');
 
   const infoTable = useMemo(() => {
@@ -189,7 +190,7 @@ function StockPage({
                   onClick={() => { console.log('換季'); }}
                   css={styles.tableBtn}
                   type="button">
-                  年
+                  2019
                 </button>
               </div>
               {stocks.map(stock => (
@@ -197,7 +198,7 @@ function StockPage({
                   key={stock.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.year}
+                    {stock.season}
                   </span>
                 </div>
               ))}

@@ -34,6 +34,7 @@ const styles = {
     backgroundColor: Colors.LAYER_FIRST,
     transition: '0.5s ease-out',
     fontSize: 13,
+    outline: 'none',
   },
   btn: css`
     height: 80px;
