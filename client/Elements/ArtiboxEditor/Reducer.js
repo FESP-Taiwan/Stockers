@@ -90,6 +90,52 @@ export default function reducer(state, action) {
       };
     }
 
+    case Actions.ADD_GRID_INFO: {
+      const blockIndex = state.blocks.findIndex(block => block.id === action.id);
+
+      return {
+        ...state,
+        blocks: [
+          ...state.blocks.slice(0, blockIndex),
+          {
+            ...state.blocks[blockIndex],
+            meta: {
+              GRIDS: [
+                ...state.blocks[blockIndex].meta.GRIDS,
+                {
+                  rowId: action.gridInfo.rowId,
+                  columnId: action.gridInfo.columnId,
+                  name: action.gridInfo.name,
+                },
+              ],
+            },
+          },
+          ...state.blocks.slice(blockIndex + 1),
+        ],
+      };
+    }
+
+    case Actions.REMOVE_GRID_INFO: {
+      const blockIndex = state.blocks.findIndex(block => block.id === action.id);
+      console.log('remove');
+      return {
+        ...state,
+        blocks: [
+          ...state.blocks.slice(0, blockIndex),
+          {
+            ...state.blocks[blockIndex],
+            meta: {
+              GRIDS: [
+                ...state.blocks[blockIndex].meta.GRIDS.slice(0, action.gridIndex),
+                ...state.blocks[blockIndex].meta.GRIDS.slice(action.gridIndex + 1),
+              ],
+            },
+          },
+          ...state.blocks.slice(blockIndex + 1),
+        ],
+      };
+    }
+
     case Actions.UPDATE_META_AND_CONTENT: {
       const updateIndex = state.blocks.findIndex(block => block.id === action.id);
 

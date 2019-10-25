@@ -88,7 +88,11 @@ function Editor() {
         const focusBlock = blocks.find(block => block.focus);
 
         if (focusBlock && focusBlock.type === BLOCK_TYPES.GRID) {
-
+          dispatch({
+            type: Actions.ADD_GRID_INFO,
+            id: focusBlock.id,
+            gridInfo,
+          });
         } else {
           dispatch({
             type: Actions.NEW_GRID,

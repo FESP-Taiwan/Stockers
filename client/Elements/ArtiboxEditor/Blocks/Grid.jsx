@@ -1,6 +1,7 @@
 // @flow
 
 import React, {
+  Fragment,
   useEffect,
   useMemo,
   useContext,
@@ -19,11 +20,8 @@ const styles = {
     outline: 'none',
   },
   invisibleTxtButton: {
-    position: 'absolute',
     width: '100%',
     height: '100%',
-    left: 0,
-    top: 0,
     fontSize: 0,
     padding: 0,
   },
@@ -68,6 +66,15 @@ function Grid({
     });
   }, [dispatch, id]);
 
+  const removeGrid = useCallback((gridIndex) => {
+    console.log('button clicked');
+    dispatch({
+      type: Actions.REMOVE_GRID_INFO,
+      id,
+      gridIndex,
+    });
+  }, [dispatch, id]);
+
   const gridButtons = useMemo(() => {
     if (!meta.GRIDS || !meta.GRIDS.length) return null;
 
@@ -77,9 +84,10 @@ function Grid({
       GRIDS: grids,
     } = meta;
 
-    grids.forEach((grid) => {
+    grids.forEach((grid, index) => {
       buttonList.push(
         <button
+          onClick={() => removeGrid(index)}
           type="button">
           {grid.name}
         </button>
@@ -87,25 +95,23 @@ function Grid({
     });
 
     return (
-      <div style={styles.buttonsWrapper}>
+      <Fragment>
         {buttonList}
-      </div>
+      </Fragment>
     );
-  }, [meta]);
+  }, [meta, removeGrid]);
 
   const wrapperStyles = useMemo(() => ({
     ...(focus ? styles.focusWrapper : styles.wrapper),
   }), [focus]);
 
   return (
-    <div style={wrapperStyles}>
+    <div
+      tabIndex="0"
+      onMouseDown={onFocusHandler}
+      role="button"
+      style={wrapperStyles}>
       {gridButtons}
-      <button
-        style={styles.invisibleTxtButton}
-        onClick={onFocusHandler}
-        type="button">
-        focusHandler
-      </button>
     </div>
   );
 }
