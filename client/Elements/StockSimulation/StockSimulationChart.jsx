@@ -30,10 +30,10 @@ const styles = {
   },
 };
 
-function StockSimulationCahrt() {
+function StockSimulationChart() {
   return (
     <div css={styles.wrapper}>
-      <LineChart width={800} height={180} data={data}>
+      <LineChart width={800} height={300} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
         <XAxis dataKey="name" />
@@ -44,4 +44,4 @@ function StockSimulationCahrt() {
   );
 }
 
-export default StockSimulationCahrt;
+export default StockSimulationChart;
