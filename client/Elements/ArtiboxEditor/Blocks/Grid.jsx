@@ -58,14 +58,12 @@ const styles = {
 };
 
 type Props = {
-  type: symbol,
   focus: boolean,
   meta: Object,
   id: string,
 }
 
 function Grid({
-  type,
   focus,
   meta,
   id,

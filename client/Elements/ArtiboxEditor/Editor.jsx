@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useContext,
 } from 'react';
 import reducer, { initializer } from './Reducer';
 import { fromJSON } from '../../helper/json';
@@ -20,6 +21,7 @@ import {
   investStrategySharedEmitter,
   EDITTER_GET_GRID,
 } from '../../Constant/investStrategy';
+import { CommentInitDataContext } from '../../Constant/context';
 
 const styles = {
   wrapper: {
@@ -73,8 +75,10 @@ function usePreviosState(value) {
 }
 
 function Editor() {
+  const initData = useContext(CommentInitDataContext);
+
   const [curFocusBlock, setFocusBlock] = useState(null);
-  const [state, dispatch] = useReducer(reducer, fromJSON(), initializer);
+  const [state, dispatch] = useReducer(reducer, fromJSON(initData), initializer);
 
   console.log(state);
 
