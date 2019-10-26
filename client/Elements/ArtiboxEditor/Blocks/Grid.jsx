@@ -5,18 +5,22 @@ import { jsx, css } from '@emotion/core';
 import {
   Fragment,
   useMemo,
+  useRef,
+  useEffect,
   useContext,
   useCallback,
 } from 'react';
 import Actions from '../../../Constant/ArtiboxEditor/actions';
 import { Dispatch as DispatchContext } from '../../../Constant/ArtiboxEditor/context';
 
+const BASIC_HEIGHT = 30;
+
 const styles = {
   wrapper: {
     width: '100%',
     borderLeft: '2px solid transparent',
     padding: '0 12px',
-    height: 30,
+    height: BASIC_HEIGHT,
     position: 'relative',
     outline: 'none',
   },
@@ -30,7 +34,7 @@ const styles = {
     width: '100%',
     borderLeft: `2px solid ${Colors.PRIMARY}`,
     padding: '0 12px',
-    height: 30,
+    height: BASIC_HEIGHT,
     position: 'relative',
     outline: 'none',
   },
@@ -61,7 +65,29 @@ function Grid({
   meta,
   id,
 }: Props) {
+  const wrapperRef = useRef();
+
   const dispatch = useContext(DispatchContext);
+
+  useEffect(() => {
+    if (wrapperRef) {
+      const { current } = wrapperRef;
+
+      current.style.setProperty('height', `${BASIC_HEIGHT}px`);
+
+      const newHeight = `${current.scrollHeight}px`;
+
+      console.log('newHeight', newHeight);
+
+      console.log('current', {
+        scrollHeight: current.scrollHeight,
+        clientHeight: current.clientHeight,
+        offsetHeight: current.offsetHeight,
+      });
+
+      current.style.setProperty('height', newHeight);
+    }
+  }, [meta]);
 
   const onFocusHandler = useCallback(() => {
     dispatch({
@@ -111,6 +137,7 @@ function Grid({
 
   return (
     <div
+      ref={wrapperRef}
       tabIndex="0"
       onMouseDown={onFocusHandler}
       role="button"

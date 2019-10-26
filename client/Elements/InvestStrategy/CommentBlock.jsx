@@ -87,10 +87,9 @@ function CommentBlock() {
     if (isMathModuleEditting) return () => {};
 
     function clickHandler(gridInfo) {
-      setFormOpened(true);
-
-      console.log('gridInfo', gridInfo);
-      investStrategySharedEmitter.emit(EDITTER_GET_GRID, gridInfo);
+      if (isFormOpened) {
+        investStrategySharedEmitter.emit(EDITTER_GET_GRID, gridInfo);
+      }
     }
 
     investStrategySharedEmitter.on(CLICK_EVENT, clickHandler);
@@ -98,7 +97,7 @@ function CommentBlock() {
     return () => {
       investStrategySharedEmitter.removeListener(CLICK_EVENT, clickHandler);
     };
-  }, [isMathModuleEditting]);
+  }, [isMathModuleEditting, isFormOpened]);
 
   const onClick = useCallback(() => {
     setFormOpened(!isFormOpened);
