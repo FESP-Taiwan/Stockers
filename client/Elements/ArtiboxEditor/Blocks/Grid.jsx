@@ -1,6 +1,8 @@
 // @flow
+/** @jsx jsx */
 
-import React, {
+import { jsx, css } from '@emotion/core';
+import {
   Fragment,
   useMemo,
   useContext,
@@ -32,6 +34,18 @@ const styles = {
     position: 'relative',
     outline: 'none',
   },
+  btn: css`
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #FFF;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: ${Colors.LAYER_SECOND};
+    margin: 0 4px 4px 0;
+    &:hover {
+      background-color: ${Colors.PRIMARY};
+    }
+  `,
 };
 
 type Props = {
@@ -76,6 +90,7 @@ function Grid({
     grids.forEach((grid, index) => {
       buttonList.push(
         <button
+          css={styles.btn}
           onClick={() => removeGrid(index)}
           type="button">
           {grid.name}
