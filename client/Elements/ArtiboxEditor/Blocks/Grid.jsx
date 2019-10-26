@@ -61,16 +61,25 @@ type Props = {
   focus: boolean,
   meta: Object,
   id: string,
+  firstLoaded: boolean,
 }
 
 function Grid({
   focus,
   meta,
   id,
+  firstLoaded,
 }: Props) {
   const wrapperRef = useRef();
 
   const dispatch = useContext(DispatchContext);
+
+  useEffect(() => {
+    dispatch({
+      type: Actions.LOADED,
+      id,
+    });
+  }, [dispatch, firstLoaded, id]);
 
   useEffect(() => {
     if (wrapperRef) {

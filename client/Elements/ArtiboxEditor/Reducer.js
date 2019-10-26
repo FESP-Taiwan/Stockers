@@ -12,6 +12,7 @@ export function initializer(initialArg = { blocks: [] }) {
       ...initialArg.blocks.map(block => ({
         ...block,
         focus: false,
+        loaded: false,
       })),
     ],
   };
@@ -19,6 +20,25 @@ export function initializer(initialArg = { blocks: [] }) {
 
 export default function reducer(state, action) {
   switch (action.type) {
+    case Actions.LOADED: {
+      const updateIndex = state.blocks.findIndex(block => action.id === block.id);
+
+      if (~updateIndex) {
+        return {
+          ...state,
+          blocks: [
+            ...state.blocks.slice(0, updateIndex),
+            {
+              ...state.blocks[updateIndex],
+              loaded: true,
+            },
+            ...state.blocks.slice(updateIndex + 1),
+          ],
+        };
+      }
+
+      return state;
+    }
     case Actions.NEW_LINE: {
       if (action.at) {
         const currentIndex = state.blocks.findIndex(block => block.id === action.at);

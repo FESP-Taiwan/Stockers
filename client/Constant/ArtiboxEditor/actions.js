@@ -1,6 +1,7 @@
 // @flow
 
 export default {
+  LOADED: Symbol('Artibox/Action/LOADED'),
   NEW_LINE: Symbol('Artibox/Action/NEW_LINE'),
   UPDATE_META_AND_CONTENT: Symbol('Artibox/Action/UPDATE_META_AND_CONTENT'),
   REMOVE_BLOCK: Symbol('Artibox/Action/REMOVE_BLOCK'),

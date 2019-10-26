@@ -78,11 +78,21 @@ function Editor() {
   const initData = useContext(CommentInitDataContext);
 
   const [curFocusBlock, setFocusBlock] = useState(null);
+  const [firstLoaded, setFirstLoaded] = useState(false);
+
   const [state, dispatch] = useReducer(reducer, fromJSON(initData), initializer);
 
   console.log(state);
 
   const prevState = usePreviosState(state);
+
+  useEffect(() => {
+    if (!firstLoaded) {
+      if (state.blocks.every(block => block.loaded)) {
+        setFirstLoaded(true);
+      }
+    }
+  }, [firstLoaded, state]);
 
   useEffect(() => {
     function getGridHandler(gridInfo) {
@@ -145,7 +155,7 @@ function Editor() {
         }
       }
     }
-  }, [state, prevState]);
+  }, [state, prevState, firstLoaded]);
 
   const placeholder = useMemo(() => {
     if (!state) return null;
@@ -173,6 +183,8 @@ function Editor() {
                     content={block.content}
                     meta={block.meta}
                     type={block.type}
+                    loaded={block.loaded}
+                    firstLoaded={firstLoaded}
                     key={block.id} />
                 );
               case BLOCK_TYPES.TITLE:
@@ -188,6 +200,8 @@ function Editor() {
                       focus={block.focus}
                       meta={block.meta}
                       type={block.type}
+                      loaded={block.loaded}
+                      firstLoaded={firstLoaded}
                       content={block.content} />
                   </div>
                 );
@@ -198,6 +212,8 @@ function Editor() {
                     id={block.id}
                     focus={block.focus}
                     type={block.type}
+                    loaded={block.loaded}
+                    firstLoaded={firstLoaded}
                     meta={block.meta} />
                 );
 

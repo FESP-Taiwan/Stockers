@@ -22,7 +22,7 @@ const MOCK = {
     },
     type: 'GRID',
   }, {
-    content: 'adsfasdf:',
+    content: 'adsfasdf:asdfsafdasdfdsfsdafasfdsdfsdfasfshifsjkfhskjfhjkshfkjh',
     id: 'a9dd5f05-1d50-4cb2-934e-f81fc682361b',
     meta: {},
     type: 'TEXT',

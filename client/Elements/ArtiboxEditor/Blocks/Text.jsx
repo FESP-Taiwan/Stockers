@@ -95,6 +95,8 @@ type Props = {
   focus: boolean,
   meta: Object,
   id: string,
+  loaded: boolean,
+  firstLoaded: boolean,
   placeholder?: string,
 }
 
@@ -104,7 +106,9 @@ function Text({
   focus,
   meta,
   id,
+  firstLoaded,
   placeholder,
+  loaded,
 }: Props) {
   const textarea = useRef();
   const displayer = useRef();
@@ -130,10 +134,30 @@ function Text({
   useEffect(() => {
     const { current } = textarea;
 
-    if (current && focus) {
+    if (loaded && textarea.current) {
+      current.style.setProperty('height', `${BASIC_HEIGHT[type]}px`);
+
+      const newHeight = `${current.scrollHeight}px`;
+
+      console.log('newHeight', newHeight);
+
+      current.style.setProperty('height', newHeight);
+      current.parentNode.style.setProperty('height', newHeight);
+    }
+  }, [loaded, type]);
+
+  useEffect(() => {
+    const { current } = textarea;
+
+    if (current && firstLoaded && focus) {
       current.focus();
     }
-  }, [focus]);
+
+    dispatch({
+      type: Actions.LOADED,
+      id,
+    });
+  }, [dispatch, firstLoaded, id, focus]);
 
   const onInputHandler = useCallback(({ target }) => {
     target.style.setProperty('height', `${BASIC_HEIGHT[type]}px`);
@@ -151,7 +175,6 @@ function Text({
     });
   }, [dispatch, id]);
 
-  // unstudied
   const onChangeHandler = useCallback(({ target }) => {
     const diff = target.selectionStart - currentCaret;
 

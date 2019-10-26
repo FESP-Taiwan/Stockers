@@ -49,7 +49,7 @@ const styles = {
     height: 0,
     borderRadius: 40,
     backgroundColor: Colors.LAYER_THIRD,
-    transition: '0.5s',
+    // transition: '0.5s',
     opacity: 0,
   },
   formBlockActived: {
@@ -61,6 +61,7 @@ const styles = {
 
 function CommentBlock() {
   const [isFormOpened, setFormOpened] = useState(false);
+  const [gridInfoForEmitTrigger, setGridInfoForEmitTrigger] = useState({});
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
 
   useEffect(() => {
@@ -87,9 +88,9 @@ function CommentBlock() {
     if (isMathModuleEditting) return () => {};
 
     function clickHandler(gridInfo) {
-      if (isFormOpened) {
-        investStrategySharedEmitter.emit(EDITTER_GET_GRID, gridInfo);
-      }
+      setFormOpened(true);
+
+      setGridInfoForEmitTrigger(gridInfo);
     }
 
     investStrategySharedEmitter.on(CLICK_EVENT, clickHandler);
@@ -97,10 +98,22 @@ function CommentBlock() {
     return () => {
       investStrategySharedEmitter.removeListener(CLICK_EVENT, clickHandler);
     };
-  }, [isMathModuleEditting, isFormOpened]);
+  }, [isMathModuleEditting]);
+
+  useEffect(() => {
+    investStrategySharedEmitter.emit(EDITTER_GET_GRID, gridInfoForEmitTrigger);
+  }, [gridInfoForEmitTrigger]);
 
   const onClick = useCallback(() => {
     setFormOpened(!isFormOpened);
+  }, [isFormOpened]);
+
+  const editor = useMemo(() => {
+    if (!isFormOpened) return null;
+
+    return (
+      <Editor />
+    );
   }, [isFormOpened]);
 
   const formBlockStyles = useMemo(() => ({
@@ -117,7 +130,7 @@ function CommentBlock() {
         筆記欄
       </button>
       <div style={formBlockStyles}>
-        <Editor />
+        {editor}
       </div>
     </div>
   );
