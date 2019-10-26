@@ -117,7 +117,17 @@ export default function reducer(state, action) {
 
     case Actions.REMOVE_GRID_INFO: {
       const blockIndex = state.blocks.findIndex(block => block.id === action.id);
-      console.log('remove');
+
+      if (state.blocks[blockIndex].meta.GRIDS.length === 1) {
+        return {
+          ...state,
+          blocks: [
+            ...state.blocks.slice(0, blockIndex),
+            ...state.blocks.slice(blockIndex + 1),
+          ],
+        };
+      }
+
       return {
         ...state,
         blocks: [

@@ -2,7 +2,6 @@
 
 import React, {
   Fragment,
-  useEffect,
   useMemo,
   useContext,
   useCallback,
@@ -50,15 +49,6 @@ function Grid({
 }: Props) {
   const dispatch = useContext(DispatchContext);
 
-  useEffect(() => {
-    if (!meta.GRIDS || !meta.GRIDS.length) {
-      dispatch({
-        type: Actions.REMOVE_BLOCK,
-        id,
-      });
-    }
-  }, [meta, dispatch, id]);
-
   const onFocusHandler = useCallback(() => {
     dispatch({
       type: Actions.FOCUS,
@@ -67,7 +57,6 @@ function Grid({
   }, [dispatch, id]);
 
   const removeGrid = useCallback((gridIndex) => {
-    console.log('button clicked');
     dispatch({
       type: Actions.REMOVE_GRID_INFO,
       id,
