@@ -21,6 +21,7 @@ const styles = {
     alignItems: 'flex-start',
     overflow: 'auto',
     maxWidth: '100%',
+    borderRadius: 22,
   },
   dateSideHeaderWrapper: {
     flexBasis: 140,

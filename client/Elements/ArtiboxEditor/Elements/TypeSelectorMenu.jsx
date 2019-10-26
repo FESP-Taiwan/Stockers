@@ -92,7 +92,6 @@ function TypeSelectorMenu({
         <Icons.LINE />
       </button>
       <button
-        disabled
         style={{
           ...styles.btn,
           ...(curFocusType === BLOCK_TYPES.GRID ? styles.btnFocused : {}),

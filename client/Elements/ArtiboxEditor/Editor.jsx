@@ -132,8 +132,12 @@ function Editor() {
       if (~removeId) {
         const artiInputs = document.querySelectorAll('.Artibox-input');
 
-        if (removeId !== 0) {
-          artiInputs[removeId - 1].focus();
+        const gridsNumberBeforeRemovedBlock = prevState.blocks
+          .slice(0, removeId)
+          .filter(block => block.type === BLOCK_TYPES.GRID).length;
+
+        if (removeId !== 0 && prevState.blocks[removeId - 1].type !== BLOCK_TYPES.GRID) {
+          artiInputs[removeId - 1 - gridsNumberBeforeRemovedBlock].focus();
         }
       }
     }

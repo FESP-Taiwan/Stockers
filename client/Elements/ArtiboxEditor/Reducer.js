@@ -101,7 +101,7 @@ export default function reducer(state, action) {
             ...state.blocks[blockIndex],
             meta: {
               GRIDS: [
-                ...state.blocks[blockIndex].meta.GRIDS,
+                ...(state.blocks[blockIndex].meta.GRIDS || []),
                 {
                   rowId: action.gridInfo.rowId,
                   columnId: action.gridInfo.columnId,
