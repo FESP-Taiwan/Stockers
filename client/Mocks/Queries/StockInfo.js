@@ -130,7 +130,7 @@ export const followingStocks = [{
   }],
 }];
 
-export const industryCard = [{ // industryStickers
+export const industryCards = [{ // industryStickers
   id: 1,
   name: '半導體',
   chart: [{
@@ -148,7 +148,7 @@ export const industryCard = [{ // industryStickers
   }],
 }, {
   id: 2,
-  name: '半導體',
+  name: '金融業',
   chart: [{
     id: 1,
     name: 'firstMonth',
@@ -164,7 +164,7 @@ export const industryCard = [{ // industryStickers
   }],
 }, {
   id: 3,
-  name: '半導體',
+  name: '殯葬業',
   chart: [{
     id: 1,
     name: 'firstMonth',
