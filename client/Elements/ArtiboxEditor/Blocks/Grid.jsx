@@ -38,6 +38,11 @@ const styles = {
     position: 'relative',
     outline: 'none',
   },
+  placeholderTxt: {
+    fontSize: 16,
+    letterSpacing: 2,
+    fontWeight: 100,
+  },
   btn: css`
     font-size: 12px;
     letter-spacing: 1px;
@@ -76,14 +81,6 @@ function Grid({
       current.style.setProperty('height', `${BASIC_HEIGHT}px`);
 
       const newHeight = `${current.scrollHeight}px`;
-
-      console.log('newHeight', newHeight);
-
-      console.log('current', {
-        scrollHeight: current.scrollHeight,
-        clientHeight: current.clientHeight,
-        offsetHeight: current.offsetHeight,
-      });
 
       current.style.setProperty('height', newHeight);
     }
@@ -131,6 +128,16 @@ function Grid({
     );
   }, [meta, removeGrid]);
 
+  const placeholderZone = useMemo(() => {
+    const { GRIDS: grids } = meta;
+
+    if (grids && grids.length) return null;
+
+    return (
+      <span style={styles.placeholderTxt}>點選欄位填入欄位資訊</span>
+    );
+  }, [meta]);
+
   const wrapperStyles = useMemo(() => ({
     ...(focus ? styles.focusWrapper : styles.wrapper),
   }), [focus]);
@@ -143,6 +150,7 @@ function Grid({
       role="button"
       style={wrapperStyles}>
       {gridButtons}
+      {placeholderZone}
     </div>
   );
 }

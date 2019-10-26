@@ -386,6 +386,7 @@ function Text({
   return (
     <div style={wrapperStyles}>
       <textarea
+        placeholder={placeholder}
         value={content}
         onPaste={onPasteHandler}
         onKeyDown={onKeyDownHandler}
