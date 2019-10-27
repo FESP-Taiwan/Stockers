@@ -22,12 +22,7 @@ moment.locale('zh-tw');
 
 const client = new ApolloClient({
   uri: 'http://localhost:5000/graphql', // gql server
-  fetchOptions: {
-    mode: 'no-cors',
-  },
 });
-
-console.log("client", client);
 
 function renderPage() {
   const root = document.getElementById('root');

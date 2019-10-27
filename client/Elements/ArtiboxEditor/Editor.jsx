@@ -82,8 +82,6 @@ function Editor() {
 
   const [state, dispatch] = useReducer(reducer, fromJSON(initData), initializer);
 
-  console.log(state);
-
   const prevState = usePreviosState(state);
 
   useEffect(() => {

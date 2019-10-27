@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 import gql from 'graphql-tag';
 import isEmail from 'validator/lib/isEmail';
@@ -123,18 +123,18 @@ function RegisterPage({
           password,
         },
       });
-
-      console.log('data', data);
-      await localStorage.setItem('token', data.signUp.id);
     } catch {
       showErrorMessage('註冊失敗');
     }
+  }, [showErrorMessage, register]);
 
+  useEffect(() => {
     if (data) {
+      localStorage.setItem('token', data.signUp.id);
       showMessage('註冊成功');
       history.push('/');
     }
-  }, [history, showMessage, showErrorMessage, register, data]);
+  }, [data, history, showMessage]);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>

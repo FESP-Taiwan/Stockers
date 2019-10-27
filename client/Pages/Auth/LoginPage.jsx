@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 import isEmail from 'validator/lib/isEmail';
 import {
@@ -154,17 +154,18 @@ function LoginPage({
           password,
         },
       });
-
-      await localStorage.setItem('token', data.logIn.token);
-    } catch {
+    } catch (ex) {
       showErrorMessage('登入失敗');
     }
+  }, [logIn, showErrorMessage]);
 
+  useEffect(() => {
     if (data) {
+      localStorage.setItem('token', data.logIn.token);
       showMessage('登入成功');
       history.push('/');
     }
-  }, [history, data, logIn, showMessage, showErrorMessage]);
+  }, [data, history, showMessage]);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
