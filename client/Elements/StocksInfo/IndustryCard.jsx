@@ -1,6 +1,7 @@
 // @flow
 /** @jsx jsx */
 
+import { useMemo } from 'react';
 import { jsx, css } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
@@ -33,20 +34,69 @@ const styles = {
     color: #FFFFFF;
     margin: 0 0 18px;
   `,
-  percent: css`
+  badPercent: css`
     font-size: 13px;
     color: ${Colors.BULL_MARKET};
+  `,
+  goodPercent: css`
+    font-size: 13px;
+    color: ${Colors.BEAR_MARKET};
   `,
 };
 type Props = {
   name: string,
-  chart: Array,
+  companies: Array,
 };
 
 function IndustryCard({
   name,
-  chart,
+  companies,
 }: Props) {
+  const average = useMemo(() => {
+    if (!companies) return null;
+    const gain = companies?.map(company => company.gain_diff.map(c => c.gain));
+
+    const eachAverages = gain.map((g) => {
+      const sum = g.reduce((prev, cur) => cur + prev);
+      const ave = sum / g.length;
+
+      return ave * 100;
+    });
+
+    const sum = eachAverages.reduce((prev, cur) => cur + prev);
+
+    const ave = sum / eachAverages.length;
+
+    return ave.toFixed(2);
+  }, [companies]);
+
+  const percentStyle = useMemo(() => {
+    if (average > 0) return styles.goodPercent;
+
+    return styles.badPercent;
+  }, [average]);
+
+  const chartData = useMemo(() => {
+    if (!companies) return null;
+
+    const gain = companies?.map(company => company.gain_diff.map(c => c.gain));
+
+    const firstMon = (gain.map(g => g[0]).reduce((prev, cur) => cur + prev)) / gain.length;
+    const secondMon = (gain.map(g => g[1]).reduce((prev, cur) => cur + prev)) / gain.length;
+    const thirdMon = (gain.map(g => g[2]).reduce((prev, cur) => cur + prev)) / gain.length;
+
+    return [{
+      name: 'firstMon',
+      percent: (firstMon + 1) * 10,
+    }, {
+      name: 'secondMon',
+      percent: (secondMon + 1) * 10,
+    }, {
+      name: 'thirdMon',
+      percent: (thirdMon + 1) * 10,
+    }];
+  }, [companies]);
+
   return (
     <Link css={styles.wrapper} to="/industry">
       <div css={styles.main}>
@@ -54,13 +104,17 @@ function IndustryCard({
           <span css={styles.title}>
             {name}
           </span>
-          <span css={styles.percent}>
+          <span css={percentStyle}>
+            {average}
+            %
+            &nbsp;
             (近三個月來漲幅)
           </span>
         </div>
         <div css={styles.chart}>
           <IndustryCardChart
-            data={chart} />
+            average={average}
+            data={chartData} />
         </div>
       </div>
     </Link>

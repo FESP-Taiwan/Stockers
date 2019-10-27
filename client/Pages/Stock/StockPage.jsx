@@ -166,16 +166,15 @@ const TABLE_TYPES = {
 
 type Props = {
   stockData: Object,
+  state: Object,
 };
 
 function StockPage({
   stockData,
+  state,
 }: Props) {
+  console.log('state', state);
   console.log('stockData', stockData);
-
-  const stockTableDatas = useMemo(() => {
-    const chipNames = stockData?.comprehensiveIncome.chipInfos.map(chip => chip.chipName);
-  }, [stockData]);
 
   const [table, setTable] = useState('INCOME_STATEMENT');
 
@@ -430,6 +429,7 @@ function StockPage({
 
 const reduxHook = connect(
   state => ({
+    state,
     stockData: state.Stocks.stockData,
   }),
 );

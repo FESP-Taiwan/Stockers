@@ -5,12 +5,9 @@ import {
   useState,
 } from 'react';
 import { jsx, css } from '@emotion/core';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
 import { industries } from '../../Mocks/Queries/IndustryDetails';
-import * as IndustryActions from '../../actions/Industry';
 
 const button = css`
   width: 320px;
@@ -123,23 +120,7 @@ const INDUSTRY_TYPES = {
   LOWER: 'LOWER',
 };
 
-type Props = {
-  fetchIndustryData: Function,
-  // industryData: Array,
-};
-
-function IndustryPage({
-  fetchIndustryData,
-  // industryData,
-}: Props) {
-  // useEffect(() => {
-  //   fetchIndustryData();
-  // }, [fetchIndustryData]);
-
-  // console.log('industryData', industryData);
-
-  console.log(fetchIndustryData);
-
+function IndustryPage() {
   const [industry, setIndustry] = useState('UPPER');
 
   return (
@@ -288,13 +269,4 @@ function IndustryPage({
   );
 }
 
-const reduxHook = connect(
-  state => ({
-    // industryData: state.industryData,
-  }),
-  dispatch => bindActionCreators({
-    ...IndustryActions,
-  }, dispatch),
-);
-
-export default reduxHook(IndustryPage);
+export default IndustryPage;
