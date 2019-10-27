@@ -1,20 +1,19 @@
 // @flow
 /** @jsx jsx */
 
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { jsx, css } from '@emotion/core';
-import debug from 'debug';
+import gql from 'graphql-tag';
 import isEmail from 'validator/lib/isEmail';
 import {
   reduxForm,
   Field,
   Form,
 } from 'redux-form';
+import { withRouter } from 'react-router';
 import type { FormProps } from 'redux-form';
-// import { withRouter } from 'react-router';
-import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
+import { useGlobalMessage, useGlobalErrorMessage } from '../../helper/useGlobalMessage';
 import { FORM_REGISTER } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
 import stockersLogo from '../../static/images/logo_stockers_text.png';
@@ -82,38 +81,58 @@ const styles = {
   },
 };
 
+const SIGNUP = gql`
+  mutation SignUp(
+    $email: String!
+    $password: String!
+    $name: String!
+  ){
+    signUp(
+      email: $email
+      password: $password
+      name: $name
+    ) {
+      id
+      email
+      password
+      name
+    }
+  }
+`;
+
 function RegisterPage({
   handleSubmit,
-}: FormProps) {
-  // const [register, { loading }] = useMutation();
+  history,
+}: FormProps & ContextRouter) {
+  const [register, { data }] = useMutation(SIGNUP);
 
-  const {
-    messageHub,
-    MESSAGE,
-  } = useContext(MessageHandlerContext);
+  const showMessage = useGlobalMessage();
+  const showErrorMessage = useGlobalErrorMessage();
 
-  const {
-    errorHub,
-    ERROR,
-  } = useContext(ErrorHandlerContext);
-
-  const onSubmit = useCallback(async () => {
+  const onSubmit = useCallback(async ({
+    firstName,
+    lastName,
+    email,
+    password,
+  }) => {
     try {
-      // await logIn({
-      //   variables: {
-      //     email,
-      //     password,
-      //   },
-      // });
+      await register({
+        variables: {
+          name: `${firstName}${lastName}`,
+          email,
+          password,
+        },
+      });
 
+      console.log('data', data);
       // await localStorage.setItem('token', data.logIn.token);
-      console.log('------');
     } catch {
-      errorHub.emit(ERROR, '註冊失敗');
+      showErrorMessage('註冊失敗');
     }
 
-    messageHub.emit(MESSAGE, '註冊成功！');
-  }, [MESSAGE, messageHub, ERROR, errorHub]);
+    showMessage('註冊成功');
+    history.push('/');
+  }, [history, showMessage, showErrorMessage, register, data]);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
@@ -156,17 +175,16 @@ function RegisterPage({
         </div>
         <div css={styles.fakeBlock} />
         <button
-          type="button"
-          css={styles.registerBlock}
-          onClick={() => console.log('click')}>
+          type="submit"
+          css={styles.registerBlock}>
           建立帳號
         </button>
         <div css={styles.fakeBlock} />
         <div css={styles.submitBtnWrapper}>
           <button
             css={styles.submitBtn}
-            type="submit"
-            onClick={() => console.log('submit!')}>
+            type="button"
+            onClick={() => history.push('/login')}>
             已經有帳號? 登入
           </button>
         </div>
@@ -224,4 +242,4 @@ const formHook = reduxForm({
   },
 });
 
-export default formHook(RegisterPage);
+export default withRouter(formHook(RegisterPage));

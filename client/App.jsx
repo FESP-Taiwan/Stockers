@@ -5,7 +5,7 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/react-hooks';
 import type { ApolloClient } from 'apollo-client';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
@@ -35,6 +35,8 @@ function App({
 }: {
   client: ApolloClient,
 }) {
+  console.log('client', client);
+
   return (
     <div style={styles.wrapper}>
       <Provider store={store}>
