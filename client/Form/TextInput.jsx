@@ -38,10 +38,10 @@ const styles = {
   label: {
     width: 100,
     fontSize: 13,
-    color: Colors.SECONDARY,
+    color: '#FFF',
     fontWeight: 500,
     letterSpacing: 1,
-    margin: '0 0 12px 20px',
+    margin: '0 0 12px 0',
     display: 'block',
   },
   lableInline: {

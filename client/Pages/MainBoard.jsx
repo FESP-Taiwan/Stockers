@@ -10,6 +10,9 @@ import {
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
 import IndustryPage from './Indusry/IndustryPage';
+import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
+import StockSimulationPage from './StockSimulation/StockSimulationPage';
+import StockPage from './Stock/StockPage';
 import StockPageWrapper from './Stock/StockPageWrapper';
 
 const styles = {
@@ -40,6 +43,10 @@ function MainBoard() {
       </Switch>
       <div style={styles.main}>
         <Switch>
+          <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
+          <Route exact path="/industry" component={IndustryPage} />
+          <Route exact path="/stockSimulation" component={StockSimulationPage} />
+          <Route exact path="/industry/stock" component={StockPage} />
           <Route path="/industry/stocks/:stockId" component={StockPageWrapper} />
           <Route path="/industry" component={IndustryPage} />
           <Route component={StocksInfoPage} />

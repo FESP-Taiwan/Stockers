@@ -2,18 +2,22 @@
 /** @jsx jsx */
 
 import {
-  useEffect,
+  useEffect, useMemo,
 } from 'react';
 import { jsx, css } from '@emotion/core';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { formValueSelector } from 'redux-form';
 import { flex } from '../../Constant/emotion';
 import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
 import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
-import { followingStocks, industryCard } from '../../Mocks/Queries/StockInfo';
+import { followingStocks, industryCards } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
 import * as IndustryCardActions from '../../actions/IndustryCard';
+import { FORM_SITE_HEADER } from '../../Constant/form';
+
+const selector = formValueSelector(FORM_SITE_HEADER);
 
 const styles = {
   wrapper: css`
@@ -63,11 +67,13 @@ const styles = {
 };
 
 type Props = {
+  searchTerm: string,
   fetchIndustryCardData: Function,
   // industryCardData: Array,
 };
 
 function StockersInfoPage({
+  searchTerm,
   fetchIndustryCardData,
   // industryCardData,
 }: Props) {
@@ -77,7 +83,11 @@ function StockersInfoPage({
 
   // console.log('industryCardData', industryCardData);
 
-  console.log(fetchIndustryCardData);
+  const filteredIndustryCards = useMemo(() => {
+    if (!searchTerm) return industryCards;
+
+    return industryCards.filter(card => card.name.includes(searchTerm));
+  }, [searchTerm]);
 
   return (
     <div css={styles.wrapper}>
@@ -106,7 +116,7 @@ function StockersInfoPage({
         </div>
       </div>
       <div css={styles.industryCardWrapper}>
-        {industryCard.map(industry => (
+        {filteredIndustryCards.map(industry => (
           <IndustryCard
             key={industry.id}
             name={industry.name}
@@ -120,6 +130,7 @@ function StockersInfoPage({
 const reduxHook = connect(
   state => ({
     // industryCardData: state.industryCardData,
+    searchTerm: selector(state, 'searchTerm'),
   }),
   dispatch => bindActionCreators({
     ...IndustryCardActions,
