@@ -50,9 +50,9 @@ function MainBoard() {
           <Route exact path="/industry/stock" component={StockPage} />
           <Route path="/industry/stocks/:stockId" component={StockPageWrapper} />
           <Route path="/industry" component={IndustryPage} />
-          <Route path="/" component={StocksInfoPage} />
+          <Route path="/stockInfo" component={StocksInfoPage} />
+          <Redirect to="/stockInfo" />
         </Switch>
-        <Redirect to="/" />
       </div>
     </div>
   );
