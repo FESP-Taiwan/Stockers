@@ -160,8 +160,10 @@ function LoginPage({
       showErrorMessage('登入失敗');
     }
 
-    showMessage('登入成功');
-    history.push('/');
+    if (data) {
+      showMessage('登入成功');
+      history.push('/');
+    }
   }, [history, data, logIn, showMessage, showErrorMessage]);
 
   return (

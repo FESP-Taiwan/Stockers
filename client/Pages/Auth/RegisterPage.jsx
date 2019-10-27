@@ -118,20 +118,22 @@ function RegisterPage({
     try {
       await register({
         variables: {
-          name: `${firstName}${lastName}`,
+          name: `${firstName} ${lastName}`,
           email,
           password,
         },
       });
 
       console.log('data', data);
-      // await localStorage.setItem('token', data.logIn.token);
+      await localStorage.setItem('token', data.signUp.id);
     } catch {
       showErrorMessage('註冊失敗');
     }
 
-    showMessage('註冊成功');
-    history.push('/');
+    if (data) {
+      showMessage('註冊成功');
+      history.push('/');
+    }
   }, [history, showMessage, showErrorMessage, register, data]);
 
   return (
