@@ -6,6 +6,7 @@ import React, {
 import {
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
@@ -49,7 +50,8 @@ function MainBoard() {
           <Route exact path="/industry/stock" component={StockPage} />
           <Route path="/industry/stocks/:stockId" component={StockPageWrapper} />
           <Route path="/industry" component={IndustryPage} />
-          <Route component={StocksInfoPage} />
+          <Route path="/stockInfo" component={StocksInfoPage} />
+          <Redirect to="/stockInfo" />
         </Switch>
       </div>
     </div>
