@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ModuleTableWrapper from './Module/ModuleTableWrapper';
-import CommentBlock from './CommentBlock';
+import CommentBlockWrapper from './CommentBlockWrapper';
 import HeaderBlock from './HeaderBlock';
 import MathModuleBlockWrapper from './Math/MathModuleBlockWrapper';
 
@@ -29,10 +29,7 @@ function InvestStrategyPage() {
       <HeaderBlock />
       <MathModuleBlockWrapper />
       <ModuleTableWrapper />
-      <CommentBlock
-        initialValues={{
-          comment: '',
-        }} />
+      <CommentBlockWrapper />
     </div>
   );
 }

@@ -48,17 +48,28 @@ function Line({
   content,
   id,
   focus,
-}: BlockProps) {
+  firstLoaded,
+}: {
+  content: string,
+  id: string,
+  focus: boolean,
+  firstLoaded: boolean,
+}) {
   const dispatch = useContext(DispatchContext);
   const textarea = useRef();
 
   useEffect(() => {
     const { current } = textarea;
 
-    if (current) {
+    if (current && firstLoaded) {
       current.focus();
     }
-  }, [textarea, id, dispatch]);
+
+    dispatch({
+      type: Actions.LOADED,
+      id,
+    });
+  }, [textarea, id, firstLoaded, dispatch]);
 
   return (
     <div style={focus ? styles.focusWrapper : styles.wrapper}>

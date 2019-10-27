@@ -53,7 +53,6 @@ function ChipHeaderUpdateBlock({
   isOpen,
   setOpen,
 }: Props) {
-  console.log('ACTIVED');
   const moduleData = useContext(ModuleDataContext);
 
   const [headerChips, setHeaderChips] = useState([]);

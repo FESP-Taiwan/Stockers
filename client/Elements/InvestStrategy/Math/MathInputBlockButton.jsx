@@ -165,9 +165,9 @@ function MathInputBlockButton({
     const { type } = buttonChipInfo.chipData;
 
     switch (type) {
-      case MATH_META_TYPES.NUMEROUS: {
+      case MATH_META_TYPES.LARGE: {
         return (
-          <span style={styles.text}>類型：眾數</span>
+          <span style={styles.text}>類型：最大值</span>
         );
       }
 
@@ -199,7 +199,7 @@ function MathInputBlockButton({
     const { type, date, rowId } = buttonChipInfo.chipData;
 
     switch (type) {
-      case MATH_META_TYPES.NUMEROUS:
+      case MATH_META_TYPES.LARGE:
       case MATH_META_TYPES.AVERAGE:
         return (
           <span style={styles.text}>計算量：10筆</span>

@@ -22,4 +22,6 @@ export const MessageHandlerContext = React.createContext({
 
 export const MathInitDataContext = React.createContext({});
 
+export const CommentInitDataContext = React.createContext({});
+
 export default null;

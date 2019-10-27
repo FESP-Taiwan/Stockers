@@ -106,7 +106,7 @@ function HeaderBlock() {
           測試績效
         </button>
       </div>
-      {mockModules.map(module => (<ModuleBtn module={module} actived={actived} />))}
+      {mockModules.map(module => (<ModuleBtn key={module.id} module={module} actived={actived} />))}
       <span css={styles.line} />
       <button
         onClick={() => console.log('add modules')}

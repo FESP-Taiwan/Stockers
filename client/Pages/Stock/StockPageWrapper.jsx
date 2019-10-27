@@ -61,9 +61,7 @@ function StockPageWrapper({
 }
 
 const reduxHook = connect(
-  state => ({
-    stockData: state.Stocks.stockData,
-  }),
+  () => ({}),
   dispatch => bindActionCreators({
     ...StockActions,
   }, dispatch),
