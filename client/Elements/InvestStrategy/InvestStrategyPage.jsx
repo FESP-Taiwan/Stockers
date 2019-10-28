@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react';
-import ModuleTableWrapper from './Module/ModuleTableWrapper';
-import CommentBlockWrapper from './CommentBlockWrapper';
+import { Route } from 'react-router-dom';
 import HeaderBlock from './HeaderBlock';
-import MathModuleBlockWrapper from './Math/MathModuleBlockWrapper';
+import InvestStrategyMainBlock from './InvestStrategyMainBlock';
 
 const styles = {
   wrapper: {
@@ -27,9 +26,7 @@ function InvestStrategyPage() {
   return (
     <div style={styles.wrapper}>
       <HeaderBlock />
-      <MathModuleBlockWrapper />
-      <ModuleTableWrapper />
-      <CommentBlockWrapper />
+      <Route path="/industry/stocks/:stockId/modules/:moduleId" component={InvestStrategyMainBlock} />
     </div>
   );
 }

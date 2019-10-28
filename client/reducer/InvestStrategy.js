@@ -1,21 +1,21 @@
 // @flow
 
 import {
-  FETCH_INDUSTRY_CARD_DATA,
-} from '../actions/IndustryCard';
+  STORE_USER_MODULES,
+} from '../actions/InvestStrategy';
 
 type State = {
 
 }
 
 export default (state: State = {
-  IndustryCardData: [],
+  userModulesInfo: [],
 }, action: any) => {
   switch (action.type) {
-    case FETCH_INDUSTRY_CARD_DATA:
+    case STORE_USER_MODULES:
       return {
         ...state,
-        industryCardData: action.data,
+        userModulesInfo: action.modules,
       };
 
     default:
