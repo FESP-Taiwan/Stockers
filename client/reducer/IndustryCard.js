@@ -15,7 +15,7 @@ export default (state: State = {
     case FETCH_INDUSTRY_CARD_DATA:
       return {
         ...state,
-        industryCardData: action.data,
+        IndustryCardData: action.industryCardData,
       };
 
     default:

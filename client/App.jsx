@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+  BrowserRouter as Router,
   Switch,
   Route,
 } from 'react-router-dom';
@@ -44,12 +45,14 @@ function App({
           <ConnectedRouter history={history}>
             <MessageHandler>
               <ErrorHandler>
-                <Switch>
-                  <Route exact path="/breadCrumb" component={BreadCrumb} />
-                  <Route exact path="/register" component={RegisterPage} />
-                  <Route exact path="/login" component={LoginPage} />
-                  <Route component={MainBoard} />
-                </Switch>
+                <Router>
+                  <Switch>
+                    <Route exact path="/breadCrumb" component={BreadCrumb} />
+                    <Route exact path="/register" component={RegisterPage} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route component={MainBoard} />
+                  </Switch>
+                </Router>
               </ErrorHandler>
             </MessageHandler>
           </ConnectedRouter>

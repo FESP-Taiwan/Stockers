@@ -1,20 +1,23 @@
 // @flow
 
-export const incomeStatements = [{
+export const comprehensiveIncomes = [{
   id: 1,
-  name: '營業成本',
+  name: '營業成本合計',
 }, {
   id: 2,
-  name: '毛利',
+  name: '營業毛利（毛損）',
 }, {
   id: 3,
-  name: '銷售費用',
+  name: '推銷費用合計',
+  // 2018-03之後的都在推銷費用
 }, {
   id: 4,
-  name: '管理費用',
+  name: '管理費用合計',
+  // 2018-03之後的都在＿＿費用
 }, {
   id: 5,
-  name: '研發費用',
+  name: '研究發展費用合計',
+  // 2018-03之後的都在＿＿費用
 }, {
   id: 6,
   name: '營業外收益',
@@ -68,88 +71,115 @@ export const incomeStatements = [{
 export const balanceSheets = [{
   id: 1,
   name: '現金及約當現金',
+  compareName: '現金及約當現金',
+  recentCompareName: '現金及約當現金合計',
 }, {
   id: 2,
-  name: '短期投資',
+  name: '應付帳款',
+  compareName: '應付帳款',
+  recentCompareName: '應付帳款合計',
 }, {
   id: 3,
-  name: '應收帳款',
+  name: '存貨',
+  compareName: '存貨合計',
+  recentCompareName: '存貨',
 }, {
   id: 4,
-  name: '存貨',
+  name: '長期資產',
+  compareName: '非流動資產合計',
 }, {
   id: 5,
-  name: '長期資產',
+  name: '流動資產',
+  compareName: '流動資產合計',
 }, {
   id: 6,
-  name: '固定資產',
+  name: '其他資產',
+  compareName: '其他流動資產',
+  recentCompareName: '其他流動資產合計',
 }, {
   id: 7,
-  name: '其他資產',
+  name: '短期借款',
+  compareName: '短期借款合計',
+  recentCompareName: '短期借款',
 }, {
   id: 8,
-  name: '短期借款',
+  name: '應付帳款',
+  compareName: '應收帳款',
 }, {
   id: 9,
-  name: '應付帳款',
+  name: '長期負債',
+  compareName: '非流動負債',
 }, {
   id: 10,
-  name: '長期負債',
+  name: '流動負債',
+  compareName: '流動負債合計',
 }, {
   id: 11,
   name: '其他負債',
+  compareName: '其他非流動負債－其他',
 }];
 
 export const cashFlows = [{
   id: 1,
-  name: '平均股本',
+  name: '期初餘額',
+  compareName: '期初現金及約當現金餘額',
 }, {
   id: 2,
-  name: '營業活動',
+  name: '期末餘額',
+  compareName: '期末現金及約當現金餘額',
 }, {
   id: 3,
-  name: '投資活動',
+  name: '折舊',
+  compareName: '折舊費用',
 }, {
   id: 4,
-  name: '融資活動',
+  name: '攤銷',
+  compareName: '攤銷費用',
 }, {
   id: 5,
-  name: '其他活動',
+  name: '營業活動',
+  compareName: '營業活動之淨現金流入（流出）',
 }, {
   id: 6,
-  name: '淨現金流',
+  name: '投資活動',
+  compareName: '投資活動之淨現金流入（流出）',
 }, {
   id: 7,
-  name: '自由現金流',
+  name: '融資活動',
+  compareName: '籌資活動之淨現金流入（流出）',
 }, {
   id: 8,
-  name: '期初餘額',
+  name: '其他活動',
+  compareName: '其他投資活動',
 }, {
   id: 9,
-  name: '期末餘額',
+  name: '淨現金流',
+  compareName: '營運產生之現金流入（流出）',
+}, {
+  id: 10,
+  name: '自由現金流',
+  compareName: '繼續營業單位稅前淨利（淨損）',
 }];
 
 export const dividends = [{
   id: 1,
-  name: '董事會日期',
+  name: '除權日',
+  compareName: '除權日',
 }, {
   id: 2,
-  name: '股東會日期',
+  name: '除息日',
+  compareName: '除息日',
 }, {
   id: 3,
-  name: '除息日',
-}, {
-  id: 4,
-  name: '除權日',
-}, {
-  id: 5,
   name: '現金股利發放日',
 }, {
-  id: 6,
-  name: '現金股利(元/股)',
+  id: 4,
+  name: '現金股利',
+  compareName: '現金股利',
 }, {
-  id: 7,
-  name: '股票股利(元/股)',
+  id: 5,
+  name: '股票股利',
+  compareName: '股票股利',
 }];
 
 export default null;
