@@ -178,7 +178,7 @@ function LoginPage({
   errorHub.emit(ERROR, '登入失敗');
 
   return (
-    <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
+    <Form css={styles.wrapper} onSubmit={handleSubmit(() => console.llog("click"))}>
       <div css={styles.main}>
         <div css={styles.brandWrapper}>
           <img css={styles.brandLogo} src={stockersLogo} alt="logo" />

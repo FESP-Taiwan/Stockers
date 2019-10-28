@@ -2,7 +2,8 @@
 /** @jsx jsx */
 
 import {
-  useEffect, useMemo,
+  useMemo,
+  useEffect,
 } from 'react';
 import { jsx, css } from '@emotion/core';
 import { bindActionCreators } from 'redux';
@@ -12,7 +13,7 @@ import { flex } from '../../Constant/emotion';
 import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
 import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
-import { followingStocks, industryCards } from '../../Mocks/Queries/StockInfo';
+import { followingStocks } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
 import * as IndustryCardActions from '../../actions/IndustryCard';
 import { FORM_SITE_HEADER } from '../../Constant/form';
@@ -69,25 +70,60 @@ const styles = {
 type Props = {
   searchTerm: string,
   fetchIndustryCardData: Function,
-  // industryCardData: Array,
+  industryCardData: Array,
 };
 
 function StockersInfoPage({
   searchTerm,
   fetchIndustryCardData,
-  // industryCardData,
+  industryCardData,
 }: Props) {
-  // useEffect(() => {
-  //   fetchIndustryCardData();
-  // }, [fetchIndustryCardData]);
+  useEffect(() => {
+    let canceled = false;
 
-  // console.log('industryCardData', industryCardData);
+    async function fetchIndustryData() {
+      const resData = await fetch(`${API_HOST}/stocker/industryStickers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        fetchIndustryCardData(resData);
+      }
+    }
+
+    fetchIndustryData();
+
+    return () => {
+      canceled = true;
+    };
+  }, [fetchIndustryCardData]);
 
   const filteredIndustryCards = useMemo(() => {
-    if (!searchTerm) return industryCards;
+    if (!industryCardData) return null;
 
-    return industryCards.filter(card => card.name.includes(searchTerm));
-  }, [searchTerm]);
+    if (!searchTerm) return industryCardData;
+
+    return industryCardData.filter(card => card.industry_type.includes(searchTerm));
+  }, [searchTerm, industryCardData]);
+
+  const industryCard = useMemo(() => {
+    if (!industryCardData) return null;
+
+    return (
+      <div css={styles.industryCardWrapper}>
+        {filteredIndustryCards.map((industry, index) => (
+          <IndustryCard
+            key={industry.industry_type}
+            name={industry.industry_type}
+            companies={industry.companies}
+            industryId={index} />
+        ))}
+      </div>
+    );
+  }, [industryCardData, filteredIndustryCards]);
 
   return (
     <div css={styles.wrapper}>
@@ -115,21 +151,14 @@ function StockersInfoPage({
           <LineChartWrapper />
         </div>
       </div>
-      <div css={styles.industryCardWrapper}>
-        {filteredIndustryCards.map(industry => (
-          <IndustryCard
-            key={industry.id}
-            name={industry.name}
-            chart={industry.chart} />
-        ))}
-      </div>
+      {industryCard}
     </div>
   );
 }
 
 const reduxHook = connect(
   state => ({
-    // industryCardData: state.industryCardData,
+    industryCardData: state.IndustryCard.IndustryCardData,
     searchTerm: selector(state, 'searchTerm'),
   }),
   dispatch => bindActionCreators({

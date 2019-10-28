@@ -1,11 +1,11 @@
 // @flow
 
-import Industry from './Industry';
+import IndustryCard from './IndustryCard';
 import Stocks from './Stocks';
 import InvestStrategy from './InvestStrategy';
 
 export default {
-  Industry,
+  IndustryCard,
   Stocks,
   InvestStrategy,
 };

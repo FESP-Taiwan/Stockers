@@ -2,18 +2,25 @@
 /** @jsx jsx */
 
 import {
+  useEffect,
   useState,
   useMemo,
 } from 'react';
+import {
+  useParams,
+} from 'react-router-dom';
 import { jsx, css } from '@emotion/core';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   LineChart, Line,
 } from 'recharts';
 import StockStrategyHeader from './StockStrategyHeader';
 import {
-  incomeStatements, balanceSheets, cashFlows, dividends,
+  comprehensiveIncomes, balanceSheets, cashFlows, dividends,
 } from '../../Constant/stockTable';
+import prettifyStockData from '../../helper/stocks';
+import * as StockActions from '../../actions/Stocks';
 
 const styles = {
   wrapper: css`
@@ -141,23 +148,19 @@ const data = [
 
 const stocks = [{
   id: 1,
-  year: 2019,
+  season: 'Q1',
   value: 1000,
 }, {
   id: 2,
-  year: 2018,
+  season: 'Q2',
   value: 1000,
 }, {
   id: 3,
-  year: 2017,
+  season: 'Q3',
   value: 1000,
 }, {
   id: 4,
-  year: 2016,
-  value: 1000,
-}, {
-  id: 5,
-  year: 2015,
+  season: 'Q4',
   value: 1000,
 }];
 
@@ -169,14 +172,42 @@ const TABLE_TYPES = {
 };
 
 type Props = {
-  stockData: {},
+  stockData: Object,
+  storeStockData: Function,
 };
 
 function StockPage({
   stockData,
+  storeStockData,
 }: Props) {
-  console.log('stockData', stockData);
   const [table, setTable] = useState('INCOME_STATEMENT');
+
+  const { stockId } = useParams();
+
+  useEffect(() => {
+    let canceled = false;
+
+    async function fetchStockData() {
+      const resData = await fetch(`${API_HOST}/stocker/individualStock/${stockId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        const prettifiedStockData = prettifyStockData(resData);
+
+        storeStockData(prettifiedStockData);
+      }
+    }
+
+    fetchStockData();
+
+    return () => {
+      canceled = true;
+    };
+  }, [storeStockData, stockId]);
 
   const infoTable = useMemo(() => {
     switch (table) {
@@ -189,7 +220,7 @@ function StockPage({
                   onClick={() => { console.log('換季'); }}
                   css={styles.tableBtn}
                   type="button">
-                  年
+                  2019
                 </button>
               </div>
               {stocks.map(stock => (
@@ -197,24 +228,26 @@ function StockPage({
                   key={stock.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.year}
+                    {stock.season}
                   </span>
                 </div>
               ))}
             </div>
-            {incomeStatements.map(incomeStatement => (
+            {comprehensiveIncomes.map(comprehensiveIncome => (
               <div
-                key={incomeStatement.id}
+                key={comprehensiveIncome.id}
                 css={styles.blockWrapper}>
                 <div
                   css={styles.block}>
-                  {incomeStatement.name}
+                  {/* 項目 */}
+                  {comprehensiveIncome.name}
                 </div>
                 {stocks.map(stock => (
                   <div
                     key={stock.id}
                     css={styles.block}>
                     <span css={styles.word}>
+                      {/* 值 */}
                       {stock.value}
                     </span>
                   </div>
@@ -242,7 +275,7 @@ function StockPage({
                   key={stock.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.year}
+                    {stock.season}
                   </span>
                 </div>
               ))}
@@ -384,7 +417,7 @@ function StockPage({
             }}
             type="button">
             <span css={styles.title}>
-              損益表
+              綜合損益表
             </span>
           </button>
           <button
@@ -431,6 +464,9 @@ const reduxHook = connect(
   state => ({
     stockData: state.Stocks.stockData,
   }),
+  dispatch => bindActionCreators({
+    ...StockActions,
+  }, dispatch),
 );
 
 export default reduxHook(StockPage);

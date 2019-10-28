@@ -34,6 +34,7 @@ const styles = {
     backgroundColor: Colors.LAYER_FIRST,
     transition: '0.5s ease-out',
     fontSize: 13,
+    outline: 'none',
   },
   btn: css`
     height: 80px;
@@ -106,7 +107,7 @@ function StockStrategyHeader({
       {mockModules.map(module => (<ModuleBtn key={module.id} module={module} />))}
       <span css={styles.line} />
       <Link
-        to={`/industry/stocks/${stockId}/modules`}
+        to={`/industry/:industryId/stocks/${stockId}/modules`}
         css={styles.editModules}>
         <img src={editIcon} css={styles.icon} alt="eddit" />
         <span>編輯計算模型</span>
