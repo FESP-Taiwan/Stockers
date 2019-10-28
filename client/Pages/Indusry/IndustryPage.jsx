@@ -8,7 +8,7 @@ import {
 import { jsx, css } from '@emotion/core';
 import { Link, useParams } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
-import { industryStream } from '../../Mocks/Queries/IndustryDetails';
+import { industryStream } from '../../Constant/industryStream';
 
 const button = css`
   width: 320px;
