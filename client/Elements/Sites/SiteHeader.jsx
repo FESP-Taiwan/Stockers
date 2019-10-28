@@ -12,7 +12,7 @@ import {
   Route,
   Link,
 } from 'react-router-dom';
-import { reduxForm } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import logo from '../../static/images/logo_stockers.svg';
 import HeaderIndustry from './HeaderIndustry';
 import HeaderStock from './HeaderStock';
@@ -133,7 +133,6 @@ const filterModals = [{
 }];
 
 function SiteHeader() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [isMenuOpened, setMenuOpened] = useState(false);
 
   const onClick = useCallback(() => {
@@ -173,45 +172,45 @@ function SiteHeader() {
   }, [isMenuOpened]);
 
   return (
-    <header style={styles.wrapper}>
-      <Link
-        to="/">
-        <img alt="stockers" src={logo} style={styles.logo} />
-      </Link>
-      <div style={styles.middle}>
-        <Switch>
-          <Route path="/industry/:industryId/stocks/:stockId">
-            <HeaderStock />
-          </Route>
-          <Route path="/industry/:industryId">
-            <HeaderIndustry />
-          </Route>
-        </Switch>
-      </div>
-      <div style={styles.searchBar}>
-        <SearchBar
-          input={{
-            value: searchTerm,
-            onChange: setSearchTerm,
-          }}
-          placeholder="以股號/股名查詢" />
-      </div>
-      <div style={styles.userInfoWrapper}>
-        <span style={styles.email}>
-          {userInfo[0].email}
-        </span>
-        <button
-          onClick={onClick}
-          style={styles.userInfoBtn}
-          type="button">
-          <svg width="24" height="24" viewBox="0 0 24 24">
-            <path fill="white" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-          </svg>
-        </button>
-        {mask}
-        {userOptions}
-      </div>
-    </header>
+    <form>
+      <header style={styles.wrapper}>
+        <Link
+          to="/">
+          <img alt="stockers" src={logo} style={styles.logo} />
+        </Link>
+        <div style={styles.middle}>
+          <Switch>
+            <Route path="/industry/:industryId/stocks/:stockId">
+              <HeaderStock />
+            </Route>
+            <Route path="/industry/:industryId">
+              <HeaderIndustry />
+            </Route>
+          </Switch>
+        </div>
+        <div style={styles.searchBar}>
+          <Field
+            name="searchTerm"
+            placeholder="以股號/股名查詢"
+            component={SearchBar} />
+        </div>
+        <div style={styles.userInfoWrapper}>
+          <span style={styles.email}>
+            {userInfo[0].email}
+          </span>
+          <button
+            onClick={onClick}
+            style={styles.userInfoBtn}
+            type="button">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path fill="white" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+            </svg>
+          </button>
+          {mask}
+          {userOptions}
+        </div>
+      </header>
+    </form>
   );
 }
 
