@@ -125,6 +125,8 @@ function StockersInfoPage({
     );
   }, [industryCardData, filteredIndustryCards]);
 
+  console.log('industryCardData', industryCardData);
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.following}>

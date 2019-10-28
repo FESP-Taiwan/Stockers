@@ -10,7 +10,6 @@ import {
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
 import IndustryPage from './Indusry/IndustryPage';
-import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
 import StockSimulationPage from './StockSimulation/StockSimulationPage';
 import StockPage from './Stock/StockPage';
 import StockPageWrapper from './Stock/StockPageWrapper';
@@ -38,11 +37,7 @@ const styles = {
 function MainBoard() {
   return (
     <div style={styles.wrapper}>
-      <Switch>
-        <Route>
-          <SiteHeader />
-        </Route>
-      </Switch>
+      <SiteHeader />
       <div style={styles.main}>
         <Switch>
           <Route path="/industry/:industryId/stocks/:stockId">
@@ -51,18 +46,13 @@ function MainBoard() {
           <Route path="/industry/:industryId">
             <IndustryPage />
           </Route>
-          <Route>
-            <StocksInfoPage />
-          </Route>
-          <Route exact path="/strategy">
-            <InvestStrategyPageWrapper />
-          </Route>
           <Route exact path="/stockSimulation">
             <StockSimulationPage />
           </Route>
           <Route exact path="/industry/stock">
             <StockPage />
           </Route>
+          <Route path="/stockInfo" component={StocksInfoPage} />
           <Redirect to="/stockInfo" />
         </Switch>
       </div>
