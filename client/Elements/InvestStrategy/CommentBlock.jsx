@@ -105,6 +105,23 @@ const styles = {
   },
 };
 
+async function submit(data, setFormOpened) {
+  const resData = await fetch(`${API_HOST}/modules/updateCommentInfo`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlhbjI0MjU3NTg3QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA4JHgvN1lkdTQ4cnh2QzYwZ3VnMFJzRU80Mk1uSTBzSWgxOFdVVllGZG5haEJ6SnZsa2lSRE1xIiwiaWF0IjoxNTcyMTg3NzkzLCJleHAiOjE1NzIyNzQxOTN9.nTFowhpiFaJdfWWBWImH2IkcWmos8mdl6aH4hVB-Juk',
+    },
+    body: JSON.stringify({
+      data,
+    }),
+  }).then(res => (res.json()));
+
+  console.log('resData', resData);
+
+  setFormOpened(false);
+}
+
 function CommentBlock() {
   const [isFormOpened, setFormOpened] = useState(false);
   const [gridInfoForEmitTrigger, setGridInfoForEmitTrigger] = useState({});
@@ -163,7 +180,8 @@ function CommentBlock() {
     if (!isFormOpened) return null;
 
     return (
-      <Editor />
+      <Editor
+        submitAction={data => submit(data, setFormOpened)} />
     );
   }, [isFormOpened]);
 

@@ -7,9 +7,10 @@ import React, {
   useMemo,
   useState,
   useContext,
+  useCallback,
 } from 'react';
 import reducer, { initializer } from './Reducer';
-import { fromJSON } from '../../helper/json';
+import { fromJSON, toJSON } from '../../helper/json';
 import { Dispatch as DispatchContext } from '../../Constant/ArtiboxEditor/context';
 import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/types';
 import Actions from '../../Constant/ArtiboxEditor/actions';
@@ -22,6 +23,7 @@ import {
   EDITTER_GET_GRID,
 } from '../../Constant/investStrategy';
 import { CommentInitDataContext } from '../../Constant/context';
+import { FIXED_BUTTON_INDEX } from '../../Constant/zIndex';
 
 const styles = {
   wrapper: {
@@ -62,6 +64,20 @@ const styles = {
     backgroundColor: Colors.LAYER_FOURTH,
     borderRadius: 40,
   },
+  submitBtn: {
+    position: 'absolute',
+    zIndex: FIXED_BUTTON_INDEX,
+    right: 0,
+    top: 40,
+    width: 60,
+    height: 28,
+    borderRadius: 4,
+    lineHeight: '28px',
+    textAlign: 'center',
+    backgroundColor: Colors.PRIMARY,
+    fontSize: 12,
+    margin: '0 8px',
+  },
 };
 
 function usePreviosState(value) {
@@ -74,7 +90,11 @@ function usePreviosState(value) {
   return ref.current;
 }
 
-function Editor() {
+function Editor({
+  submitAction,
+}: {
+  submitAction: Function,
+}) {
   const initData = useContext(CommentInitDataContext);
 
   const [curFocusBlock, setFocusBlock] = useState(null);
@@ -85,6 +105,14 @@ function Editor() {
   console.log(state);
 
   const prevState = usePreviosState(state);
+
+  const submit = useCallback(() => {
+    const storedObject = toJSON(state);
+
+    console.log('storedObject', storedObject);
+
+    // submitAction(storedObject);
+  }, [submitAction, state]);
 
   useEffect(() => {
     if (!firstLoaded) {
@@ -209,6 +237,7 @@ function Editor() {
               case BLOCK_TYPES.GRID:
                 return (
                   <Grid
+                    key={block.id}
                     id={block.id}
                     focus={block.focus}
                     type={block.type}
@@ -260,6 +289,12 @@ function Editor() {
             curFocusId={curFocusBlock ? curFocusBlock.id : null}
             curFocusType={curFocusBlock ? curFocusBlock.type : null} />
         </div>
+        <button
+          style={styles.submitBtn}
+          onClick={submit}
+          type="button">
+          儲存編輯
+        </button>
       </div>
     </DispatchContext.Provider>
   );

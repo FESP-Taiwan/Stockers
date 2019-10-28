@@ -80,7 +80,9 @@ function ModuleTable() {
     const dateList = [];
 
     dateList.push(
-      <div style={styles.dateBlockHeader}>
+      <div
+        key="header"
+        style={styles.dateBlockHeader}>
         <span>資料：單季</span>
         <div style={styles.horizontalLine} />
         <span>時間列表</span>
@@ -89,7 +91,9 @@ function ModuleTable() {
 
     moduleData[0].chipData.forEach(({ date }) => {
       dateList.push(
-        <span style={styles.dateBlock}>
+        <span
+          key={date}
+          style={styles.dateBlock}>
           {date}
           季
         </span>
