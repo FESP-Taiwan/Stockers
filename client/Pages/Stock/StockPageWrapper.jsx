@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import type { ContextRouter } from 'react-router';
 import * as StockActions from '../../actions/Stocks';
-import prettifyStockData from '../../helper/stocks';
+import { prettifyStockData } from '../../helper/stocks';
 import StockPage from './StockPage';
 import InvestStrategyPageWrapper from '../InvestStrategy/InvestStrategyPageWrapper';
 
