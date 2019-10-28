@@ -4,6 +4,7 @@ import React, {
   useEffect,
 } from 'react';
 import {
+  useParams,
   Switch,
   Route,
 } from 'react-router-dom';
@@ -21,12 +22,9 @@ type Props = {
 
 function StockPageWrapper({
   storeStockData,
-  match: {
-    params: {
-      stockId,
-    },
-  },
 }: Props) {
+  const { stockId } = useParams();
+
   useEffect(() => {
     let canceled = false;
 
@@ -54,8 +52,12 @@ function StockPageWrapper({
 
   return (
     <Switch>
-      <Route path="/industry/stocks/:stockId/modules" component={InvestStrategyPageWrapper} />
-      <Route component={StockPage} />
+      <Route path="/industry/:industryId/stocks/:stockId/modules">
+        <InvestStrategyPageWrapper />
+      </Route>
+      <Route>
+        <StockPage />
+      </Route>
     </Switch>
   );
 }

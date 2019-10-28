@@ -100,11 +100,12 @@ function StockersInfoPage({
 
     return (
       <div css={styles.industryCardWrapper}>
-        {industryCardData.map(industry => (
+        {industryCardData.map((industry, index) => (
           <IndustryCard
             key={industry.industry_type}
             name={industry.industry_type}
-            companies={industry.companies} />
+            companies={industry.companies}
+            industryId={index} />
         ))}
       </div>
     );

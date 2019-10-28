@@ -1,11 +1,10 @@
 // @flow
 
-import React, {
-  Fragment,
-} from 'react';
+import React from 'react';
 import {
   Switch,
   Route,
+  useParams,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
@@ -36,13 +35,21 @@ function MainBoard() {
   return (
     <div style={styles.wrapper}>
       <Switch>
-        <Route component={SiteHeader} />
+        <Route>
+          <SiteHeader />
+        </Route>
       </Switch>
       <div style={styles.main}>
         <Switch>
-          <Route path="/industry/stocks/:stockId" component={StockPageWrapper} />
-          <Route path="/industry" component={IndustryPage} />
-          <Route component={StocksInfoPage} />
+          <Route path="/industry/:industryId/stocks/:stockId">
+            <StockPageWrapper />
+          </Route>
+          <Route path="/industry/:industryId">
+            <IndustryPage />
+          </Route>
+          <Route>
+            <StocksInfoPage />
+          </Route>
         </Switch>
       </div>
     </div>

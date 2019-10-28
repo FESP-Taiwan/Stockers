@@ -171,9 +171,7 @@ type Props = {
 
 function StockPage({
   stockData,
-  state,
 }: Props) {
-  console.log('state', state);
   console.log('stockData', stockData);
 
   const [table, setTable] = useState('INCOME_STATEMENT');
@@ -429,7 +427,6 @@ function StockPage({
 
 const reduxHook = connect(
   state => ({
-    state,
     stockData: state.Stocks.stockData,
   }),
 );

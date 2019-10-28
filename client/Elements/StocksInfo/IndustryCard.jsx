@@ -3,7 +3,7 @@
 
 import { useMemo } from 'react';
 import { jsx, css } from '@emotion/core';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
 import IndustryCardChart from './Form/IndustryCardChart';
 
@@ -45,11 +45,13 @@ const styles = {
 };
 type Props = {
   name: string,
+  industryId: number,
   companies: Array,
 };
 
 function IndustryCard({
   name,
+  industryId,
   companies,
 }: Props) {
   const average = useMemo(() => {
@@ -87,18 +89,18 @@ function IndustryCard({
 
     return [{
       name: 'firstMon',
-      percent: (firstMon + 1) * 10,
+      percent: (firstMon + 1) * 10000,
     }, {
       name: 'secondMon',
-      percent: (secondMon + 1) * 10,
+      percent: (secondMon + 1) * 10000,
     }, {
       name: 'thirdMon',
-      percent: (thirdMon + 1) * 10,
+      percent: (thirdMon + 1) * 10000,
     }];
   }, [companies]);
 
   return (
-    <Link css={styles.wrapper} to="/industry">
+    <Link css={styles.wrapper} to={`/industry/${industryId}`}>
       <div css={styles.main}>
         <div css={styles.word}>
           <span css={styles.title}>

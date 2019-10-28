@@ -174,9 +174,12 @@ function SiteHeader() {
       </Link>
       <div style={styles.middle}>
         <Switch>
-          <Route exact path="/" render={() => null} />
-          <Route exact path="/industry" component={HeaderIndustry} />
-          <Route exact paht="/industry/stock" component={HeaderStock} />
+          <Route path="/industry/:industryId/stocks/:stockId">
+            <HeaderStock />
+          </Route>
+          <Route path="/industry/:industryId">
+            <HeaderIndustry />
+          </Route>
         </Switch>
       </div>
       <div style={styles.searchBar}>

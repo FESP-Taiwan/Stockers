@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 // 引用要使用的圖表元素
 import {
-  AreaChart, Area,
+  AreaChart, Area, XAxis, YAxis,
 } from 'recharts';
 
 const styles = {
@@ -28,6 +28,7 @@ function IndustryCardChart({
   average,
   data,
 }: Props) {
+  console.log('data', data);
   const area = useMemo(() => {
     if (average > 0) {
       return (

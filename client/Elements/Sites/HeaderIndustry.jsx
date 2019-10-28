@@ -1,9 +1,16 @@
 // @flow
 /** @jsx jsx */
 
+import {
+  useMemo,
+  useEffect,
+} from 'react';
 import { jsx, css } from '@emotion/core';
-import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import arrow from '../../static/images/arrow.png';
+import * as IndustryCardActions from '../../actions/IndustryCard';
 
 const styles = {
   wrapper: css`
@@ -25,15 +32,61 @@ const styles = {
   `,
 };
 
-function HeaderIndustry() {
+function HeaderIndustry({
+  fetchIndustryCardData,
+  industryCardData,
+}: {
+  fetchIndustryCardData: Function,
+  industryCardData: Array,
+}) {
+  const { industryId } = useParams();
+
+  useEffect(() => {
+    let canceled = false;
+
+    async function fetchIndustryData() {
+      const resData = await fetch(`${API_HOST}/stocker/industryStickers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        fetchIndustryCardData(resData);
+      }
+    }
+
+    fetchIndustryData();
+
+    return () => {
+      canceled = true;
+    };
+  }, [fetchIndustryCardData]);
+
+  const industryName = useMemo(() => {
+    if (!industryCardData.length) return null;
+
+    return industryCardData[Number(industryId)].industry_type;
+  }, [industryCardData, industryId]);
+
   return (
     <div css={styles.wrapper}>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <span css={styles.industryName}>
-        半導體
+        {industryName}
       </span>
     </div>
   );
 }
 
-export default HeaderIndustry;
+const reduxHook = connect(
+  state => ({
+    industryCardData: state.IndustryCard.IndustryCardData,
+  }),
+  dispatch => bindActionCreators({
+    ...IndustryCardActions,
+  }, dispatch),
+);
+
+export default reduxHook(HeaderIndustry);

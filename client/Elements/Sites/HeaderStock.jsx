@@ -1,11 +1,18 @@
 // @flow
 /** @jsx jsx */
 
+import {
+  useMemo,
+  useEffect,
+} from 'react';
 import { jsx, css } from '@emotion/core';
-import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 import { flex } from '../../Constant/emotion';
 import { SITE_HEADER_INDEX } from '../../Constant/zIndex';
 import arrow from '../../static/images/arrow.png';
+import * as IndustryCardActions from '../../actions/IndustryCard';
 
 const styles = {
   wrapper: css`
@@ -51,21 +58,66 @@ const styles = {
   `,
 };
 
-function HeaderIndustry() {
+function HeaderIndustry({
+  fetchIndustryCardData,
+  industryCardData,
+}: {
+  fetchIndustryCardData: Function,
+  industryCardData: Array,
+}) {
+  const { industryId, stockId } = useParams();
+
+  useEffect(() => {
+    let canceled = false;
+
+    async function fetchIndustryData() {
+      const resData = await fetch(`${API_HOST}/stocker/industryStickers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        fetchIndustryCardData(resData);
+      }
+    }
+
+    fetchIndustryData();
+
+    return () => {
+      canceled = true;
+    };
+  }, [fetchIndustryCardData]);
+
+  const industryName = useMemo(() => {
+    if (!industryCardData.length) return null;
+
+    return industryCardData[Number(industryId)].industry_type;
+  }, [industryCardData, industryId]);
+
+  const [stock] = useMemo(() => {
+    if (!industryCardData.length) return null;
+
+    return industryCardData[Number(industryId)].companies
+      .filter(company => company.stockNo === stockId);
+  }, [industryCardData, stockId, industryId]);
+
   return (
     <div css={styles.wrapper}>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <Link
-        to="/industry"
+        to={`/industry/${industryId}`}
         css={styles.industryName}>
-        半導體
+        {industryName}
       </Link>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <div css={styles.stock}>
         <span
           css={styles.stockName}>
-          2200
-          台積電
+          {stockId}
+          &nbsp;
+          {stock.name}
         </span>
         <div css={styles.following}>
           <span css={styles.followingWord}>
@@ -77,4 +129,13 @@ function HeaderIndustry() {
   );
 }
 
-export default HeaderIndustry;
+const reduxHook = connect(
+  state => ({
+    industryCardData: state.IndustryCard.IndustryCardData,
+  }),
+  dispatch => bindActionCreators({
+    ...IndustryCardActions,
+  }, dispatch),
+);
+
+export default reduxHook(HeaderIndustry);
