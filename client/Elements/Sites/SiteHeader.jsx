@@ -156,11 +156,13 @@ function SiteHeader() {
           你的模型
         </div>
         {filterModals.map(filterModal => (
-          <div
+          <button
             key={filterModal.id}
+            onClick={() => console.log('切換模型')}
+            type="button"
             style={styles.filterBtn}>
             {filterModal.name}
-          </div>
+          </button>
         ))}
       </div>
     );

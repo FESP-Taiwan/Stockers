@@ -195,8 +195,6 @@ function IndustryPage() {
     ));
   }, [streamInfo, industryId]);
 
-  console.log('streamInfo', streamInfo);
-
   return (
     <div css={styles.wrapper}>
       <div css={styles.blockWrapper}>

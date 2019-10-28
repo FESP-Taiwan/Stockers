@@ -65,6 +65,8 @@ function HeaderIndustry({
   fetchIndustryCardData: Function,
   industryCardData: Array,
 }) {
+  console.log('industryCardData', industryCardData);
+
   const { industryId, stockId } = useParams();
 
   useEffect(() => {
@@ -96,11 +98,13 @@ function HeaderIndustry({
     return industryCardData[Number(industryId)].industry_type;
   }, [industryCardData, industryId]);
 
-  const [stock] = useMemo(() => {
+  const stockName = useMemo(() => {
     if (!industryCardData.length) return null;
 
-    return industryCardData[Number(industryId)].companies
+    const stock = industryCardData[Number(industryId)].companies
       .filter(company => company.stockNo === stockId);
+
+    return stock[0].name;
   }, [industryCardData, stockId, industryId]);
 
   return (
@@ -117,7 +121,7 @@ function HeaderIndustry({
           css={styles.stockName}>
           {stockId}
           &nbsp;
-          {stock.name}
+          {stockName}
         </span>
         <div css={styles.following}>
           <span css={styles.followingWord}>
