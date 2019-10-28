@@ -58,7 +58,7 @@ const styles = {
   `,
 };
 
-function HeaderIndustry({
+function HeaderStock({
   fetchIndustryCardData,
   industryCardData,
 }: {
@@ -140,4 +140,4 @@ const reduxHook = connect(
   }, dispatch),
 );
 
-export default reduxHook(HeaderIndustry);
+export default reduxHook(HeaderStock);
