@@ -1,20 +1,24 @@
 // @flow
+/** @jsx jsx */
 
-import React, {
+import {
   useCallback,
   useState,
   useMemo,
 } from 'react';
+import { jsx } from '@emotion/core';
 import {
   Switch,
   Route,
   Link,
 } from 'react-router-dom';
+import { reduxForm } from 'redux-form';
 import logo from '../../static/images/logo_stockers.svg';
 import HeaderIndustry from './HeaderIndustry';
 import HeaderStock from './HeaderStock';
 import { userInfo } from '../../Mocks/Queries/User';
 import SearchBar from '../../Form/SearchBar';
+import { FORM_SITE_HEADER } from '../../Constant/form';
 import { FOOTER_INDEX } from '../../Constant/zIndex';
 
 const styles = {
@@ -211,4 +215,8 @@ function SiteHeader() {
   );
 }
 
-export default SiteHeader;
+const formHook = reduxForm({
+  form: FORM_SITE_HEADER,
+});
+
+export default formHook(SiteHeader);

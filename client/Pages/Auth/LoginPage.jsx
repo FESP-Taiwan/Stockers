@@ -13,7 +13,6 @@ import {
 import type { FormProps } from 'redux-form';
 // import { withRouter } from 'react-router';
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
 import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
 import { FORM_LOGIN } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
@@ -84,6 +83,7 @@ const styles = {
     background-repeat: no-repeat;
   `,
   googleBlock: css`
+    color: #000;
     width: 306px;
     height: 80px;
     border-radius: 40px;
@@ -135,12 +135,12 @@ const LOGIN = gql`
   }
 `;
 
+
 function LoginPage({
   handleSubmit,
 }: FormProps) {
   // const [register, { loading }] = useMutation();
-  // const [logIn, { data }] = useMutation(LOGIN);
-  // const [loading, data] = useQuery(LOGIN);
+  // const [loading, data] = useQuery(LOGIN)
 
   const {
     messageHub,
@@ -154,26 +154,25 @@ function LoginPage({
 
   // useEffect(() => () => messageHub.emit(MESSAGE, '登入成功！'), [MESSAGE, messageHub]);
 
-  // const onSubmit = useCallback(async ({
-  //   email,
-  //   password,
-  // }) => {
-  //   try {
-      // await logIn({
-      //   variables: {
-      //     email,
-      //     password,
-      //   },
-      // });
+  const onSubmit = useCallback(async ({
+    email,
+    password,
+  }) => {
+    // try {
+    //   await logIn({
+    //     variables: {
+    //       email,
+    //       password,
+    //     },
+    //   });
 
-      // await localStorage.setItem('token', data.logIn.token);
-  //   } catch {
-  //     errorHub.emit(ERROR, '登入失敗');
-  //   }
-  //
-  //   console.log('data', data);
-  //   errorHub.emit(ERROR, '登入失敗');
-  // }, [MESSAGE, messageHub, ERROR, errorHub, data, logIn]);
+    //   await localStorage.setItem('token', data.logIn.token);
+    // } catch {
+    //   errorHub.emit(ERROR, '登入失敗');
+    // }
+
+    // errorHub.emit(ERROR, '登入失敗');
+  }, [ERROR, errorHub]);
 
   // messageHub.emit(MESSAGE, '登入成功！');
   errorHub.emit(ERROR, '登入失敗');

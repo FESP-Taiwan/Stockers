@@ -4,11 +4,15 @@ import React from 'react';
 import {
   Switch,
   Route,
+  Redirect,
   useParams,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
 import IndustryPage from './Indusry/IndustryPage';
+import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
+import StockSimulationPage from './StockSimulation/StockSimulationPage';
+import StockPage from './Stock/StockPage';
 import StockPageWrapper from './Stock/StockPageWrapper';
 
 const styles = {
@@ -50,6 +54,16 @@ function MainBoard() {
           <Route>
             <StocksInfoPage />
           </Route>
+          <Route exact path="/strategy">
+            <InvestStrategyPageWrapper />
+          </Route>
+          <Route exact path="/stockSimulation">
+            <StockSimulationPage />
+          </Route>
+          <Route exact path="/industry/stock">
+            <StockPage />
+          </Route>
+          <Redirect to="/stockInfo" />
         </Switch>
       </div>
     </div>

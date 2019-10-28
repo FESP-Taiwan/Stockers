@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useContext,
 } from 'react';
 import reducer, { initializer } from './Reducer';
 import { fromJSON } from '../../helper/json';
@@ -14,7 +15,13 @@ import { BLOCK_TYPES } from '../../Constant/ArtiboxEditor/types';
 import Actions from '../../Constant/ArtiboxEditor/actions';
 import Text from './Blocks/Text';
 import Line from './Blocks/Line';
+import Grid from './Blocks/Grid';
 import TypeSelectorMenu from './Elements/TypeSelectorMenu';
+import {
+  investStrategySharedEmitter,
+  EDITTER_GET_GRID,
+} from '../../Constant/investStrategy';
+import { CommentInitDataContext } from '../../Constant/context';
 
 const styles = {
   wrapper: {
@@ -68,10 +75,51 @@ function usePreviosState(value) {
 }
 
 function Editor() {
+  const initData = useContext(CommentInitDataContext);
+
   const [curFocusBlock, setFocusBlock] = useState(null);
-  const [state, dispatch] = useReducer(reducer, fromJSON(), initializer);
+  const [firstLoaded, setFirstLoaded] = useState(false);
+
+  const [state, dispatch] = useReducer(reducer, fromJSON(initData), initializer);
 
   const prevState = usePreviosState(state);
+
+  useEffect(() => {
+    if (!firstLoaded) {
+      if (state.blocks.every(block => block.loaded)) {
+        setFirstLoaded(true);
+      }
+    }
+  }, [firstLoaded, state]);
+
+  useEffect(() => {
+    function getGridHandler(gridInfo) {
+      const { blocks } = state;
+
+      if (blocks) {
+        const focusBlock = blocks.find(block => block.focus);
+
+        if (focusBlock && focusBlock.type === BLOCK_TYPES.GRID) {
+          dispatch({
+            type: Actions.ADD_GRID_INFO,
+            id: focusBlock.id,
+            gridInfo,
+          });
+        } else {
+          dispatch({
+            type: Actions.NEW_GRID,
+            gridInfo,
+          });
+        }
+      }
+    }
+
+    investStrategySharedEmitter.on(EDITTER_GET_GRID, getGridHandler);
+
+    return () => {
+      investStrategySharedEmitter.removeListener(EDITTER_GET_GRID, getGridHandler);
+    };
+  }, [dispatch, state]);
 
   useEffect(() => {
     if (!state) return;
@@ -96,12 +144,16 @@ function Editor() {
       if (~removeId) {
         const artiInputs = document.querySelectorAll('.Artibox-input');
 
-        if (removeId !== 0) {
-          artiInputs[removeId - 1].focus();
+        const gridsNumberBeforeRemovedBlock = prevState.blocks
+          .slice(0, removeId)
+          .filter(block => block.type === BLOCK_TYPES.GRID).length;
+
+        if (removeId !== 0 && prevState.blocks[removeId - 1].type !== BLOCK_TYPES.GRID) {
+          artiInputs[removeId - 1 - gridsNumberBeforeRemovedBlock].focus();
         }
       }
     }
-  }, [state, prevState]);
+  }, [state, prevState, firstLoaded]);
 
   const placeholder = useMemo(() => {
     if (!state) return null;
@@ -129,9 +181,10 @@ function Editor() {
                     content={block.content}
                     meta={block.meta}
                     type={block.type}
+                    loaded={block.loaded}
+                    firstLoaded={firstLoaded}
                     key={block.id} />
                 );
-              case BLOCK_TYPES.QUOTE:
               case BLOCK_TYPES.TITLE:
               case BLOCK_TYPES.SUBTITLE:
               case BLOCK_TYPES.TEXT:
@@ -145,8 +198,21 @@ function Editor() {
                       focus={block.focus}
                       meta={block.meta}
                       type={block.type}
+                      loaded={block.loaded}
+                      firstLoaded={firstLoaded}
                       content={block.content} />
                   </div>
+                );
+
+              case BLOCK_TYPES.GRID:
+                return (
+                  <Grid
+                    id={block.id}
+                    focus={block.focus}
+                    type={block.type}
+                    loaded={block.loaded}
+                    firstLoaded={firstLoaded}
+                    meta={block.meta} />
                 );
 
               default:
@@ -166,7 +232,9 @@ function Editor() {
               const lastBlock = (blocks.length && blocks[blocks.length - 1]);
 
               if (!lastBlock || (lastBlock
-                && (lastBlock.type === BLOCK_TYPES.LINE ? true : !!lastBlock.content))
+                && ((
+                  lastBlock.type === BLOCK_TYPES.LINE || lastBlock.type === BLOCK_TYPES.GRID
+                ) ? true : !!lastBlock.content))
               ) {
                 dispatch({
                   type: Actions.NEW_LINE,

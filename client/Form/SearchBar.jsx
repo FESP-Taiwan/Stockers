@@ -35,11 +35,6 @@ const styles = {
 };
 
 type Props = {
-  input: {
-    name: string,
-    value: string,
-    onChange: Function,
-  },
   placeholder: string,
 };
 
@@ -55,12 +50,11 @@ function usePrevValue(value) {
 
 function SearchBar({
   input: {
-    name,
     value,
     onChange,
   },
   placeholder,
-}: Props) {
+}: Props & FieldProps) {
   const [terms, setTerms] = useState(value);
   const prevValue = usePrevValue(value);
 
@@ -88,7 +82,7 @@ function SearchBar({
         }}
         onKeyUp={(e) => {
           if (e.which === 13 || e.keyCode === 13) {
-            e.onChange(terms);
+            onChange(terms);
           }
         }}
         onChange={({

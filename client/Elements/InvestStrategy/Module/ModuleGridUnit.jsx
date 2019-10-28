@@ -86,6 +86,9 @@ const styles = {
       background-color: ${Colors.LAYER_FOURTH};
     }
   `,
+  redTxt: {
+    color: Colors.ERROR,
+  },
 };
 
 type Props = {
@@ -111,14 +114,23 @@ function ModuleGridUnit({
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
 
   const onClick = useCallback((type: null) => {
-    investStrategySharedEmitter.emit(CLICK_EVENT, {
-      rowId,
-      columnId,
-      type,
-      date: (type === MATH_META_TYPES.DATE ? timeStamp : null),
-      name: (headerName || label),
-    });
-  }, [rowId, columnId, headerName, label, timeStamp]);
+    if (!isMathModuleEditting) {
+      investStrategySharedEmitter.emit(CLICK_EVENT, {
+        rowId,
+        columnId,
+        name: (headerName || label),
+      });
+    } else if (type) {
+      investStrategySharedEmitter.emit(CLICK_EVENT, {
+        rowId,
+        columnId,
+        type,
+        date: (type === MATH_META_TYPES.DATE ? timeStamp : null),
+        name: (headerName || label),
+        value: (type === MATH_META_TYPES.DATE || type === MATH_META_TYPES.GRID) ? label : null,
+      });
+    }
+  }, [rowId, columnId, headerName, label, timeStamp, isMathModuleEditting]);
 
   const mathEmitHandlerBlock = useMemo(() => {
     if (!isMathModuleEditting) return null;
@@ -137,9 +149,9 @@ function ModuleGridUnit({
           </button>
           <button
             css={styles.mathEditBtn}
-            onClick={() => onClick(MATH_META_TYPES.NUMEROUS)}
+            onClick={() => onClick(MATH_META_TYPES.LARGE)}
             type="button">
-            取眾數
+            最大值
           </button>
         </div>
       );
@@ -254,6 +266,11 @@ function ModuleGridUnit({
     }
   }, [setHeaderUpdateBlockOpen]);
 
+  const headerBtnStyles = useMemo(() => ({
+    ...styles.headerBtn,
+    ...(!label ? styles.redTxt : {}),
+  }), [label]);
+
   if (rowId === 'header') {
     return (
       <div
@@ -264,7 +281,7 @@ function ModuleGridUnit({
           ref={moduleGridUnit}
           className="module-grid-unit"
           style={styles.headerBtn}
-          onClick={onClick}
+          onClick={() => onClick()}
           type="button">
           {label}
         </button>
@@ -295,11 +312,10 @@ function ModuleGridUnit({
       <button
         ref={moduleGridUnit}
         className="module-grid-unit"
-        css={styles.headerBtn}
-        onClick={onClick}
-        // disabled={isMathModuleEditting}
+        css={headerBtnStyles}
+        onClick={() => onClick()}
         type="button">
-        {label}
+        {label || '資料從缺'}
       </button>
       {mathEmitHandlerBlock}
     </div>
