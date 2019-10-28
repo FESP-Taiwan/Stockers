@@ -2,6 +2,7 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import type { ContextRouter } from 'react-router';
@@ -89,13 +90,9 @@ const mockModules = [{
   name: 'B',
 }];
 
-function StockStrategyHeader({
-  match: {
-    params: {
-      stockId,
-    },
-  },
-}: ContextRouter) {
+function StockStrategyHeader() {
+  const { industryId, stockId } = useParams();
+
   return (
     <div css={styles.wrapper}>
       <button
@@ -107,7 +104,7 @@ function StockStrategyHeader({
       {mockModules.map(module => (<ModuleBtn key={module.id} module={module} />))}
       <span css={styles.line} />
       <Link
-        to={`/industry/:industryId/stocks/${stockId}/modules`}
+        to={`/industry/${industryId}/stocks/${stockId}/modules`}
         css={styles.editModules}>
         <img src={editIcon} css={styles.icon} alt="eddit" />
         <span>編輯計算模型</span>
