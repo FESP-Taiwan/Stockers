@@ -11,7 +11,7 @@ import CommentBlockWrapper from './CommentBlockWrapper';
 import MathModuleBlockWrapper from './Math/MathModuleBlockWrapper';
 
 type Props = {
-  moduleInfo: Array,
+  moduleInfo: {},
 } & ContextRouter;
 
 function InvestStrategyMainBlock({
@@ -24,11 +24,16 @@ function InvestStrategyMainBlock({
 }: Props) {
   console.log('moduleInfo', moduleInfo);
 
+  const {
+    comment,
+  } = moduleInfo;
+
   return (
     <Fragment>
       <MathModuleBlockWrapper />
       <ModuleTableWrapper />
-      <CommentBlockWrapper />
+      <CommentBlockWrapper
+        comment={comment || {}} />
     </Fragment>
   );
 }
@@ -42,7 +47,7 @@ const reduxHook = connect(
     },
   }) => ({
     moduleInfo: state.InvestStrategy.userModulesInfo
-      .find(module => module.id === parseInt(moduleId, 10)),
+      .find(module => module.id === parseInt(moduleId, 10)) || {},
   }),
 );
 

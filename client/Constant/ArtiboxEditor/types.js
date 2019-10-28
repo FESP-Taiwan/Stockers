@@ -9,6 +9,15 @@ export const BLOCK_TYPES = {
   HIGHLIGHT_AREA: Symbol('Artibox/Block/HIGHLIGHT_AREA'),
 };
 
+export const BLOCK_NAMES = {
+  [BLOCK_TYPES.LINE]: 'LINE',
+  [BLOCK_TYPES.TEXT]: 'TEXT',
+  [BLOCK_TYPES.TITLE]: 'TITLE',
+  [BLOCK_TYPES.SUBTITLE]: 'SUBTITLE',
+  [BLOCK_TYPES.GRID]: 'GRID',
+  [BLOCK_TYPES.HIGHLIGHT_AREA]: 'HIGHLIGHT_AREA',
+};
+
 export const MARKER_TYPES = {
   HIGHTLIGHT: Symbol('Artibox/Marker/HIGHLIGHT'),
   BOLD: Symbol('Artibox/Marker/BOLD'),

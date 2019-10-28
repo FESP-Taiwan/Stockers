@@ -120,6 +120,7 @@ function Grid({
     grids.forEach((grid, index) => {
       buttonList.push(
         <button
+          key={`${grid}_${index}`}
           css={styles.btn}
           onClick={() => removeGrid(index)}
           type="button">
