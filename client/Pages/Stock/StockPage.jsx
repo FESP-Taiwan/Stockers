@@ -17,7 +17,7 @@ import {
 } from 'recharts';
 import StockStrategyHeader from './StockStrategyHeader';
 import {
-  incomeStatements, balanceSheets, cashFlows, dividends,
+  comprehensiveIncomes, balanceSheets, cashFlows, dividends,
 } from '../../Constant/stockTable';
 import prettifyStockData from '../../helper/stocks';
 import * as StockActions from '../../actions/Stocks';
@@ -182,8 +182,6 @@ function StockPage({
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
 
-  console.log('stockData', stockData);
-
   const { stockId } = useParams();
 
   useEffect(() => {
@@ -235,19 +233,21 @@ function StockPage({
                 </div>
               ))}
             </div>
-            {incomeStatements.map(incomeStatement => (
+            {comprehensiveIncomes.map(comprehensiveIncome => (
               <div
-                key={incomeStatement.id}
+                key={comprehensiveIncome.id}
                 css={styles.blockWrapper}>
                 <div
                   css={styles.block}>
-                  {incomeStatement.name}
+                  {/* 項目 */}
+                  {comprehensiveIncome.name}
                 </div>
                 {stocks.map(stock => (
                   <div
                     key={stock.id}
                     css={styles.block}>
                     <span css={styles.word}>
+                      {/* 值 */}
                       {stock.value}
                     </span>
                   </div>
@@ -275,7 +275,7 @@ function StockPage({
                   key={stock.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.year}
+                    {stock.season}
                   </span>
                 </div>
               ))}
@@ -417,7 +417,7 @@ function StockPage({
             }}
             type="button">
             <span css={styles.title}>
-              損益表
+              綜合損益表
             </span>
           </button>
           <button

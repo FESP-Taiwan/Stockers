@@ -32,8 +32,6 @@ const styles = {
 };
 
 function MainBoard() {
-  console.log('---');
-
   return (
     <div style={styles.wrapper}>
       <Switch>

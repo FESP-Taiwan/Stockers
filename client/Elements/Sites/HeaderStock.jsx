@@ -65,8 +65,6 @@ function HeaderIndustry({
   fetchIndustryCardData: Function,
   industryCardData: Array,
 }) {
-  console.log('industryCardData', industryCardData);
-
   const { industryId, stockId } = useParams();
 
   useEffect(() => {

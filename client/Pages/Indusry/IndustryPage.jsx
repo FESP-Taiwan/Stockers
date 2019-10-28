@@ -88,11 +88,12 @@ const styles = {
     align-items: flex-start;
     justify-content: flex-start;
     margin: 20px 20px 0 0;
+    flex-wrap: wrap;
   `,
   subBtn: css`
     width: 100px;
     height: 30px;
-    margin: 0 20px 0 0;
+    margin: 0 20px 20px 0;
     border-radius: 40px;
     background-color: ${Colors.LAYER_FIRST};
     display: flex;
@@ -104,6 +105,9 @@ const styles = {
   subBtnTitle: css`
     font-size: 13px;
     color: ${Colors.PRIMARY};
+  `,
+  disableBtnTitle: css`
+    font-size: 13px;
   `,
   btnActive: css`
     ${button}
@@ -121,6 +125,7 @@ const INDUSTRY_TYPES = {
   UPPER: 'UPPER',
   MIDDLE: 'MIDDLE',
   LOWER: 'LOWER',
+  OTHER: 'OTHER',
 };
 
 function IndustryPage() {
@@ -150,6 +155,28 @@ function IndustryPage() {
     );
   }, [industry, industryId]);
 
+  const otherStream = useMemo(() => {
+    if (!industryStream[Number(industryId)].streams[3]) return null;
+
+    return (
+      <button
+        css={{
+          ...styles.button,
+          ...(industry === 'OTHER') ? styles.btnActive : {},
+        }}
+        onClick={() => setIndustry(INDUSTRY_TYPES.OTHER)}
+        type="button">
+        <span
+          css={{
+            ...styles.buttonTitle,
+            ...(industry === 'OTHER') ? styles.btnTitleActive : {},
+          }}>
+          {industryStream[Number(industryId)].streams[3].name}
+        </span>
+      </button>
+    );
+  }, [industry, industryId]);
+
   const [streamInfo] = useMemo(() => industryStream[Number(industryId)].streams
     .filter(stream => stream.type === industry), [industry, industryId]);
 
@@ -162,7 +189,7 @@ function IndustryPage() {
           </span>
           <div css={styles.subBtnWrapper}>
             <div css={styles.subBtn}>
-              <span css={styles.subBtnTitle}>
+              <span css={styles.disableBtnTitle}>
                 暫無提供
               </span>
             </div>
@@ -171,28 +198,30 @@ function IndustryPage() {
       );
     }
 
-    return streamInfo.stocks.map(stock => (
+    return (
       <div
-        key={stock.number}
         css={styles.subIndustry}>
         <span css={styles.subTitle}>
           {streamInfo.name}
         </span>
         <div css={styles.subBtnWrapper}>
-          <Link
-            to={`/industry/${industryId}/stocks/${stock.number}`}
-            css={styles.subBtn}>
-            <span css={styles.subBtnTitle}>
-              {stock.number}
-            </span>
-            <span css={styles.subBtnTitle}>
-              &nbsp;
-              {stock.name}
-            </span>
-          </Link>
+          {streamInfo.stocks.map(stock => (
+            <Link
+              key={stock.number}
+              to={`/industry/${industryId}/stocks/${stock.number}`}
+              css={styles.subBtn}>
+              <span css={styles.subBtnTitle}>
+                {stock.number}
+              </span>
+              <span css={styles.subBtnTitle}>
+                &nbsp;
+                {stock.name}
+              </span>
+            </Link>
+          ))}
         </div>
       </div>
-    ));
+    );
   }, [streamInfo, industryId]);
 
   return (
@@ -250,6 +279,7 @@ function IndustryPage() {
               {industryStream[Number(industryId)].streams[2].name}
             </span>
           </button>
+          {otherStream}
         </div>
         <div css={styles.industryBlock}>
           <span css={styles.article}>
