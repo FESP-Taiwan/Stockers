@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import { useParams } from 'react-router-dom';
 import Editor from '../ArtiboxEditor/Editor';
 import {
   investStrategySharedEmitter,
@@ -127,6 +128,8 @@ function CommentBlock() {
   const [gridInfoForEmitTrigger, setGridInfoForEmitTrigger] = useState({});
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
   const [isConfirmedModalOpened, setConfirmedModalOpened] = useState(false);
+
+  const { moduleId } = useParams();
 
   useEffect(() => {
     function mathStartEditHandler() {
