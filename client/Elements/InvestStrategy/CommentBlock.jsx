@@ -109,7 +109,6 @@ const styles = {
 
 async function submit(data, setFormOpened, moduleId, showMessage) {
   const localState = {
-    userId: localStorage.getItem('userId'),
     token: localStorage.getItem('token'),
   };
 

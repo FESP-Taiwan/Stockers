@@ -109,8 +109,6 @@ function Editor({
   const submit = useCallback(() => {
     const storedObject = toJSON(state);
 
-    console.log('storedObject', storedObject);
-
     submitAction(storedObject);
   }, [submitAction, state]);
 

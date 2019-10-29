@@ -12,6 +12,7 @@ import MathModuleBlockWrapper from './Math/MathModuleBlockWrapper';
 type Props = {
   moduleInfo: {
     comment: {},
+    mathModule: {},
   },
 };
 
@@ -22,11 +23,13 @@ function InvestStrategyMainBlock({
 
   const {
     comment,
+    mathModule,
   } = moduleInfo;
 
   return (
     <Fragment>
-      <MathModuleBlockWrapper />
+      <MathModuleBlockWrapper
+        mathModule={mathModule || {}} />
       <ModuleTableWrapper />
       <CommentBlockWrapper
         comment={comment || {}} />
