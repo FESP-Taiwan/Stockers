@@ -36,8 +36,6 @@ function App({
 }: {
   client: ApolloClient,
 }) {
-  console.log('client', client);
-
   return (
     <div style={styles.wrapper}>
       <Provider store={store}>

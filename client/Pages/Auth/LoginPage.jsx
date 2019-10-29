@@ -165,7 +165,7 @@ function LoginPage({
   }, [history, data, logIn, showMessage, showErrorMessage]);
 
   return (
-    <Form css={styles.wrapper} onSubmit={handleSubmit(() => console.llog("click"))}>
+    <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
       <div css={styles.main}>
         <div css={styles.brandWrapper}>
           <img css={styles.brandLogo} src={stockersLogo} alt="logo" />
