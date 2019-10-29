@@ -26,7 +26,7 @@ function InvestStrategyPage() {
   return (
     <div style={styles.wrapper}>
       <HeaderBlock />
-      <Route path="/industry/stocks/:stockId/modules/:moduleId" component={InvestStrategyMainBlock} />
+      <Route path="/industry/:industryId/stocks/:stockId/modules/:moduleId" component={InvestStrategyMainBlock} />
     </div>
   );
 }

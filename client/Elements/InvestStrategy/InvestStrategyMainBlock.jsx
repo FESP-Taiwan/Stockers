@@ -5,21 +5,17 @@ import React, {
   useMemo,
 } from 'react';
 import { connect } from 'react-redux';
-import { ContextRouter } from 'react-router';
 import ModuleTableWrapper from './Module/ModuleTableWrapper';
 import CommentBlockWrapper from './CommentBlockWrapper';
 import MathModuleBlockWrapper from './Math/MathModuleBlockWrapper';
 
 type Props = {
-  moduleInfo: {},
-} & ContextRouter;
+  moduleInfo: {
+    comment: {},
+  },
+};
 
 function InvestStrategyMainBlock({
-  match: {
-    params: {
-      moduleId,
-    },
-  },
   moduleInfo,
 }: Props) {
   console.log('moduleInfo', moduleInfo);
