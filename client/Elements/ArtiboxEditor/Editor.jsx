@@ -67,8 +67,8 @@ const styles = {
   submitBtn: {
     position: 'absolute',
     zIndex: FIXED_BUTTON_INDEX,
-    right: 0,
-    top: 40,
+    right: 2,
+    bottom: 96,
     width: 60,
     height: 28,
     borderRadius: 4,
