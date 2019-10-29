@@ -11,20 +11,26 @@ function InvestStrategyPageWrapper({
 }: {
   storeUserModules: Function,
 }) {
+  const localState = {
+    useId: localStorage.getItem('userId'),
+    tokem: localStorage.getItem('token'),
+  };
+
   useEffect(() => {
     let canceled = false;
 
     async function fetchUserModulesData() {
-      const resData = await fetch(`${API_HOST}/modules/userModules/2`, {
+      const resData = await fetch(`${localState.useId}/modules/userModules/2`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlhbjI0MjU3NTg3QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA4JHgvN1lkdTQ4cnh2QzYwZ3VnMFJzRU80Mk1uSTBzSWgxOFdVVllGZG5haEJ6SnZsa2lSRE1xIiwiaWF0IjoxNTcyMTg3NzkzLCJleHAiOjE1NzIyNzQxOTN9.nTFowhpiFaJdfWWBWImH2IkcWmos8mdl6aH4hVB-Juk',
+          authorization: localState.token,
         },
       }).then(res => (!canceled ? res.json() : null));
 
       if (resData) {
         storeUserModules(resData);
+        console.log("resData", resData);
       }
     }
 
@@ -33,7 +39,7 @@ function InvestStrategyPageWrapper({
     return () => {
       canceled = true;
     };
-  }, [storeUserModules]);
+  }, [storeUserModules, localState]);
 
   return (
     <InvestStrategyPage />
