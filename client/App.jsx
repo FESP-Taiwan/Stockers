@@ -48,7 +48,7 @@ function App({
                     <Route exact path="/breadCrumb" component={BreadCrumb} />
                     <Route exact path="/register" component={RegisterPage} />
                     <Route exact path="/login" component={LoginPage} />
-                    <Route component={MainBoard} />
+                    <Route path="/" component={MainBoard} />
                   </Switch>
                 </Router>
               </ErrorHandler>
