@@ -2,7 +2,6 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { useCallback } from 'react';
 
 const styles = {
   btn: css`
@@ -44,24 +43,22 @@ const styles = {
 };
 
 type Props = {
-  id: number,
   name: string,
   usingIndex: number,
+  addChip: Function,
+  removeChip: Function,
 }
 
 function ChipHeaderUpdateBlockButton({
-  id,
   name,
   usingIndex,
+  addChip,
+  removeChip,
 }: Props) {
-  const onClick = useCallback(() => {
-    console.log('ONCLICK ACTIONED');
-  }, []);
-
   if (~usingIndex) {
     return (
       <button
-        onClick={onClick}
+        onClick={() => removeChip(usingIndex)}
         css={styles.btnUsing}
         type="button">
         {name}
@@ -74,7 +71,7 @@ function ChipHeaderUpdateBlockButton({
 
   return (
     <button
-      onClick={onClick}
+      onClick={() => addChip(name)}
       css={styles.btn}
       type="button">
       {name}

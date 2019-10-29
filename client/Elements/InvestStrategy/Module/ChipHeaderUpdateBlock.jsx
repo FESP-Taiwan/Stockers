@@ -49,7 +49,6 @@ function ChipHeaderUpdateBlock({
 
   useEffect(() => {
     const initHeaderChips = moduleData.map(el => ({
-      id: el.id,
       name: el.name,
       parentName: el.parentName,
     }));
@@ -85,6 +84,23 @@ function ChipHeaderUpdateBlock({
     }
   }, [setOpen]);
 
+  const addChips = useCallback((data, name) => {
+    setUsingHeaderChips([
+      ...usingHeaderChips,
+      {
+        name: data,
+        parentName: name,
+      },
+    ]);
+  }, [usingHeaderChips]);
+
+  const removeChip = useCallback((removeIndex) => {
+    setUsingHeaderChips([
+      ...usingHeaderChips.slice(0, removeIndex),
+      ...usingHeaderChips.slice(removeIndex + 1),
+    ]);
+  }, [usingHeaderChips]);
+
   const mainBlock = useMemo(() => {
     if (!headerChips.length) return null;
 
@@ -98,15 +114,16 @@ function ChipHeaderUpdateBlock({
             {childNodes.map(childNode => (
               <ChipHeaderUpdateBlockButton
                 usingIndex={usingHeaderChips.findIndex(chip => chip.name === childNode.name)}
+                addChip={data => addChips(data, name)}
+                removeChip={removeIndex => removeChip(removeIndex)}
                 key={childNode.id}
-                id={childNode.id}
                 name={childNode.name} />
             ))}
           </div>
         ))}
       </div>
     );
-  }, [headerChips, usingHeaderChips]);
+  }, [headerChips, usingHeaderChips, addChips, removeChip]);
 
   if (!isOpen) return null;
 
