@@ -18,6 +18,7 @@ import {
 } from '../../Constant/investStrategy';
 import { FIXED_BUTTON_INDEX, BASE_CONTAINER_INDEX } from '../../Constant/zIndex';
 import Modal from '../Modal/Modal';
+import { useGlobalMessage } from '../../helper/useGlobalMessage';
 
 const styles = {
   wrapper: {
@@ -106,12 +107,17 @@ const styles = {
   },
 };
 
-async function submit(data, setFormOpened, moduleId) {
+async function submit(data, setFormOpened, moduleId, showMessage) {
+  const localState = {
+    userId: localStorage.getItem('userId'),
+    token: localStorage.getItem('token'),
+  };
+
   const resStatus = await fetch(`${API_HOST}/modules/updateCommentInfo`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlhbjI0MjU3NTg3QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA4JHgvN1lkdTQ4cnh2QzYwZ3VnMFJzRU80Mk1uSTBzSWgxOFdVVllGZG5haEJ6SnZsa2lSRE1xIiwiaWF0IjoxNTcyMTg3NzkzLCJleHAiOjE1NzIyNzQxOTN9.nTFowhpiFaJdfWWBWImH2IkcWmos8mdl6aH4hVB-Juk',
+      authorization: localState.token,
     },
     body: JSON.stringify({
       moduleId,
@@ -119,7 +125,9 @@ async function submit(data, setFormOpened, moduleId) {
     }),
   }).then(res => res.status);
 
-  console.log('resStatus', resStatus);
+  if (resStatus === 200) {
+    showMessage('儲存成功');
+  }
 
   setFormOpened(false);
 }
@@ -129,6 +137,8 @@ function CommentBlock() {
   const [gridInfoForEmitTrigger, setGridInfoForEmitTrigger] = useState({});
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
   const [isConfirmedModalOpened, setConfirmedModalOpened] = useState(false);
+
+  const showMessage = useGlobalMessage();
 
   const { moduleId } = useParams();
 
@@ -185,7 +195,7 @@ function CommentBlock() {
 
     return (
       <Editor
-        submitAction={data => submit(data, setFormOpened, moduleId)} />
+        submitAction={data => submit(data, setFormOpened, moduleId, showMessage)} />
     );
   }, [isFormOpened, moduleId]);
 
