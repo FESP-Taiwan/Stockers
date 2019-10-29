@@ -86,8 +86,6 @@ function MathInputBlockButton({
   const [buttonIndex, setButtonIndex] = useState(null);
   const [isInfoModalOpened, setInfoModalOpened] = useState(false);
 
-  // console.log('inputState', inputState);
-
   useEffect(() => {
     const { current: button } = blockButtonRef;
 

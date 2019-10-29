@@ -1,9 +1,8 @@
 // @flow
 /** @jsx jsx */
 
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { jsx, css } from '@emotion/core';
-import debug from 'debug';
 import isEmail from 'validator/lib/isEmail';
 import {
   reduxForm,
@@ -11,16 +10,16 @@ import {
   Form,
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
-// import { withRouter } from 'react-router';
+import { withRouter } from 'react-router';
+import type { ContextRouter } from 'react-router';
+import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
+import { useGlobalMessage, useGlobalErrorMessage } from '../../helper/useGlobalMessage';
 import { FORM_LOGIN } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
 import stockersLogo from '../../static/images/logo_stockers_text.png';
 import facebookLogo from '../../static/images/facebook-logo.png';
 import googleLogo from '../../static/images/google-logo.png';
-
-const debugRegister = debug('Stocekers:Register');
 
 const styles = {
   wrapper: css`
@@ -135,50 +134,38 @@ const LOGIN = gql`
   }
 `;
 
-
 function LoginPage({
   handleSubmit,
-}: FormProps) {
-  // const [register, { loading }] = useMutation();
-  // const [loading, data] = useQuery(LOGIN)
+  history,
+}: FormProps & ContextRouter) {
+  const showMessage = useGlobalMessage();
+  const showErrorMessage = useGlobalErrorMessage();
 
-  const {
-    messageHub,
-    MESSAGE,
-  } = useContext(MessageHandlerContext);
-
-  const {
-    errorHub,
-    ERROR,
-  } = useContext(ErrorHandlerContext);
-
-  // useEffect(() => () => messageHub.emit(MESSAGE, '登入成功！'), [MESSAGE, messageHub]);
+  const [logIn, { data }] = useMutation(LOGIN);
 
   const onSubmit = useCallback(async ({
     email,
     password,
   }) => {
-    // try {
-    //   await logIn({
-    //     variables: {
-    //       email,
-    //       password,
-    //     },
-    //   });
+    try {
+      await logIn({
+        variables: {
+          email,
+          password,
+        },
+      });
 
-    //   await localStorage.setItem('token', data.logIn.token);
-    // } catch {
-    //   errorHub.emit(ERROR, '登入失敗');
-    // }
+      await localStorage.setItem('token', data.logIn.token);
+    } catch {
+      showErrorMessage('登入失敗');
+    }
 
-    // errorHub.emit(ERROR, '登入失敗');
-  }, [ERROR, errorHub]);
-
-  // messageHub.emit(MESSAGE, '登入成功！');
-  errorHub.emit(ERROR, '登入失敗');
+    showMessage('登入成功');
+    history.push('/');
+  }, [history, data, logIn, showMessage, showErrorMessage]);
 
   return (
-    <Form css={styles.wrapper} onSubmit={handleSubmit(() => console.llog("click"))}>
+    <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
       <div css={styles.main}>
         <div css={styles.brandWrapper}>
           <img css={styles.brandLogo} src={stockersLogo} alt="logo" />
@@ -203,8 +190,7 @@ function LoginPage({
         <div css={styles.submitBtnWrapper}>
           <button
             css={styles.submitBtn}
-            type="submit"
-            onClick={() => console.log('submit!')}>
+            type="submit">
             登入
           </button>
         </div>
@@ -271,4 +257,4 @@ const formHook = reduxForm({
   },
 });
 
-export default formHook(LoginPage);
+export default withRouter(formHook(LoginPage));

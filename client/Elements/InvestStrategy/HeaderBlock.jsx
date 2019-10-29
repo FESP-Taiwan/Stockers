@@ -31,6 +31,7 @@ const styles = {
     backgroundColor: Colors.LAYER_FIRST,
     transition: '0.5s ease-out',
     fontSize: 13,
+    margin: '0 16px 0 0',
   },
   btn: css`
     height: 80px;
