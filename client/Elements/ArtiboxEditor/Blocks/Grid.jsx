@@ -108,6 +108,14 @@ function Grid({
     });
   }, [dispatch, id]);
 
+  const getGridButtonContent = useCallback((grid) => {
+    if (grid.rowId === 'header') {
+      return `${grid.name}-h`;
+    }
+
+    return `${grid.name}-${grid.rowId + 1}`;
+  }, []);
+
   const gridButtons = useMemo(() => {
     if (!meta.GRIDS || !meta.GRIDS.length) return null;
 
@@ -117,6 +125,8 @@ function Grid({
       GRIDS: grids,
     } = meta;
 
+    console.log('grids', grids);
+
     grids.forEach((grid, index) => {
       buttonList.push(
         <button
@@ -124,7 +134,7 @@ function Grid({
           css={styles.btn}
           onClick={() => removeGrid(index)}
           type="button">
-          {grid.name}
+          {getGridButtonContent(grid)}
         </button>
       );
     });

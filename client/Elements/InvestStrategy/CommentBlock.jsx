@@ -107,7 +107,7 @@ const styles = {
   },
 };
 
-async function submit(data, setFormOpened, moduleId, showMessage) {
+async function submit(data, setFormOpened, moduleId, showMessage, updateCommentInitData) {
   const localState = {
     token: localStorage.getItem('token'),
   };
@@ -126,12 +126,18 @@ async function submit(data, setFormOpened, moduleId, showMessage) {
 
   if (resStatus === 200) {
     showMessage('儲存成功');
+
+    updateCommentInitData(data);
   }
 
   setFormOpened(false);
 }
 
-function CommentBlock() {
+function CommentBlock({
+  updateCommentInitData,
+}: {
+  updateCommentInitData: Function,
+}) {
   const [isFormOpened, setFormOpened] = useState(false);
   const [gridInfoForEmitTrigger, setGridInfoForEmitTrigger] = useState({});
   const [isMathModuleEditting, setMathModuleEditting] = useState(false);
@@ -194,9 +200,10 @@ function CommentBlock() {
 
     return (
       <Editor
-        submitAction={data => submit(data, setFormOpened, moduleId, showMessage)} />
+        submitAction={data => submit(data,
+          setFormOpened, moduleId, showMessage, updateCommentInitData)} />
     );
-  }, [isFormOpened, moduleId]);
+  }, [isFormOpened, moduleId, showMessage, updateCommentInitData]);
 
   const confirmedModal = useMemo(() => {
     if (!isConfirmedModalOpened) return null;
