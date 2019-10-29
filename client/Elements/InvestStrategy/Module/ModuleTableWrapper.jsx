@@ -9,24 +9,23 @@ import moment from 'moment';
 import { ModuleDataContext } from '../../../Constant/context';
 import ModuleTable from './ModuleTable';
 
-// Mock data
-import { moduleDataMock } from '../../../Mocks/Queries/financeTable';
-
 type Props = {
   stockData: {},
+  headers: Array,
 }
 
 function ModuleTableWrapper({
   stockData,
+  headers,
 }: Props) {
   const [moduleData, setModuleData] = useState([]);
 
   useEffect(() => {
-    if (moduleDataMock) {
+    if (headers.length) {
       const sheets = Object.values(stockData).filter(el => el.name);
 
       if (sheets.length) {
-        const newData = moduleDataMock.map((data) => {
+        const newData = headers.map((data) => {
           const dataBelongSheetInfo = sheets.find(sheet => sheet.name === data.parentName);
 
           const chipDataBeforeProgressionDetermine = dataBelongSheetInfo.chipInfos
@@ -47,7 +46,7 @@ function ModuleTableWrapper({
             : chipDataBeforeProgressionDetermine.slice(0, 10));
 
           return {
-            id: data.id,
+            id: data.columnId,
             name: data.headerName,
             parentName: data.parentName,
             isProgression: dataBelongSheetInfo.isProgression,
@@ -58,7 +57,7 @@ function ModuleTableWrapper({
         setModuleData(newData);
       }
     }
-  }, [setModuleData, stockData]);
+  }, [setModuleData, stockData, headers]);
 
   return (
     <ModuleDataContext.Provider value={moduleData}>

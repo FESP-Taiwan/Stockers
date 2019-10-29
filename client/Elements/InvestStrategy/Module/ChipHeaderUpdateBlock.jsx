@@ -5,10 +5,9 @@ import { jsx, css } from '@emotion/core';
 import {
   useCallback,
   useContext,
-  useState,
-  useEffect,
   useMemo,
 } from 'react';
+import { connect } from 'react-redux';
 import Modal from '../../Modal/Modal';
 import { ModuleDataContext } from '../../../Constant/context';
 import { headerChipData } from '../../../Mocks/Queries/financeTable';
@@ -30,7 +29,7 @@ const styles = {
     fontWeight: 500,
   },
   btn: css`
-    width: 220px;
+    width: 320px;
     height: 32px;
     padding: 0;
     line-height: 32px;
@@ -47,21 +46,38 @@ const styles = {
 type Props = {
   isOpen: boolean,
   setOpen: Function,
+  stockData: {},
 }
 
 function ChipHeaderUpdateBlock({
   isOpen,
   setOpen,
+  stockData,
 }: Props) {
   const moduleData = useContext(ModuleDataContext);
 
-  const [headerChips, setHeaderChips] = useState([]);
+  console.log('headerChipData', headerChipData);
+  console.log('stockData', stockData);
 
-  useEffect(() => {
-    if (headerChipData) {
-      setHeaderChips(headerChipData);
-    }
-  }, []);
+  const headerChips = useMemo(() => {
+    const headerData = Object.values(stockData).reduce((accum, el, index) => {
+      if (!el.name) return accum;
+
+      return [
+        ...accum,
+        {
+          name: el.name,
+          id: index,
+          childNodes: el.chipInfos.slice(0, 30).map((chip, chipIndex) => ({
+            id: chipIndex,
+            name: chip.chipName,
+          })),
+        },
+      ];
+    }, []);
+
+    return headerData;
+  }, [stockData]);
 
   const onClose = useCallback(() => {
     if (setOpen) {
@@ -107,4 +123,10 @@ function ChipHeaderUpdateBlock({
   );
 }
 
-export default ChipHeaderUpdateBlock;
+const reduxHook = connect(
+  state => ({
+    stockData: state.Stocks.stockData,
+  }),
+);
+
+export default reduxHook(ChipHeaderUpdateBlock);
