@@ -156,6 +156,7 @@ function LoginPage({
       });
 
       await localStorage.setItem('token', data.logIn.token);
+      await localStorage.setItem('userId', data.logIn.id);
     } catch {
       showErrorMessage('登入失敗');
     }

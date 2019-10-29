@@ -123,16 +123,13 @@ function RegisterPage({
           password,
         },
       });
-
-      console.log('data', data);
-      // await localStorage.setItem('token', data.logIn.token);
     } catch {
       showErrorMessage('註冊失敗');
     }
 
     showMessage('註冊成功');
-    history.push('/');
-  }, [history, showMessage, showErrorMessage, register, data]);
+    history.push('/login');
+  }, [history, showMessage, showErrorMessage, register]);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
