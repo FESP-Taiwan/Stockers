@@ -9,6 +9,8 @@ function CommentBlockWrapper({
 }: {
   comment: {},
 }) {
+  console.log('comment', comment);
+
   return (
     <CommentInitDataContext.Provider value={comment}>
       <CommentBlock />

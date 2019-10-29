@@ -2,10 +2,8 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import type { ContextRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
 import ModuleBtn from '../../Elements/InvestStrategy/ModuleBtn';
