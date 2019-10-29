@@ -2,6 +2,7 @@
 /** @jsx jsx */
 
 import {
+  useState,
   useMemo,
   useEffect,
 } from 'react';
@@ -11,6 +12,7 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import arrow from '../../static/images/arrow.png';
 import * as IndustryCardActions from '../../actions/IndustryCard';
+import LoadingSpinner from '../LoadingSpinner';
 
 const styles = {
   wrapper: css`
@@ -40,6 +42,7 @@ function HeaderIndustry({
   industryCardData: Array,
 }) {
   const { industryId } = useParams();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     let canceled = false;
@@ -58,6 +61,7 @@ function HeaderIndustry({
     }
 
     fetchIndustryData();
+    setLoading(false);
 
     return () => {
       canceled = true;
@@ -67,8 +71,10 @@ function HeaderIndustry({
   const industryName = useMemo(() => {
     if (!industryCardData.length) return null;
 
+    if (isLoading) return <LoadingSpinner />;
+
     return industryCardData[Number(industryId)].industry_type;
-  }, [industryCardData, industryId]);
+  }, [industryCardData, industryId, isLoading]);
 
   return (
     <div css={styles.wrapper}>

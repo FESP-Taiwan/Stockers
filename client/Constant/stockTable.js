@@ -171,7 +171,8 @@ export const dividends = [{
   compareName: '除息日',
 }, {
   id: 3,
-  name: '現金股利發放日',
+  name: '除權息前之股價',
+  compareName: '除權息前之股價',
 }, {
   id: 4,
   name: '現金股利',
@@ -180,6 +181,47 @@ export const dividends = [{
   id: 5,
   name: '股票股利',
   compareName: '股票股利',
+}];
+
+export const dividendYears = [{
+  id: 1,
+  year: 2018,
+}, {
+  id: 2,
+  year: 2017,
+}, {
+  id: 3,
+  year: 2016,
+}, {
+  id: 4,
+  year: 2015,
+}, {
+  id: 5,
+  year: 2014,
+}, {
+  id: 6,
+  year: 2013,
+}, {
+  id: 7,
+  year: 2012,
+}, {
+  id: 8,
+  year: 2011,
+}, {
+  id: 9,
+  year: 2010,
+}, {
+  id: 10,
+  year: 2009,
+}, {
+  id: 11,
+  year: 2008,
+}, {
+  id: 12,
+  year: 2007,
+}, {
+  id: 13,
+  year: 2006,
 }];
 
 export default null;
