@@ -2,15 +2,12 @@
 /** @jsx jsx */
 
 import {
-  useEffect,
   useState,
   useMemo,
 } from 'react';
 import {
-  useParams,
 } from 'react-router-dom';
 import { jsx, css } from '@emotion/core';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   LineChart, Line,
@@ -19,8 +16,6 @@ import StockStrategyHeader from './StockStrategyHeader';
 import {
   comprehensiveIncomes, balanceSheets, cashFlows, dividends,
 } from '../../Constant/stockTable';
-import prettifyStockData from '../../helper/stocks';
-import * as StockActions from '../../actions/Stocks';
 
 const styles = {
   wrapper: css`
@@ -173,41 +168,12 @@ const TABLE_TYPES = {
 
 type Props = {
   stockData: Object,
-  storeStockData: Function,
 };
 
 function StockPage({
   stockData,
-  storeStockData,
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
-
-  const { stockId } = useParams();
-
-  useEffect(() => {
-    let canceled = false;
-
-    async function fetchStockData() {
-      const resData = await fetch(`${API_HOST}/stocker/individualStock/${stockId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(res => (!canceled ? res.json() : null));
-
-      if (resData) {
-        const prettifiedStockData = prettifyStockData(resData);
-
-        storeStockData(prettifiedStockData);
-      }
-    }
-
-    fetchStockData();
-
-    return () => {
-      canceled = true;
-    };
-  }, [storeStockData, stockId]);
 
   const infoTable = useMemo(() => {
     switch (table) {
@@ -464,9 +430,6 @@ const reduxHook = connect(
   state => ({
     stockData: state.Stocks.stockData,
   }),
-  dispatch => bindActionCreators({
-    ...StockActions,
-  }, dispatch),
 );
 
 export default reduxHook(StockPage);
