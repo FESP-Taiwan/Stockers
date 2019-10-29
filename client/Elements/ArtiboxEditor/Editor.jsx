@@ -102,6 +102,8 @@ function Editor({
 
   const [state, dispatch] = useReducer(reducer, fromJSON(initData), initializer);
 
+  console.log('state', state);
+
   const prevState = usePreviosState(state);
 
   const submit = useCallback(() => {
@@ -109,7 +111,7 @@ function Editor({
 
     console.log('storedObject', storedObject);
 
-    // submitAction(storedObject);
+    submitAction(storedObject);
   }, [submitAction, state]);
 
   useEffect(() => {

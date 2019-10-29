@@ -1,7 +1,12 @@
 // @flow
 
 import uuid from 'uuid/v4';
-import { BLOCK_TYPES, BLOCK_NAMES } from '../Constant/ArtiboxEditor/types';
+import {
+  BLOCK_TYPES,
+  BLOCK_NAMES,
+  MARKER_TYPES,
+  MARKER_NAMES,
+} from '../Constant/ArtiboxEditor/types';
 
 export function fromJSON(json = { blocks: [] }) {
   return {
@@ -9,7 +14,14 @@ export function fromJSON(json = { blocks: [] }) {
       id: block.id || uuid(),
       type: BLOCK_TYPES[block.type],
       content: block.content,
-      meta: block.meta,
+      meta: {
+        ...block.meta,
+        MARKERS: (block.meta.MARKERS && block.meta.MARKERS.length ? block.meta.MARKERS
+          .map(marker => ({
+            ...marker,
+            TYPE: MARKER_TYPES[marker.TYPE],
+          })) : []),
+      },
     })),
   };
 }
@@ -20,7 +32,14 @@ export function toJSON(storedObject = {}) {
       id: block.id,
       type: BLOCK_NAMES[block.type],
       content: block.content,
-      meta: block.meta,
+      meta: {
+        ...block.meta,
+        MARKERS: (block.meta.MARKERS && block.meta.MARKERS.length ? block.meta.MARKERS
+          .map(marker => ({
+            ...marker,
+            TYPE: MARKER_NAMES[marker.TYPE],
+          })) : []),
+      },
     })),
   };
 }

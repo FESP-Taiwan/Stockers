@@ -106,19 +106,20 @@ const styles = {
   },
 };
 
-async function submit(data, setFormOpened) {
-  const resData = await fetch(`${API_HOST}/modules/updateCommentInfo`, {
-    method: 'POST',
+async function submit(data, setFormOpened, moduleId) {
+  const resStatus = await fetch(`${API_HOST}/modules/updateCommentInfo`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlhbjI0MjU3NTg3QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA4JHgvN1lkdTQ4cnh2QzYwZ3VnMFJzRU80Mk1uSTBzSWgxOFdVVllGZG5haEJ6SnZsa2lSRE1xIiwiaWF0IjoxNTcyMTg3NzkzLCJleHAiOjE1NzIyNzQxOTN9.nTFowhpiFaJdfWWBWImH2IkcWmos8mdl6aH4hVB-Juk',
     },
     body: JSON.stringify({
-      data,
+      moduleId,
+      commentInfo: data,
     }),
-  }).then(res => (res.json()));
+  }).then(res => res.status);
 
-  console.log('resData', resData);
+  console.log('resStatus', resStatus);
 
   setFormOpened(false);
 }
@@ -184,9 +185,9 @@ function CommentBlock() {
 
     return (
       <Editor
-        submitAction={data => submit(data, setFormOpened)} />
+        submitAction={data => submit(data, setFormOpened, moduleId)} />
     );
-  }, [isFormOpened]);
+  }, [isFormOpened, moduleId]);
 
   const confirmedModal = useMemo(() => {
     if (!isConfirmedModalOpened) return null;
