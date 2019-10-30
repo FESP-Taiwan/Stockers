@@ -186,14 +186,11 @@ function StockPage({
 
   const comprehensiveIncomeTableData = useMemo(() => {
     if (!stockData) return null;
-    console.log('s', stockData.comprehensiveIncome);
 
     return stockData.comprehensiveIncome?.chipInfos
       .filter(c => comprehensiveIncomes
         .some(comprehensiveIncome => comprehensiveIncome.name === c.chipName));
   }, [stockData]);
-
-  console.log('comprehensiveIncomeTableData', comprehensiveIncomeTableData);
 
   const balanceSheetTableData = useMemo(() => {
     if (!stockData) return null;

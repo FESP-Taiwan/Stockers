@@ -118,8 +118,6 @@ function StockersInfoPage({
     return comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
   }, [searchTerm, industryCardData]);
 
-  console.log('filteredIndustryCards', filteredIndustryCards);
-
   const industryCard = useMemo(() => {
     if (!industryCardData) return null;
 

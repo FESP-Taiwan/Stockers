@@ -119,8 +119,6 @@ async function submit(data, setFormOpened, moduleId) {
     }),
   }).then(res => res.status);
 
-  console.log('resStatus', resStatus);
-
   setFormOpened(false);
 }
 
