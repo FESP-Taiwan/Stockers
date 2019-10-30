@@ -1,6 +1,10 @@
 // @flow
 
-import React from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import CommentBlock from './CommentBlock';
 import { CommentInitDataContext } from '../../Constant/context';
 
@@ -9,9 +13,20 @@ function CommentBlockWrapper({
 }: {
   comment: {},
 }) {
+  const [contextProviderData, setContextProviderData] = useState();
+
+  useEffect(() => {
+    setContextProviderData(comment);
+  }, [comment]);
+
+  const updateCommentInitData = useCallback((data) => {
+    setContextProviderData(data);
+  }, []);
+
   return (
-    <CommentInitDataContext.Provider value={comment}>
-      <CommentBlock />
+    <CommentInitDataContext.Provider value={contextProviderData}>
+      <CommentBlock
+        updateCommentInitData={updateCommentInitData} />
     </CommentInitDataContext.Provider>
   );
 }

@@ -130,6 +130,7 @@ const LOGIN = gql`
       password: $password
     ) {
       token
+      userID
     }
   }
 `;
@@ -141,28 +142,31 @@ function LoginPage({
   const showMessage = useGlobalMessage();
   const showErrorMessage = useGlobalErrorMessage();
 
-  const [logIn, { data }] = useMutation(LOGIN);
+  const [logIn] = useMutation(LOGIN);
 
   const onSubmit = useCallback(async ({
     email,
     password,
   }) => {
     try {
-      await logIn({
+      const { data: resData } = await logIn({
         variables: {
           email,
           password,
         },
       });
 
-      await localStorage.setItem('token', data.logIn.token);
+      if (resData) {
+        localStorage.setItem('token', resData.logIn.token);
+        localStorage.setItem('userId', resData.logIn.userID);
+
+        showMessage('登入成功');
+        history.push('/');
+      }
     } catch {
       showErrorMessage('登入失敗');
     }
-
-    showMessage('登入成功');
-    history.push('/');
-  }, [history, data, logIn, showMessage, showErrorMessage]);
+  }, [history, logIn, showMessage, showErrorMessage]);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>

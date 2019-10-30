@@ -131,3 +131,15 @@ input[type=range]::-ms-thumb {
   opacity: 0;
   cursor: pointer;
 }
+
+@-webkit-keyframes autofill {
+  to {
+      color: #FFF;
+      background: transparent;
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+}
