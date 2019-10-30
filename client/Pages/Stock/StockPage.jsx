@@ -250,7 +250,7 @@ function StockPage({
                 css={styles.blockWrapper}>
                 <div
                   css={styles.block}>
-                  {comprehensiveIncome.chipName}
+                  {comprehensiveIncome.chipName }
                 </div>
                 {comprehensiveIncome?.chipData.map((chip) => {
                   if (!chip.value) {

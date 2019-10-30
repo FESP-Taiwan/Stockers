@@ -42,7 +42,6 @@ const styles = {
 };
 
 type Props = {
-  id: number,
   name: string,
   number: number,
   status: string,
@@ -50,7 +49,6 @@ type Props = {
 };
 
 function FollowingCard({
-  id,
   name,
   number,
   status,
