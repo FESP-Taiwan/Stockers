@@ -30,14 +30,27 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
     ];
   }, []);
 
+  console.log('modulesInfo', modulesInfo);
+
   return {
     initialPrice: 100000,
     modules: modulesInfo.map(module => ({
       moduleId: module.id,
       moduleRate: module.usingStock
         .find(stock => stock.companyNumber === parseInt(stockId, 10)).rate,
-      moduleMath: module.mathModule,
-      partitionedDataPhase: timeList.map(timeStamp => ({
+      moduleMath: {
+        content: module.mathModule.content,
+        metaList: module.mathModule.chipInfos.map(chipInfo => ({
+          FROM: chipInfo.FROM,
+          TO: chipInfo.TO,
+          metaInfo: {
+            type: chipInfo.chipData.type,
+            timeStamp: chipInfo.chipData.date,
+            chipName: chipInfo.chipData.name,
+          },
+        })),
+      },
+      partitionedDataPhases: timeList.map(timeStamp => ({
         stockPrice: 10,
         timeStamp,
         chipDataList: module.mathModule.chipInfos.map((chip) => {

@@ -3,7 +3,6 @@
 import React, {
   useCallback,
 } from 'react';
-import moment from 'moment';
 import { Route, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import HeaderBlock from './HeaderBlock';
