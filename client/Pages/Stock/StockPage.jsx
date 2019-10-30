@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import StockStrategyHeader from './StockStrategyHeader';
 import {
-  comprehensiveIncomes, balanceSheets, cashFlows, dividends, dividendYears,
+  comprehensiveIncomes, balanceSheets, cashFlows, dividends, dividendYears, months,
 } from '../../Constant/stockTable';
 
 const styles = {
@@ -107,8 +107,21 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     border-right: solid 2px ${Colors.LAYER_SECOND};
     border-bottom: solid 2px ${Colors.LAYER_SECOND};
+    padding: 10px;
+  `,
+  dividendBlock: css`
+    width: 200px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-right: solid 2px ${Colors.LAYER_SECOND};
+    border-bottom: solid 2px ${Colors.LAYER_SECOND};
+    padding: 10px;
   `,
   word: css`
     font-size: 16px;
@@ -117,7 +130,7 @@ const styles = {
   lostWord: css`
     font-size: 16px;
     font-weight: 500;
-    opacity: 0.5,
+    opacity: 0.5;
   `,
   tableBtn: css`
     width: 80px;
@@ -155,24 +168,6 @@ const data = [
   },
 ];
 
-const stocks = [{
-  id: 1,
-  season: 'Q1',
-  value: 1000,
-}, {
-  id: 2,
-  season: 'Q2',
-  value: 1000,
-}, {
-  id: 3,
-  season: 'Q3',
-  value: 1000,
-}, {
-  id: 4,
-  season: 'Q4',
-  value: 1000,
-}];
-
 const TABLE_TYPES = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   BALANCE_SHEET: 'BALANCE_SHEET',
@@ -189,24 +184,22 @@ function StockPage({
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
 
-  console.log('stockData', stockData);
+  const comprehensiveIncomeTableData = useMemo(() => {
+    if (!stockData) return null;
+    console.log('s', stockData.comprehensiveIncome);
+
+    return stockData.comprehensiveIncome?.chipInfos
+      .filter(c => comprehensiveIncomes
+        .some(comprehensiveIncome => comprehensiveIncome.name === c.chipName));
+  }, [stockData]);
+
+  console.log('comprehensiveIncomeTableData', comprehensiveIncomeTableData);
 
   const balanceSheetTableData = useMemo(() => {
     if (!stockData) return null;
 
-    const recentCompared = stockData.balanceSheet?.chipInfos
-      .filter(c => balanceSheets.some(b => b.recentCompareName === c.chipName));
-
-    // const recentChip = recentCompared.map(r => r.chipData?.map(c => c.value));
-
     const comparedBalanceSheets = stockData.balanceSheet?.chipInfos
       .filter(c => balanceSheets.some(b => b.compareName === c.chipName));
-
-    // console.log('comparedBalanceSheets', comparedBalanceSheets);
-    //
-    // console.log('recentCompared', recentCompared);
-    //
-    // console.log('recentChip', recentChip);
 
     return comparedBalanceSheets;
   }, [stockData]);
@@ -219,8 +212,6 @@ function StockPage({
 
     return comparedCashFlows;
   }, [stockData]);
-
-  console.log('cashFlowTableData', cashFlowTableData);
 
   const dividendTableData = useMemo(() => {
     if (!stockData) return null;
@@ -243,178 +234,32 @@ function StockPage({
                   2019
                 </button>
               </div>
-              {stocks.map(stock => (
+              {months.map(mon => (
                 <div
-                  key={stock.id}
+                  key={mon.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.season}
+                    {mon.month}
                   </span>
                 </div>
               ))}
             </div>
-            {comprehensiveIncomes.map(comprehensiveIncome => (
+            {comprehensiveIncomeTableData?.map(comprehensiveIncome => (
               <div
-                key={comprehensiveIncome.id}
+                key={comprehensiveIncome.chipName}
                 css={styles.blockWrapper}>
                 <div
                   css={styles.block}>
-                  {/* 項目 */}
-                  {comprehensiveIncome.name}
+                  {comprehensiveIncome.chipName}
                 </div>
-                {stocks.map(stock => (
-                  <div
-                    key={stock.id}
-                    css={styles.block}>
-                    <span css={styles.word}>
-                      {/* 值 */}
-                      {stock.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        );
-
-      case 'BALANCE_SHEET':
-        return (
-          // 11x1
-          <div css={styles.tableWrapper}>
-            <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                <button
-                  onClick={() => { console.log('換季'); }}
-                  css={styles.tableBtn}
-                  type="button">
-                  比例/值
-                </button>
-              </div>
-              {stocks.map(stock => (
-                <div
-                  key={stock.id}
-                  css={styles.block}>
-                  <span css={styles.word}>
-                    {stock.season}
-                  </span>
-                </div>
-              ))}
-            </div>
-            {balanceSheets.map(balanceSheet => (
-              <div
-                key={balanceSheet.id}
-                css={styles.blockWrapper}>
-                <div css={styles.block}>
-                  {balanceSheet.name}
-                </div>
-                {stocks.map((stock) => {
-                  if (!stock.value) {
-                    return (
-                      <div
-                        key={stock.id}
-                        css={styles.block}>
-                        <span css={styles.lostWord}>
-                          資料佚失
-                        </span>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div
-                      key={stock.id}
-                      css={styles.block}>
-                      <span css={styles.word}>
-                        {stock.value}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        );
-
-      case 'CASH_FLOW':
-        return (
-          // 9x1
-          <div css={styles.tableWrapper}>
-            <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                <button
-                  onClick={() => { console.log('換年'); }}
-                  css={styles.tableBtn}
-                  type="button">
-                  年
-                </button>
-              </div>
-              {stocks.map(stock => (
-                <div
-                  key={stock.id}
-                  css={styles.block}>
-                  <span css={styles.word}>
-                    {stock.year}
-                  </span>
-                </div>
-              ))}
-            </div>
-            {cashFlowTableData.map(cashFlow => (
-              <div
-                key={cashFlow.chipName}
-                css={styles.blockWrapper}>
-                <div css={styles.block}>
-                  {cashFlow.chipName}
-                </div>
-                {cashFlow?.chipData.map(chip => (
-                  <div
-                    key={chip.id}
-                    css={styles.block}>
-                    <span css={styles.word}>
-                      {chip.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        );
-
-      case 'DIVIDEND':
-        return (
-          // 9x1
-          <div css={styles.tableWrapper}>
-            <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                <div
-                  css={styles.periodTitle}>
-                  年
-                </div>
-              </div>
-              {dividendYears.map(dividendYear => (
-                <div
-                  key={dividendYear.id}
-                  css={styles.block}>
-                  <span css={styles.word}>
-                    {dividendYear.year}
-                  </span>
-                </div>
-              ))}
-            </div>
-            {dividendTableData?.map(dividend => (
-              <div
-                key={dividend.chipName}
-                css={styles.blockWrapper}>
-                <div css={styles.block}>
-                  {dividend.chipName}
-                </div>
-                {dividend?.chipData.map((chip) => {
+                {comprehensiveIncome?.chipData.map((chip) => {
                   if (!chip.value) {
                     return (
                       <div
                         key={chip.date}
                         css={styles.block}>
                         <span css={styles.lostWord}>
-                          資料佚失
+                          無
                         </span>
                       </div>
                     );
@@ -435,10 +280,167 @@ function StockPage({
           </div>
         );
 
+      case 'BALANCE_SHEET':
+        return (
+          // 11x1
+          <div css={styles.tableWrapper}>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                <button
+                  css={styles.tableBtn}
+                  type="button">
+                  季
+                </button>
+              </div>
+              {months.map(mon => (
+                <div
+                  key={mon.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {mon.month}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {balanceSheetTableData?.map(balanceSheet => (
+              <div
+                key={balanceSheet.chipName}
+                css={styles.blockWrapper}>
+                <div css={styles.block}>
+                  {balanceSheet.chipName}
+                </div>
+                {balanceSheet?.chipData.map((chip) => {
+                  if (!chip.value) {
+                    return (
+                      <div
+                        key={chip.date}
+                        css={styles.block}>
+                        <span css={styles.lostWord}>
+                          無
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={chip.date}
+                      css={styles.block}>
+                      <span css={styles.word}>
+                        {chip.value}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'CASH_FLOW':
+        return (
+          // 9x1
+          <div css={styles.tableWrapper}>
+            <div css={styles.blockWrapper}>
+              <div css={styles.block}>
+                <button
+                  onClick={() => { console.log('換年'); }}
+                  css={styles.tableBtn}
+                  type="button">
+                  季
+                </button>
+              </div>
+              {months.map(mon => (
+                <div
+                  key={mon.id}
+                  css={styles.block}>
+                  <span css={styles.word}>
+                    {mon.month}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {cashFlowTableData?.map(cashFlow => (
+              <div
+                key={cashFlow.chipName}
+                css={styles.blockWrapper}>
+                <div css={styles.block}>
+                  {cashFlow.chipName}
+                </div>
+                {cashFlow?.chipData.map(chip => (
+                  <div
+                    key={chip.date}
+                    css={styles.block}>
+                    <span css={styles.word}>
+                      {chip.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'DIVIDEND':
+        return (
+          // 9x1
+          <div css={styles.tableWrapper}>
+            <div css={styles.blockWrapper}>
+              <div css={styles.dividendBlock}>
+                <div
+                  css={styles.periodTitle}>
+                  年
+                </div>
+              </div>
+              {dividendYears.map(dividendYear => (
+                <div
+                  key={dividendYear.id}
+                  css={styles.dividendBlock}>
+                  <span css={styles.word}>
+                    {dividendYear.year}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {dividendTableData?.map(dividend => (
+              <div
+                key={dividend.chipName}
+                css={styles.blockWrapper}>
+                <div css={styles.dividendBlock}>
+                  {dividend.chipName}
+                </div>
+                {dividend?.chipData.map((chip) => {
+                  if (!chip.value) {
+                    return (
+                      <div
+                        key={chip.date}
+                        css={styles.dividendBlock}>
+                        <span css={styles.lostWord}>
+                          無
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={chip.date}
+                      css={styles.dividendBlock}>
+                      <span css={styles.word}>
+                        {chip.value}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        );
+
       default:
         return null;
     }
-  }, [table, dividendTableData]);
+  }, [table, dividendTableData, cashFlowTableData]);
 
   return (
     <div css={styles.wrapper}>

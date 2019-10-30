@@ -15,6 +15,7 @@ import { SITE_HEADER_INDEX } from '../../Constant/zIndex';
 import arrow from '../../static/images/arrow.png';
 import * as IndustryCardActions from '../../actions/IndustryCard';
 import LoadingSpinner from '../LoadingSpinner';
+import { industryNames } from '../../Constant/industryName';
 
 const styles = {
   wrapper: css`
@@ -94,18 +95,13 @@ function HeaderStock({
     };
   }, [fetchIndustryCardData]);
 
-  const industryName = useMemo(() => {
-    if (!industryCardData.length) return null;
-
-    if (isLoading) return <LoadingSpinner />;
-
-    return industryCardData[Number(industryId)].industry_type;
-  }, [industryCardData, industryId, isLoading]);
-
   const stockName = useMemo(() => {
     if (!industryCardData.length) return null;
 
-    const stock = industryCardData[Number(industryId)].companies
+    const comparedIndustry = industryCardData?.filter(card => industryNames
+      .some(industry => industry.name === card.industry_type));
+
+    const stock = comparedIndustry[Number(industryId)].companies
       .filter(company => company.stockNo === stockId);
 
     return stock[0].name;
@@ -130,7 +126,7 @@ function HeaderStock({
       <Link
         to={`/industry/${industryId}`}
         css={styles.industryName}>
-        {industryName}
+        {industryNames[Number(industryId)].name}
       </Link>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <div css={styles.stock}>

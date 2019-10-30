@@ -8,64 +8,25 @@ export const comprehensiveIncomes = [{
   name: '營業毛利（毛損）',
 }, {
   id: 3,
-  name: '推銷費用合計',
-  // 2018-03之後的都在推銷費用
+  name: '營業外收入及支出合計',
 }, {
   id: 4,
-  name: '管理費用合計',
-  // 2018-03之後的都在＿＿費用
+  name: '營業利益（損失）',
 }, {
   id: 5,
-  name: '研究發展費用合計',
-  // 2018-03之後的都在＿＿費用
+  name: '推銷費用合計',
 }, {
   id: 6,
-  name: '營業外收益',
+  name: '管理費用合計',
 }, {
   id: 7,
-  name: '稅前淨利',
+  name: '繼續營業單位稅前淨利（淨損）',
 }, {
   id: 8,
-  name: '歸屬於母公司淨利',
+  name: '母公司業主（淨利／損）',
 }, {
   id: 9,
-  name: '每股盈餘',
-}, {
-  id: 10,
-  name: '營業活動',
-}, {
-  id: 11,
-  name: '投資活動',
-}, {
-  id: 12,
-  name: '自由現金流',
-}, {
-  id: 13,
-  name: '經營績效',
-}, {
-  id: 14,
-  name: '股東權益報酬率',
-}, {
-  id: 15,
-  name: '毛利率',
-}, {
-  id: 16,
-  name: '營業利益率',
-}, {
-  id: 17,
-  name: '淨利率',
-}, {
-  id: 18,
-  name: '股息',
-}, {
-  id: 19,
-  name: '現金股利',
-}, {
-  id: 20,
-  name: '股票股利',
-}, {
-  id: 21,
-  name: '股利合計',
+  name: '基本每股盈餘合計',
 }];
 
 export const balanceSheets = [{
@@ -222,6 +183,112 @@ export const dividendYears = [{
 }, {
   id: 13,
   year: 2006,
+}];
+
+export const months = [{
+  id: 1,
+  month: '2019-06',
+  season: 'Q2',
+}, {
+  id: 2,
+  month: '2019-03',
+  season: 'Q1',
+}, {
+  id: 3,
+  month: '2018-12',
+  season: 'Q4',
+}, {
+  id: 4,
+  month: '2018-09',
+  season: 'Q3',
+}, {
+  id: 5,
+  month: '2018-06',
+  season: 'Q2',
+}, {
+  id: 6,
+  month: '2018-03',
+  season: 'Q1',
+}, {
+  id: 7,
+  month: '2017-12',
+  season: 'Q4',
+}, {
+  id: 8,
+  month: '2017-09',
+  season: 'Q3',
+}, {
+  id: 9,
+  month: '2017-06',
+  season: 'Q1',
+}, {
+  id: 10,
+  month: '2017-03',
+  season: 'Q1',
+}, {
+  id: 11,
+  month: '2016-12',
+  season: 'Q4',
+}, {
+  id: 12,
+  month: '2016-09',
+  season: 'Q3',
+}, {
+  id: 13,
+  month: '2016-06',
+  season: 'Q2',
+}, {
+  id: 14,
+  month: '2016-03',
+  season: 'Q1',
+}, {
+  id: 15,
+  month: '2015-12',
+  season: 'Q4',
+}, {
+  id: 16,
+  month: '2015-09',
+  season: 'Q3',
+}, {
+  id: 17,
+  month: '2015-06',
+  season: 'Q2',
+}, {
+  id: 18,
+  month: '2015-03',
+  season: 'Q1',
+}, {
+  id: 19,
+  month: '2014-12',
+  season: 'Q4',
+}, {
+  id: 20,
+  month: '2014-09',
+  season: 'Q3',
+}, {
+  id: 21,
+  month: '2014-06',
+  season: 'Q2',
+}, {
+  id: 22,
+  month: '2014-03',
+  season: 'Q1',
+}, {
+  id: 23,
+  month: '2013-12',
+  season: 'Q4',
+}, {
+  id: 24,
+  month: '2013-09',
+  season: 'Q3',
+}, {
+  id: 25,
+  month: '2013-06',
+  season: 'Q2',
+}, {
+  id: 26,
+  month: '2013-03',
+  season: 'Q1',
 }];
 
 export default null;
