@@ -6,7 +6,7 @@ import { useParams, Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
-import ModuleBtn from '../../Elements/InvestStrategy/ModuleBtn';
+import ModuleBtns from '../../Elements/InvestStrategy/ModuleBtns';
 import editIcon from '../../static/images/icon-edit.png';
 
 const styles = {
@@ -99,7 +99,7 @@ function StockStrategyHeader() {
         css={styles.circleBtn}>
         <span css={styles.title}>買</span>
       </button>
-      {mockModules.map(module => (<ModuleBtn key={module.id} module={module} />))}
+      {/* {mockModules.map(module => (<ModuleBtn key={module.id} module={module} />))} */}
       <span css={styles.line} />
       <Link
         to={`/industry/${industryId}/stocks/${stockId}/modules`}

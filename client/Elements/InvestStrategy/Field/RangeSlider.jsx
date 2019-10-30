@@ -55,6 +55,8 @@ function RangeSlider({
     backgroundColor: '#FF9500',
   }), [value]);
 
+  console.log("value", value);
+
   return (
     <div css={[styles.wrapper, actived && styles.actived]}>
       <input
