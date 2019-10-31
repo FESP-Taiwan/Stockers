@@ -2,6 +2,7 @@
 /** @jsx jsx */
 
 import {
+  useState,
   useMemo,
   useEffect,
 } from 'react';
@@ -17,6 +18,8 @@ import { followingStocks } from '../../Mocks/Queries/StockInfo';
 import { FOLLOWING_STATE } from '../../Constant/stockNumber';
 import * as IndustryCardActions from '../../actions/IndustryCard';
 import { FORM_SITE_HEADER } from '../../Constant/form';
+import LoadingSpinner from '../../Elements/LoadingSpinner';
+import { industryNames } from '../../Constant/industryName';
 
 const selector = formValueSelector(FORM_SITE_HEADER);
 
@@ -78,6 +81,8 @@ function StockersInfoPage({
   fetchIndustryCardData,
   industryCardData,
 }: Props) {
+  const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     let canceled = false;
 
@@ -95,6 +100,7 @@ function StockersInfoPage({
     }
 
     fetchIndustryData();
+    setLoading(false);
 
     return () => {
       canceled = true;
@@ -104,9 +110,12 @@ function StockersInfoPage({
   const filteredIndustryCards = useMemo(() => {
     if (!industryCardData) return null;
 
-    if (!searchTerm) return industryCardData;
+    const comparedIndustry = industryCardData?.filter(card => industryNames
+      .some(industry => industry.name === card.industry_type));
 
-    return industryCardData.filter(card => card.industry_type.includes(searchTerm));
+    if (!searchTerm) return comparedIndustry;
+
+    return comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
   }, [searchTerm, industryCardData]);
 
   const industryCard = useMemo(() => {
@@ -125,7 +134,7 @@ function StockersInfoPage({
     );
   }, [industryCardData, filteredIndustryCards]);
 
-  console.log('industryCardData', industryCardData);
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div css={styles.wrapper}>

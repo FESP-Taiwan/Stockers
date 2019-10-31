@@ -19,8 +19,6 @@ type Props = {
 function InvestStrategyMainBlock({
   moduleInfo,
 }: Props) {
-  console.log('moduleInfo', moduleInfo);
-
   const {
     comment,
     mathModule,

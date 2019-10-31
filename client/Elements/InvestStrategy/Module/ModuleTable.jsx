@@ -72,8 +72,6 @@ function ModuleTable() {
   const [isHeaderUpdateBlockOpen, setHeaderUpdateBlockOpen] = useState(false);
   const moduleData = useContext(ModuleDataContext);
 
-  console.log('moduleData', moduleData);
-
   const dateSideHeader = useMemo(() => {
     if (!moduleData.length) return null;
 

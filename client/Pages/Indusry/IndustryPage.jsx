@@ -2,13 +2,19 @@
 /** @jsx jsx */
 
 import {
+  useEffect,
   useState,
   useMemo,
 } from 'react';
 import { jsx, css } from '@emotion/core';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import IndustryCardChart from '../../Elements/StocksInfo/Form/IndustryCardChart';
 import { flex } from '../../Constant/emotion';
 import { industryStream } from '../../Constant/industryStream';
+import * as IndustryCardActions from '../../actions/IndustryCard';
+import LoadingSpinner from '../../Elements/LoadingSpinner';
 
 const button = css`
   width: 320px;
@@ -128,10 +134,43 @@ const INDUSTRY_TYPES = {
   OTHER: 'OTHER',
 };
 
-function IndustryPage() {
+type Props = {
+  fetchIndustryCardData: Function,
+  industryCardData: Array,
+};
+
+function IndustryPage({
+  fetchIndustryCardData,
+  industryCardData,
+}: Props) {
   const [industry, setIndustry] = useState('UPPER');
+  const [isLoading, setLoading] = useState(true);
 
   const { industryId } = useParams();
+
+  useEffect(() => {
+    let canceled = false;
+
+    async function fetchIndustryData() {
+      const resData = await fetch(`${API_HOST}/stocker/industryStickers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        fetchIndustryCardData(resData);
+      }
+    }
+
+    fetchIndustryData();
+    setLoading(false);
+
+    return () => {
+      canceled = true;
+    };
+  }, [fetchIndustryCardData]);
 
   const middleStream = useMemo(() => {
     if (!industryStream[Number(industryId)].streams[1].name) return null;
@@ -224,6 +263,8 @@ function IndustryPage() {
     );
   }, [streamInfo, industryId]);
 
+  if (isLoading) return <LoadingSpinner />;
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.blockWrapper}>
@@ -294,4 +335,13 @@ function IndustryPage() {
   );
 }
 
-export default IndustryPage;
+const reduxHook = connect(
+  state => ({
+    industryCardData: state.IndustryCard.IndustryCardData,
+  }),
+  dispatch => bindActionCreators({
+    ...IndustryCardActions,
+  }, dispatch),
+);
+
+export default reduxHook(IndustryPage);
