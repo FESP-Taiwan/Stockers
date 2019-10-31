@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import StockStrategyHeader from './StockStrategyHeader';
 import {
-  comprehensiveIncomes, balanceSheets, cashFlows, dividends,
+  comprehensiveIncomes, balanceSheets, cashFlows, dividends, dividendYears, months,
 } from '../../Constant/stockTable';
 
 const styles = {
@@ -107,12 +107,30 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     border-right: solid 2px ${Colors.LAYER_SECOND};
     border-bottom: solid 2px ${Colors.LAYER_SECOND};
+    padding: 10px;
+  `,
+  dividendBlock: css`
+    width: 200px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-right: solid 2px ${Colors.LAYER_SECOND};
+    border-bottom: solid 2px ${Colors.LAYER_SECOND};
+    padding: 10px;
   `,
   word: css`
     font-size: 16px;
     font-weight: 500;
+  `,
+  lostWord: css`
+    font-size: 16px;
+    font-weight: 500;
+    opacity: 0.5;
   `,
   tableBtn: css`
     width: 80px;
@@ -120,6 +138,15 @@ const styles = {
     font-size: 16px;
     border-radius: 20px;
     background-color: ${Colors.LAYER_SECOND};
+  `,
+  periodTitle: css`
+  width: 80px;
+  height: 50px;
+  font-size: 16px;
+  border-radius: 20px;
+  background-color: ${Colors.LAYER_SECOND};
+  text-align: center;
+  line-height: 50px;
   `,
 };
 
@@ -141,24 +168,6 @@ const data = [
   },
 ];
 
-const stocks = [{
-  id: 1,
-  season: 'Q1',
-  value: 1000,
-}, {
-  id: 2,
-  season: 'Q2',
-  value: 1000,
-}, {
-  id: 3,
-  season: 'Q3',
-  value: 1000,
-}, {
-  id: 4,
-  season: 'Q4',
-  value: 1000,
-}];
-
 const TABLE_TYPES = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   BALANCE_SHEET: 'BALANCE_SHEET',
@@ -175,6 +184,39 @@ function StockPage({
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
 
+  const comprehensiveIncomeTableData = useMemo(() => {
+    if (!stockData) return null;
+
+    return stockData.comprehensiveIncome?.chipInfos
+      .filter(c => comprehensiveIncomes
+        .some(comprehensiveIncome => comprehensiveIncome.name === c.chipName));
+  }, [stockData]);
+
+  const balanceSheetTableData = useMemo(() => {
+    if (!stockData) return null;
+
+    const comparedBalanceSheets = stockData.balanceSheet?.chipInfos
+      .filter(c => balanceSheets.some(b => b.compareName === c.chipName));
+
+    return comparedBalanceSheets;
+  }, [stockData]);
+
+  const cashFlowTableData = useMemo(() => {
+    if (!stockData) return null;
+
+    const comparedCashFlows = stockData.cashFlow?.chipInfos
+      .filter(c => cashFlows.some(cash => cash.compareName === c.chipName));
+
+    return comparedCashFlows;
+  }, [stockData]);
+
+  const dividendTableData = useMemo(() => {
+    if (!stockData) return null;
+
+    return stockData.dividend?.chipInfos
+      .filter(c => dividends.some(d => d.compareName === c.chipName));
+  }, [stockData]);
+
   const infoTable = useMemo(() => {
     switch (table) {
       case 'INCOME_STATEMENT':
@@ -189,35 +231,47 @@ function StockPage({
                   2019
                 </button>
               </div>
-              {stocks.map(stock => (
+              {months.map(mon => (
                 <div
-                  key={stock.id}
+                  key={mon.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.season}
+                    {mon.month}
                   </span>
                 </div>
               ))}
             </div>
-            {comprehensiveIncomes.map(comprehensiveIncome => (
+            {comprehensiveIncomeTableData?.map(comprehensiveIncome => (
               <div
-                key={comprehensiveIncome.id}
+                key={comprehensiveIncome.chipName}
                 css={styles.blockWrapper}>
                 <div
                   css={styles.block}>
-                  {/* 項目 */}
-                  {comprehensiveIncome.name}
+                  {comprehensiveIncome.chipName }
                 </div>
-                {stocks.map(stock => (
-                  <div
-                    key={stock.id}
-                    css={styles.block}>
-                    <span css={styles.word}>
-                      {/* 值 */}
-                      {stock.value}
-                    </span>
-                  </div>
-                ))}
+                {comprehensiveIncome?.chipData.map((chip) => {
+                  if (!chip.value) {
+                    return (
+                      <div
+                        key={chip.date}
+                        css={styles.block}>
+                        <span css={styles.lostWord}>
+                          無
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={chip.date}
+                      css={styles.block}>
+                      <span css={styles.word}>
+                        {chip.value}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -230,38 +284,51 @@ function StockPage({
             <div css={styles.blockWrapper}>
               <div css={styles.block}>
                 <button
-                  onClick={() => { console.log('換季'); }}
                   css={styles.tableBtn}
                   type="button">
-                  比例/值
+                  季
                 </button>
               </div>
-              {stocks.map(stock => (
+              {months.map(mon => (
                 <div
-                  key={stock.id}
+                  key={mon.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.season}
+                    {mon.month}
                   </span>
                 </div>
               ))}
             </div>
-            {balanceSheets.map(balanceSheet => (
+            {balanceSheetTableData?.map(balanceSheet => (
               <div
-                key={balanceSheet.id}
+                key={balanceSheet.chipName}
                 css={styles.blockWrapper}>
                 <div css={styles.block}>
-                  {balanceSheet.name}
+                  {balanceSheet.chipName}
                 </div>
-                {stocks.map(stock => (
-                  <div
-                    key={stock.id}
-                    css={styles.block}>
-                    <span css={styles.word}>
-                      {stock.value}
-                    </span>
-                  </div>
-                ))}
+                {balanceSheet?.chipData.map((chip) => {
+                  if (!chip.value) {
+                    return (
+                      <div
+                        key={chip.date}
+                        css={styles.block}>
+                        <span css={styles.lostWord}>
+                          無
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={chip.date}
+                      css={styles.block}>
+                      <span css={styles.word}>
+                        {chip.value}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -274,35 +341,35 @@ function StockPage({
             <div css={styles.blockWrapper}>
               <div css={styles.block}>
                 <button
-                  onClick={() => { console.log('換季'); }}
+                  onClick={() => { console.log('換年'); }}
                   css={styles.tableBtn}
                   type="button">
-                  年/季
+                  季
                 </button>
               </div>
-              {stocks.map(stock => (
+              {months.map(mon => (
                 <div
-                  key={stock.id}
+                  key={mon.id}
                   css={styles.block}>
                   <span css={styles.word}>
-                    {stock.year}
+                    {mon.month}
                   </span>
                 </div>
               ))}
             </div>
-            {cashFlows.map(cashFlow => (
+            {cashFlowTableData?.map(cashFlow => (
               <div
-                key={cashFlow.id}
+                key={cashFlow.chipName}
                 css={styles.blockWrapper}>
                 <div css={styles.block}>
-                  {cashFlow.name}
+                  {cashFlow.chipName}
                 </div>
-                {stocks.map(stock => (
+                {cashFlow?.chipData.map(chip => (
                   <div
-                    key={stock.id}
+                    key={chip.date}
                     css={styles.block}>
                     <span css={styles.word}>
-                      {stock.value}
+                      {chip.value}
                     </span>
                   </div>
                 ))}
@@ -316,40 +383,52 @@ function StockPage({
           // 9x1
           <div css={styles.tableWrapper}>
             <div css={styles.blockWrapper}>
-              <div css={styles.block}>
-                <button
-                  onClick={() => { console.log('換季'); }}
-                  css={styles.tableBtn}
-                  type="button">
-                  年度／季度
-                </button>
-              </div>
-              {stocks.map(stock => (
+              <div css={styles.dividendBlock}>
                 <div
-                  key={stock.id}
-                  css={styles.block}>
+                  css={styles.periodTitle}>
+                  年
+                </div>
+              </div>
+              {dividendYears.map(dividendYear => (
+                <div
+                  key={dividendYear.id}
+                  css={styles.dividendBlock}>
                   <span css={styles.word}>
-                    {stock.year}
+                    {dividendYear.year}
                   </span>
                 </div>
               ))}
             </div>
-            {dividends.map(dividend => (
+            {dividendTableData?.map(dividend => (
               <div
-                key={dividend.id}
+                key={dividend.chipName}
                 css={styles.blockWrapper}>
-                <div css={styles.block}>
-                  {dividend.name}
+                <div css={styles.dividendBlock}>
+                  {dividend.chipName}
                 </div>
-                {stocks.map(stock => (
-                  <div
-                    key={stock.id}
-                    css={styles.block}>
-                    <span css={styles.word}>
-                      {stock.value}
-                    </span>
-                  </div>
-                ))}
+                {dividend?.chipData.map((chip) => {
+                  if (!chip.value) {
+                    return (
+                      <div
+                        key={chip.date}
+                        css={styles.dividendBlock}>
+                        <span css={styles.lostWord}>
+                          無
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={chip.date}
+                      css={styles.dividendBlock}>
+                      <span css={styles.word}>
+                        {chip.value}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -358,7 +437,7 @@ function StockPage({
       default:
         return null;
     }
-  }, [table]);
+  }, [table, dividendTableData, cashFlowTableData]);
 
   return (
     <div css={styles.wrapper}>

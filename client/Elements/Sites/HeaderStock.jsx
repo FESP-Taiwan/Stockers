@@ -2,6 +2,7 @@
 /** @jsx jsx */
 
 import {
+  useState,
   useMemo,
   useEffect,
 } from 'react';
@@ -13,6 +14,8 @@ import { flex } from '../../Constant/emotion';
 import { SITE_HEADER_INDEX } from '../../Constant/zIndex';
 import arrow from '../../static/images/arrow.png';
 import * as IndustryCardActions from '../../actions/IndustryCard';
+import LoadingSpinner from '../LoadingSpinner';
+import { industryNames } from '../../Constant/industryName';
 
 const styles = {
   wrapper: css`
@@ -66,6 +69,7 @@ function HeaderStock({
   industryCardData: Array,
 }) {
   const { industryId, stockId } = useParams();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     let canceled = false;
@@ -84,26 +88,37 @@ function HeaderStock({
     }
 
     fetchIndustryData();
+    setLoading(false);
 
     return () => {
       canceled = true;
     };
   }, [fetchIndustryCardData]);
 
-  const industryName = useMemo(() => {
-    if (!industryCardData.length) return null;
-
-    return industryCardData[Number(industryId)].industry_type;
-  }, [industryCardData, industryId]);
-
   const stockName = useMemo(() => {
     if (!industryCardData.length) return null;
 
-    const stock = industryCardData[Number(industryId)].companies
+    const comparedIndustry = industryCardData?.filter(card => industryNames
+      .some(industry => industry.name === card.industry_type));
+
+    const stock = comparedIndustry[Number(industryId)].companies
       .filter(company => company.stockNo === stockId);
 
     return stock[0].name;
   }, [industryCardData, stockId, industryId]);
+
+  const stock = useMemo(() => {
+    if (isLoading) return <LoadingSpinner />;
+
+    return (
+      <span
+        css={styles.stockName}>
+        {stockId}
+        &nbsp;
+        {stockName}
+      </span>
+    );
+  }, [isLoading, stockId, stockName]);
 
   return (
     <div css={styles.wrapper}>
@@ -111,16 +126,11 @@ function HeaderStock({
       <Link
         to={`/industry/${industryId}`}
         css={styles.industryName}>
-        {industryName}
+        {industryNames[Number(industryId)].name}
       </Link>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <div css={styles.stock}>
-        <span
-          css={styles.stockName}>
-          {stockId}
-          &nbsp;
-          {stockName}
-        </span>
+        {stock}
         <div css={styles.following}>
           <span css={styles.followingWord}>
             已追蹤

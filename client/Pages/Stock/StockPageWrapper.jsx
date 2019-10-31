@@ -1,6 +1,7 @@
 // @flow
 
 import React, {
+  useState,
   useEffect,
 } from 'react';
 import {
@@ -14,6 +15,7 @@ import StockPage from './StockPage';
 import InvestStrategyPageWrapper from '../InvestStrategy/InvestStrategyPageWrapper';
 import { prettifyStockData } from '../../helper/stocks';
 import * as StockActions from '../../actions/Stocks';
+import LoadingSpinner from '../../Elements/LoadingSpinner';
 
 function StockPageWrapper({
   storeStockData,
@@ -21,6 +23,7 @@ function StockPageWrapper({
   storeStockData: Function,
 }) {
   const { stockId } = useParams();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     let canceled = false;
@@ -41,11 +44,14 @@ function StockPageWrapper({
     }
 
     fetchStockData();
+    setLoading(false);
 
     return () => {
       canceled = true;
     };
   }, [storeStockData, stockId]);
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <Switch>
