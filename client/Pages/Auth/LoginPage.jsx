@@ -1,9 +1,8 @@
 // @flow
 /** @jsx jsx */
 
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { jsx, css } from '@emotion/core';
-import debug from 'debug';
 import isEmail from 'validator/lib/isEmail';
 import {
   reduxForm,
@@ -11,17 +10,16 @@ import {
   Form,
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
-// import { withRouter } from 'react-router';
-import gql from 'graphql-tag';
+import { withRouter } from 'react-router';
+import type { ContextRouter } from 'react-router';
 import { useMutation } from '@apollo/react-hooks';
-import { MessageHandlerContext, ErrorHandlerContext } from '../../Constant/context';
+import gql from 'graphql-tag';
+import { useGlobalMessage, useGlobalErrorMessage } from '../../helper/useGlobalMessage';
 import { FORM_LOGIN } from '../../Constant/form';
 import TextInput from '../../Form/TextInput';
 import stockersLogo from '../../static/images/logo_stockers_text.png';
 import facebookLogo from '../../static/images/facebook-logo.png';
 import googleLogo from '../../static/images/google-logo.png';
-
-const debugRegister = debug('Stocekers:Register');
 
 const styles = {
   wrapper: css`
@@ -84,6 +82,7 @@ const styles = {
     background-repeat: no-repeat;
   `,
   googleBlock: css`
+    color: #000;
     width: 306px;
     height: 80px;
     border-radius: 40px;
@@ -131,52 +130,43 @@ const LOGIN = gql`
       password: $password
     ) {
       token
+      userID
     }
   }
 `;
 
 function LoginPage({
   handleSubmit,
-}: FormProps) {
-  // const [register, { loading }] = useMutation();
-  const [logIn, { data }] = useMutation(LOGIN);
-  // const [loading, data] = useQuery(LOGIN)
+  history,
+}: FormProps & ContextRouter) {
+  const showMessage = useGlobalMessage();
+  const showErrorMessage = useGlobalErrorMessage();
 
-  const {
-    messageHub,
-    MESSAGE,
-  } = useContext(MessageHandlerContext);
-
-  const {
-    errorHub,
-    ERROR,
-  } = useContext(ErrorHandlerContext);
-
-  // useEffect(() => () => messageHub.emit(MESSAGE, '登入成功！'), [MESSAGE, messageHub]);
+  const [logIn] = useMutation(LOGIN);
 
   const onSubmit = useCallback(async ({
     email,
     password,
   }) => {
     try {
-      await logIn({
+      const { data: resData } = await logIn({
         variables: {
           email,
           password,
         },
       });
 
-      await localStorage.setItem('token', data.logIn.token);
+      if (resData) {
+        localStorage.setItem('token', resData.logIn.token);
+        localStorage.setItem('userId', resData.logIn.userID);
+
+        showMessage('登入成功');
+        history.push('/');
+      }
     } catch {
-      errorHub.emit(ERROR, '登入失敗');
+      showErrorMessage('登入失敗');
     }
-
-    console.log('data', data);
-    errorHub.emit(ERROR, '登入失敗');
-  }, [MESSAGE, messageHub, ERROR, errorHub, data, logIn]);
-
-  // messageHub.emit(MESSAGE, '登入成功！');
-  errorHub.emit(ERROR, '登入失敗');
+  }, [history, logIn, showMessage, showErrorMessage]);
 
   return (
     <Form css={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
@@ -204,8 +194,7 @@ function LoginPage({
         <div css={styles.submitBtnWrapper}>
           <button
             css={styles.submitBtn}
-            type="submit"
-            onClick={() => console.log('submit!')}>
+            type="submit">
             登入
           </button>
         </div>
@@ -272,4 +261,4 @@ const formHook = reduxForm({
   },
 });
 
-export default formHook(LoginPage);
+export default withRouter(formHook(LoginPage));

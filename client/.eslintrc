@@ -20,7 +20,7 @@
     "GRAPHQL_HOST",
     "SUBSCRIPTION_PATH",
     "Colors",
-    "AUTH_HOST",
+    "API_HOST",
     "fetch",
     "STATIC_HOST",
     "confirm",
@@ -39,6 +39,7 @@
     "crypto",
     "DEFAULT_ACCOUNT",
     "DEFAULT_PASSWORD",
+    "MutationObserver",
   },
   "parser": "babel-eslint",
   "extends": [

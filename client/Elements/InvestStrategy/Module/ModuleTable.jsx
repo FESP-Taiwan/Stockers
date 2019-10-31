@@ -7,10 +7,12 @@ import React, {
 } from 'react';
 import { ModuleDataContext } from '../../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
-import addIcon from '../../../static/images/icon-add-w.png';
+import editIcon from '../../../static/images/icon-edit.png';
+import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
 
 const styles = {
   wrapper: {
+    width: '100%',
     padding: 16,
     backgroundColor: Colors.LAYER_FIRST,
     display: 'flex',
@@ -19,13 +21,19 @@ const styles = {
     alignItems: 'flex-start',
     overflow: 'auto',
     maxWidth: '100%',
+    borderRadius: 22,
   },
-  dateSideHeaderMock: {
-    width: 32,
+  dateSideHeaderWrapper: {
+    flexBasis: 140,
+    flexShrink: 0,
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: Colors.LAYER_FOURTH,
+    borderRadius: 16,
   },
   addBtn: {
-    width: 140,
+    flexBasis: 140,
     height: 100,
     padding: 0,
     fontSize: 13,
@@ -34,14 +42,68 @@ const styles = {
     alignItems: 'center',
     flexShrink: 0,
   },
-  addBtnImg: {
+  editBtnImg: {
     width: 18,
+  },
+  dateBlockHeader: {
+    height: 100,
+    margin: '0 0 10px 0',
+    borderRadius: 16,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '0 20px',
+  },
+  horizontalLine: {
+    width: '100%',
+    height: 2,
+    backgroundColor: '#FFF',
+  },
+  dateBlock: {
+    height: 100,
+    margin: '0 0 10px 0',
+    textAlign: 'center',
+    lineHeight: '100px',
   },
 };
 
 function ModuleTable() {
   const [isHeaderUpdateBlockOpen, setHeaderUpdateBlockOpen] = useState(false);
   const moduleData = useContext(ModuleDataContext);
+
+  const dateSideHeader = useMemo(() => {
+    if (!moduleData.length) return null;
+
+    const dateList = [];
+
+    dateList.push(
+      <div
+        key="header"
+        style={styles.dateBlockHeader}>
+        <span>資料：單季</span>
+        <div style={styles.horizontalLine} />
+        <span>時間列表</span>
+      </div>
+    );
+
+    moduleData[0].chipData.forEach(({ date }) => {
+      dateList.push(
+        <span
+          key={date}
+          style={styles.dateBlock}>
+          {date}
+          季
+        </span>
+      );
+    });
+
+    return (
+      <div style={styles.dateSideHeaderWrapper}>
+        {dateList}
+      </div>
+    );
+  }, [moduleData]);
 
   const moduleMainBlock = useMemo(() => {
     if (!moduleData) return null;
@@ -52,23 +114,25 @@ function ModuleTable() {
           <ModuleTableColumnBoard
             key={elem.id}
             columnId={id}
-            setHeaderUpdateBlockOpen={setHeaderUpdateBlockOpen}
             elem={elem} />
         ))}
       </>
     );
-  }, [moduleData, setHeaderUpdateBlockOpen]);
+  }, [moduleData]);
 
   return (
     <div style={styles.wrapper}>
-      <div style={styles.dateSideHeaderMock} />
+      {dateSideHeader}
       {moduleMainBlock}
       <button
         onClick={() => setHeaderUpdateBlockOpen(true)}
         style={styles.addBtn}
         type="button">
-        <img src={addIcon} alt="add" style={styles.addBtnImg} />
+        <img src={editIcon} alt="add" style={styles.editBtnImg} />
       </button>
+      <ChipHeaderUpdateBlock
+        isOpen={isHeaderUpdateBlockOpen}
+        setOpen={setHeaderUpdateBlockOpen} />
     </div>
   );
 }

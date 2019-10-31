@@ -2,8 +2,9 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import arrow from '../../static/images/arrow.png';
+import { industryNames } from '../../Constant/industryName';
 
 const styles = {
   wrapper: css`
@@ -26,11 +27,13 @@ const styles = {
 };
 
 function HeaderIndustry() {
+  const { industryId } = useParams();
+
   return (
     <div css={styles.wrapper}>
       <img src={arrow} alt="arrow" css={styles.arrow} />
       <span css={styles.industryName}>
-        半導體
+        {industryNames[Number(industryId)].name}
       </span>
     </div>
   );

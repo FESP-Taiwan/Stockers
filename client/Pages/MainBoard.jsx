@@ -1,16 +1,17 @@
 // @flow
 
-import React, {
-  Fragment,
-} from 'react';
+import React from 'react';
 import {
   Switch,
   Route,
+  Redirect,
+  useParams,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
 import IndustryPage from './Indusry/IndustryPage';
-import InvestStrategyPageWrapper from './InvestStrategy/InvestStrategyPageWrapper';
+import StockSimulationPage from './StockSimulation/StockSimulationPage';
+import StockPageWrapper from './Stock/StockPageWrapper';
 
 const styles = {
   wrapper: {
@@ -35,14 +36,14 @@ const styles = {
 function MainBoard() {
   return (
     <div style={styles.wrapper}>
-      <Switch>
-        <Route component={SiteHeader} />
-      </Switch>
+      <SiteHeader />
       <div style={styles.main}>
         <Switch>
-          <Route exact path="/strategy" component={InvestStrategyPageWrapper} />
-          <Route exact path="/industry" component={IndustryPage} />
-          <Route render={() => (<StocksInfoPage />)} />
+          <Route path="/industry/:industryId/stocks/:stockId" component={StockPageWrapper} />
+          <Route path="/industry/:industryId" component={IndustryPage} />
+          <Route exact path="/stockSimulation" component={StockSimulationPage} />
+          <Route path="/stockInfo" component={StocksInfoPage} />
+          <Redirect to="/stockInfo" />
         </Switch>
       </div>
     </div>

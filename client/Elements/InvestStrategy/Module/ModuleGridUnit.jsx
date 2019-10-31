@@ -6,13 +6,20 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useMemo,
+  useState,
 } from 'react';
-import EventEmitter from 'events';
-import editIcon from '../../../static/images/icon-edit.png';
-import cancelIcon from '../../../static/images/icon-cancel.png';
+import {
+  investStrategySharedEmitter,
+  START_EDITTING,
+  END_EDITTING,
+  INIT_MODULE,
+  CLICK_EVENT,
+  MATH_META_TYPES,
+} from '../../../Constant/investStrategy';
 
 const styles = {
-  btn: css`
+  btnWrapper: css`
     position: relative;
     width: 140px;
     height: 100px;
@@ -24,9 +31,6 @@ const styles = {
     flex-shrink: 0;
   `,
   headerBtn: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
     width: '100%',
     height: '100%',
     padding: 0,
@@ -58,22 +62,39 @@ const styles = {
     width: 14,
     height: 14,
   },
+  mathHandlerBlock: {
+    padding: 4,
+    position: 'absolute',
+    right: 4,
+    top: -14,
+    width: 0,
+    height: 0,
+    opacity: 0,
+    backgroundColor: Colors.LAYER_THIRD,
+    display: 'flex',
+    flexDirection: 'row',
+    borderRadius: 4,
+  },
+  mathEditBtn: css`
+    flex-grow: 1;
+    height: 100%;
+    text-align: center;
+    line-height: 22px;
+    &:hover {
+      background-color: ${Colors.LAYER_FOURTH};
+    }
+  `,
+  redTxt: {
+    color: Colors.ERROR,
+  },
 };
-
-export const sharedEmitter = new EventEmitter();
-
-sharedEmitter.setMaxListeners(300);
-
-export const ENTER_EVENT = 'E/MOUSE_ENTER';
-export const LEAVE_EVENT = 'E/MOUSE_LEAVE';
-export const CLICK_EVENT = 'E/ONCLICK';
 
 type Props = {
   label: string,
   rowId: string | number,
   columnId: string | number,
   headerName?: string,
-  setHeaderUpdateBlockOpen?: Function,
+  timeStamp?: MomentType,
 }
 
 function ModuleGridUnit({
@@ -81,144 +102,180 @@ function ModuleGridUnit({
   rowId,
   columnId,
   headerName,
-  setHeaderUpdateBlockOpen,
+  timeStamp,
 }: Props) {
   const moduleGridUnit = useRef();
+  const mathEmitHandler = useRef();
+
+  const [isMathModuleEditting, setMathModuleEditting] = useState(false);
+
+  const onClick = useCallback((type: null) => {
+    if (!isMathModuleEditting) {
+      investStrategySharedEmitter.emit(CLICK_EVENT, {
+        rowId,
+        columnId,
+        name: (headerName || label),
+      });
+    } else if (type) {
+      investStrategySharedEmitter.emit(CLICK_EVENT, {
+        rowId,
+        columnId,
+        type,
+        date: (type === MATH_META_TYPES.DATE ? timeStamp : null),
+        name: (headerName || label),
+        value: (type === MATH_META_TYPES.DATE || type === MATH_META_TYPES.GRID) ? label : null,
+      });
+    }
+  }, [rowId, columnId, headerName, label, timeStamp, isMathModuleEditting]);
+
+  const mathEmitHandlerBlock = useMemo(() => {
+    if (!isMathModuleEditting) return null;
+
+    if (rowId === 'header') {
+      return (
+        <div
+          ref={mathEmitHandler}
+          className="module-math-edit-handler"
+          style={styles.mathHandlerBlock}>
+          <button
+            css={styles.mathEditBtn}
+            onClick={() => onClick(MATH_META_TYPES.AVERAGE)}
+            type="button">
+            取平均
+          </button>
+          <button
+            css={styles.mathEditBtn}
+            onClick={() => onClick(MATH_META_TYPES.LARGE)}
+            type="button">
+            最大值
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        ref={mathEmitHandler}
+        className="module-math-edit-handler"
+        style={styles.mathHandlerBlock}>
+        <button
+          css={styles.mathEditBtn}
+          onClick={() => onClick(MATH_META_TYPES.GRID)}
+          type="button">
+          取格子
+        </button>
+        <button
+          css={styles.mathEditBtn}
+          onClick={() => onClick(MATH_META_TYPES.DATE)}
+          type="button">
+          取時間
+        </button>
+      </div>
+    );
+  }, [isMathModuleEditting, rowId, onClick]);
 
   useEffect(() => {
-    const enterHandler = ({ activedRowId, activedColumnId }) => {
-      const { current } = moduleGridUnit;
+    function startEditHandler() {
+      setMathModuleEditting(true);
+    }
 
-      if (current) {
-        if (current.classList.contains('hovered')) {
-          current.classList.remove('hovered');
-        }
+    function endEditHandler() {
+      setMathModuleEditting(false);
+    }
 
-        if (activedColumnId === columnId) {
-          if (activedRowId === 'header' || activedRowId === rowId) {
-            current.classList.add('hovered');
-          }
-        }
-      }
+    investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
+    investStrategySharedEmitter.on(END_EDITTING, endEditHandler);
+    investStrategySharedEmitter.on(INIT_MODULE, endEditHandler);
+
+    return () => {
+      investStrategySharedEmitter.removeListener(START_EDITTING, startEditHandler);
+      investStrategySharedEmitter.removeListener(END_EDITTING, endEditHandler);
+      investStrategySharedEmitter.removeListener(INIT_MODULE, endEditHandler);
     };
+  }, []);
 
-    const leaveHandler = () => {
-      const { current } = moduleGridUnit;
+  const onMouseEnter = useCallback(() => {
+    const { current } = moduleGridUnit;
+    const { current: mathHandlerCurrent } = mathEmitHandler;
 
+    if (current) {
+      // clean up
+      if (current.classList.contains('hovered')) {
+        current.classList.remove('hovered');
+      }
+
+      if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
+        mathHandlerCurrent.classList.remove('hovered');
+      }
+
+      current.classList.add('hovered');
+
+      if (isMathModuleEditting && mathHandlerCurrent) {
+        mathHandlerCurrent.classList.add('hovered');
+      }
+    }
+  }, [isMathModuleEditting]);
+
+  const onMouseLeave = useCallback(() => {
+    const { current } = moduleGridUnit;
+    const { current: mathHandlerCurrent } = mathEmitHandler;
+
+    if (current) {
       if (current && current.classList.contains('hovered')) {
         current.classList.remove('hovered');
       }
-    };
 
-    sharedEmitter.on(ENTER_EVENT, enterHandler);
-    sharedEmitter.on(LEAVE_EVENT, leaveHandler);
-
-    return () => {
-      sharedEmitter.removeListener(ENTER_EVENT, enterHandler);
-      sharedEmitter.removeListener(LEAVE_EVENT, leaveHandler);
-    };
-  }, [rowId, columnId]);
-
-  const onMouseEnter = useCallback(() => {
-    if (moduleGridUnit.current && rowId === 'header') {
-      const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
-
-      childrenNodes.map((child) => {
-        if (child.className === 'module-grid-unit') return null;
-
-        child.style.setProperty('top', '43px');
-
-        child.style.setProperty('opacity', 1);
-
-        return null;
-      });
+      if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
+        mathHandlerCurrent.classList.remove('hovered');
+      }
     }
+  }, [isMathModuleEditting]);
 
-    sharedEmitter.emit(ENTER_EVENT, {
-      activedRowId: rowId,
-      activedColumnId: columnId,
-    });
-  }, [rowId, columnId]);
-
-  const onMouseLeave = useCallback(() => {
-    if (moduleGridUnit.current && rowId === 'header') {
-      const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
-
-      childrenNodes.map((child) => {
-        if (child.className === 'module-grid-unit hovered') return null;
-
-        child.style.setProperty('top', '50px');
-
-        child.style.setProperty('opacity', 0);
-
-        return null;
-      });
-    }
-
-    sharedEmitter.emit(LEAVE_EVENT);
-  }, [rowId]);
-
-  const setHeaderUpdateBlock = useCallback(() => {
-    if (typeof (setHeaderUpdateBlockOpen) === 'function') {
-      setHeaderUpdateBlockOpen(true);
-    }
-  }, [setHeaderUpdateBlockOpen]);
-
-  const onClick = useCallback(() => {
-    sharedEmitter.emit(CLICK_EVENT, {
-      rowId,
-      columnId,
-      name: (headerName || label),
-    });
-  }, [rowId, columnId, headerName, label]);
+  const headerBtnStyles = useMemo(() => ({
+    ...styles.headerBtn,
+    ...(!label ? styles.redTxt : {}),
+  }), [label]);
 
   if (rowId === 'header') {
     return (
       <div
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        css={styles.btn}>
+        css={styles.btnWrapper}>
         <button
           ref={moduleGridUnit}
           className="module-grid-unit"
           style={styles.headerBtn}
-          onClick={onClick}
+          onClick={() => onClick()}
           type="button">
           {label}
         </button>
-        <button
-          style={styles.editBtn}
-          onClick={setHeaderUpdateBlock}
-          type="button">
-          <img src={editIcon} alt="edit" style={styles.icon} />
-        </button>
-        <button
-          style={styles.cancelBtn}
-          onClick={() => console.log('CANCEL ACTION')}
-          type="button">
-          <img src={cancelIcon} alt="cancel" style={styles.icon} />
-        </button>
+        {mathEmitHandlerBlock}
       </div>
     );
   }
 
   return (
-    <button
-      ref={moduleGridUnit}
-      className="module-grid-unit"
-      css={styles.btn}
-      onClick={onClick}
+    <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      type="button">
-      {label}
-    </button>
+      css={styles.btnWrapper}>
+      <button
+        ref={moduleGridUnit}
+        className="module-grid-unit"
+        css={headerBtnStyles}
+        onClick={() => onClick()}
+        type="button">
+        {label || '資料從缺'}
+      </button>
+      {mathEmitHandlerBlock}
+    </div>
   );
 }
 
 ModuleGridUnit.defaultProps = {
-  setHeaderUpdateBlockOpen: null,
   headerName: null,
+  timeStamp: null,
 };
 
 export default ModuleGridUnit;

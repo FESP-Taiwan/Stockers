@@ -2,10 +2,11 @@
 
 import React from 'react';
 import {
+  BrowserRouter as Router,
   Switch,
   Route,
 } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/react-hooks';
 import type { ApolloClient } from 'apollo-client';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
@@ -42,12 +43,14 @@ function App({
           <ConnectedRouter history={history}>
             <MessageHandler>
               <ErrorHandler>
-                <Switch>
-                  <Route exact path="/breadCrumb" component={BreadCrumb} />
-                  <Route exact path="/register" component={RegisterPage} />
-                  <Route exact path="/login" component={LoginPage} />
-                  <Route component={MainBoard} />
-                </Switch>
+                <Router>
+                  <Switch>
+                    <Route exact path="/breadCrumb" component={BreadCrumb} />
+                    <Route exact path="/register" component={RegisterPage} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route path="/" component={MainBoard} />
+                  </Switch>
+                </Router>
               </ErrorHandler>
             </MessageHandler>
           </ConnectedRouter>

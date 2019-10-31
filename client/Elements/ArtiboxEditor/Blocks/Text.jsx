@@ -18,35 +18,30 @@ const BASIC_HEIGHT = {
   [BLOCK_TYPES.TEXT]: 26,
   [BLOCK_TYPES.TITLE]: 36,
   [BLOCK_TYPES.SUBTITLE]: 30,
-  [BLOCK_TYPES.QUOTE]: 26,
 };
 
 const FONT_SIZE = {
   [BLOCK_TYPES.TEXT]: 16,
   [BLOCK_TYPES.TITLE]: 24,
   [BLOCK_TYPES.SUBTITLE]: 20,
-  [BLOCK_TYPES.QUOTE]: 16,
 };
 
 const FONT_WEIGHT = {
   [BLOCK_TYPES.TEXT]: 400,
   [BLOCK_TYPES.TITLE]: 700,
   [BLOCK_TYPES.SUBTITLE]: 500,
-  [BLOCK_TYPES.QUOTE]: 400,
 };
 
 const LETTER_SPACING = {
   [BLOCK_TYPES.TEXT]: 1,
   [BLOCK_TYPES.TITLE]: 3,
   [BLOCK_TYPES.SUBTITLE]: 2,
-  [BLOCK_TYPES.QUOTE]: 6,
 };
 
 const COLOR = {
   [BLOCK_TYPES.TEXT]: '#FFF',
-  [BLOCK_TYPES.TITLE]: '#4a4a4a',
-  [BLOCK_TYPES.SUBTITLE]: '#212121',
-  [BLOCK_TYPES.QUOTE]: '#b2b2b2',
+  [BLOCK_TYPES.TITLE]: '#FFF',
+  [BLOCK_TYPES.SUBTITLE]: '#FFF',
 };
 
 const styles = {
@@ -100,6 +95,8 @@ type Props = {
   focus: boolean,
   meta: Object,
   id: string,
+  loaded: boolean,
+  firstLoaded: boolean,
   placeholder?: string,
 }
 
@@ -109,7 +106,9 @@ function Text({
   focus,
   meta,
   id,
+  firstLoaded,
   placeholder,
+  loaded,
 }: Props) {
   const textarea = useRef();
   const displayer = useRef();
@@ -135,10 +134,28 @@ function Text({
   useEffect(() => {
     const { current } = textarea;
 
-    if (current && focus) {
+    if (loaded && textarea.current) {
+      current.style.setProperty('height', `${BASIC_HEIGHT[type]}px`);
+
+      const newHeight = `${current.scrollHeight}px`;
+
+      current.style.setProperty('height', newHeight);
+      current.parentNode.style.setProperty('height', newHeight);
+    }
+  }, [loaded, type]);
+
+  useEffect(() => {
+    const { current } = textarea;
+
+    if (current && firstLoaded && focus) {
       current.focus();
     }
-  }, [focus]);
+
+    dispatch({
+      type: Actions.LOADED,
+      id,
+    });
+  }, [dispatch, firstLoaded, id, focus]);
 
   const onInputHandler = useCallback(({ target }) => {
     target.style.setProperty('height', `${BASIC_HEIGHT[type]}px`);
@@ -156,7 +173,6 @@ function Text({
     });
   }, [dispatch, id]);
 
-  // unstudied
   const onChangeHandler = useCallback(({ target }) => {
     const diff = target.selectionStart - currentCaret;
 
@@ -391,13 +407,14 @@ function Text({
   return (
     <div style={wrapperStyles}>
       <textarea
+        placeholder={placeholder}
+        value={content}
         onPaste={onPasteHandler}
         onKeyDown={onKeyDownHandler}
         onChange={onChangeHandler}
         onInput={onInputHandler}
         onFocus={onFocusHandler}
         style={inputStyles}
-        placeholder={placeholder}
         className="Artibox-input"
         ref={textarea} />
       <div
