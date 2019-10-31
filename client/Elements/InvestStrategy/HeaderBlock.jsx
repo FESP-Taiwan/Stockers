@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 import { reduxForm, formValueSelector, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
@@ -81,21 +81,25 @@ const styles = {
 
 const mockModules = [{
   id: 1,
-  name: 'A',
+  name: 'F',
 }, {
   id: 2,
-  name: 'B',
+  name: 'E',
+}, {
+  id: 3,
+  name: 'S',
+}, {
+  id: 4,
+  name: 'P',
 }];
 
 function HeaderBlock({
   moduleValue,
 }: Props) {
   const [actived, active] = useState(false);
+  const [allvalues, setallvalues] = useState(new Array(mockModules.length).fill(0));
 
   const onClick = useCallback(() => active(!actived), [actived]);
-
-  // console.log('moduleValue', moduleValue);
-  console.log(mockModules.map(module => `module.${module.id}`));
 
   return (
     <form css={styles.wrapper}>
@@ -115,11 +119,11 @@ function HeaderBlock({
           測試績效
         </button>
       </div>
-      <FieldArray
+      <ModuleBtns
+        allvalues={allvalues}
+        setallvalues={setallvalues}
         modules={mockModules}
-        actived={actived}
-        name="modules"
-        component={ModuleBtns} />
+        actived={actived} />
       <span css={styles.line} />
       <button
         onClick={() => console.log('add modules')}

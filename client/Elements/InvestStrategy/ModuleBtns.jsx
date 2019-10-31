@@ -62,49 +62,16 @@ type Props = {
   module: Object,
   name: string,
   changeValue: Function,
+  setallvalues: Function,
 }
 
 function ModuleBtns({
   actived,
   modules,
-  changeFirstValue,
-  changeNextValue,
-  firstValue,
-  value,
-  nextValue,
-  fields,
+  allvalues,
+  setallvalues,
 }: Props) {
   const [selected, select] = useState(false);
-
-  console.log('fields', fields.getAll());
-
-  // console.log('values', values)
-
-
-  // useEffect(() => {
-  //   if (id !== 1 && value + firstValue > 100) {
-  //     console.log('3', value)
-  //     changeFirstValue(firstValue - (value + firstValue - 100));
-  //   }
-  // }, [firstValue, id, value, changeFirstValue]);
-
-  // useEffect(() => {
-  //   if (id === 1 && nextValue === 'noValue') {
-  //     changeFirstValue(100);
-  //   }
-
-  //   if (id === 1 && nextValue !== 'noValue') {
-  //     if (value + nextValue < 100) {
-  //       console.log('2')
-  //       changeNextValue(100 - firstValue);
-  //     }
-
-  //     if (value + nextValue > 100) {
-  //       console.log("----", nextValue - (value + nextValue - 100));
-  //       changeNextValue(nextValue - (value + nextValue - 100));
-  //     }
-  //   }
-  // }, [id, firstValue, value, changeFirstValue, changeNextValue, nextValue]);
 
   const onClick = useCallback(() => select(!selected), [selected]);
   const modulesStyle = useMemo(() => ({
@@ -131,23 +98,15 @@ function ModuleBtns({
         css={btnStyle}>
         {name}
       </button>
-      <Field actived={actived} name={`modules.${id - 1}`} component={RangeSlider} />
+      <RangeSlider
+        index={id - 1}
+        allvalues={allvalues}
+        setallvalues={setallvalues}
+        actived={actived} />
     </div>
-  )), [modules, modulesStyle, onClick, btnStyle, actived]);
+  )), [allvalues, modules, modulesStyle, onClick, btnStyle, actived, setallvalues]);
 
   return modulesBtns;
 }
-
-// const reduxHook = connect(
-//   (state, { module: { id } }) => ({
-//     firstValue: formValueSelector(FORM_STRATEGY_HEADER)(state, 'range-slider-1'),
-//     value: formValueSelector(FORM_STRATEGY_HEADER)(state, `range-slider-${id}`),
-//     nextValue: formValueSelector(FORM_STRATEGY_HEADER)(state, `range-slider-${id + 1}`) ?? 'noValue',
-//   }),
-//   (dispatch, { module: { id } }) => ({
-//     changeFirstValue: newValue => dispatch(change(FORM_STRATEGY_HEADER, 'range-slider-1', newValue)),
-//     changeNextValue: newValue => dispatch(change(FORM_STRATEGY_HEADER, `range-slider-${id + 1}`, newValue)),
-//   }),
-// );
 
 export default ModuleBtns;
