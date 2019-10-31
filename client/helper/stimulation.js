@@ -30,8 +30,6 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
     ];
   }, []);
 
-  console.log('modulesInfo', modulesInfo);
-
   return {
     initialPrice: 100000,
     modules: modulesInfo.map(module => ({
