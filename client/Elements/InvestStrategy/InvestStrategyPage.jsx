@@ -47,13 +47,13 @@ function InvestStrategyPage({
 
   const onClick = useCallback(() => {
     const datePeriod = {
-      startFrom: '2018-06',
+      startFrom: '2018-09',
       endAt: '2019-06',
     };
 
     const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInfo, stockData);
 
-    console.log('stimulationData', stimulationData);
+    console.log('stimulationData', JSON.stringify(stimulationData));
   }, [modulesInfo, stockData, stockId]);
 
   return (
