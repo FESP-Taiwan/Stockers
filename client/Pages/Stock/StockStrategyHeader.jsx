@@ -6,7 +6,6 @@ import { useParams, Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
-import ModuleBtns from '../../Elements/InvestStrategy/ModuleBtns';
 import editIcon from '../../static/images/icon-edit.png';
 
 const styles = {

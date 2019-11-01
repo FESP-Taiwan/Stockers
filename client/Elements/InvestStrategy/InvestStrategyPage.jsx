@@ -68,8 +68,6 @@ function InvestStrategyPage({
     const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInfo, stockData);
 
     simulation(stimulationData);
-
-    console.log('stimulationData', stimulationData);
   }, [modulesInfo, stockData, stockId]);
 
   return (

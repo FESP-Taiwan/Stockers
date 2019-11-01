@@ -89,10 +89,6 @@ export default function getModuleAlertion(math, stockData) {
     };
   });
 
-  console.log('chipsValue', chipsValue);
-
-  console.log('math', math);
-
   const subStringList = chipsValue.map(chip => ({
     stringName: math.content.substring(chip.FROM, chip.TO),
     value: chip.value,
@@ -106,8 +102,6 @@ export default function getModuleAlertion(math, stockData) {
 
     return string.replace(stringName, value);
   }, math.content);
-
-  console.log('calString', calString);
 
   const newString = replaceCalString(calString);
 

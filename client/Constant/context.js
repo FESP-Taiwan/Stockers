@@ -24,4 +24,6 @@ export const MathInitDataContext = React.createContext({});
 
 export const CommentInitDataContext = React.createContext({});
 
+export const HeaderBlockAllValuesContext = React.createContext([[], () => {}]);
+
 export default null;

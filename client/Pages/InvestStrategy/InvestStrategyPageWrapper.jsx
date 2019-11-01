@@ -50,8 +50,6 @@ function InvestStrategyPageWrapper({
 
         resData.forEach((el) => {
           const moduleAlertion = getModuleAlertion(el.mathModule, stockData);
-
-          console.log('moduleAlertion', moduleAlertion);
         });
       }
     }

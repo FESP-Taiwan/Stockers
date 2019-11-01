@@ -1,9 +1,10 @@
 // @flow
 /** @jsx jsx */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useContext } from 'react';
 import { jsx } from '@emotion/core';
 import type { FieldProps } from 'redux-form';
+import { HeaderBlockAllValuesContext } from '../../../Constant/context';
 
 const styles = {
   wrapper: {
@@ -39,14 +40,14 @@ const styles = {
 
 function RangeSlider({
   index,
-  allvalues,
-  setallvalues,
   actived,
   className,
 }: FieldProps & {
   actived: boolean,
   className: string,
 }) {
+  const [allvalues, setallvalues] = useContext(HeaderBlockAllValuesContext);
+
   const [value, setValue] = useState(0);
   const rangeSliderValue = useMemo(() => ({
     position: 'absolute',
