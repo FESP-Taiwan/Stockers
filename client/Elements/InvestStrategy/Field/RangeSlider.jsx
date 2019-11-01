@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { jsx } from '@emotion/core';
 import type { FieldProps } from 'redux-form';
 
@@ -38,36 +38,80 @@ const styles = {
 };
 
 function RangeSlider({
+  index,
+  allvalues,
+  setallvalues,
   actived,
-  input: {
-    onChange,
-    value,
-  },
   className,
 }: FieldProps & {
   actived: boolean,
   className: string,
 }) {
+  const [value, setValue] = useState(0);
   const rangeSliderValue = useMemo(() => ({
     position: 'absolute',
     height: 80,
-    width: (300 * value) / 100,
+    width: (300 * allvalues?.[index]) / 100,
     backgroundColor: '#FF9500',
-  }), [value]);
+  }), [allvalues, index]);
 
   return (
     <div css={[styles.wrapper, actived && styles.actived]}>
       <input
         className={className}
         type="range"
-        value={value ?? 0}
+        value={value}
         min="0"
         max="100"
         step="1"
         onChange={({
           target,
-        }) => onChange(Number(target.value))} />
-      <span css={styles.percentText}>{value ? `${value}%` : '0%'}</span>
+        }) => {
+          const accumValue = [
+            ...allvalues.slice(0, index),
+            Number(target.value),
+            ...allvalues.slice(index + 1),
+          ].reduce((accum, curr) => accum + curr, 0);
+
+          if (accumValue < 100) {
+            setallvalues([
+              ...allvalues.slice(0, index),
+              Number(target.value),
+              ...allvalues.slice(index + 1),
+            ]);
+          }
+
+          const hasValueIndex = allvalues.findIndex((allvalue, i) => allvalue > 0 && i !== index);
+
+          if (accumValue > 100) {
+            if (index === 0) {
+              if (hasValueIndex > 1) {
+                setallvalues([
+                  Number(target.value),
+                  ...allvalues.slice(1, hasValueIndex),
+                  allvalues[hasValueIndex] - (accumValue - 100),
+                  ...allvalues.slice(hasValueIndex + 1),
+                ]);
+              } else {
+                setallvalues([
+                  Number(target.value),
+                  allvalues[1] - (accumValue - 100),
+                  ...allvalues.slice(2),
+                ]);
+              }
+            } else {
+              setallvalues([
+                allvalues[0] - (accumValue - 100),
+                ...allvalues.slice(1, index),
+                Number(target.value),
+                ...allvalues.slice(index + 1),
+              ]);
+            }
+          }
+
+          setValue(Number(target.value));
+        }} />
+      <span css={styles.percentText}>{allvalues?.[index] ? `${allvalues[index]}%` : '0%'}</span>
       <div css={styles.rangeSlider}>
         <span css={rangeSliderValue} />
       </div>

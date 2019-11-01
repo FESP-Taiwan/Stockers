@@ -1,11 +1,13 @@
 // @flow
 /** @jsx jsx */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
-import { Field } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, change, formValueSelector } from 'redux-form';
 import closeIcon from '../../static/images/close-icon.png';
 import RangeSlider from './Field/RangeSlider';
+import { FORM_STRATEGY_HEADER } from '../../Constant/form';
 
 const styles = {
   modules: {
@@ -59,14 +61,15 @@ type Props = {
   actived: boolean,
   module: Object,
   name: string,
+  changeValue: Function,
+  setallvalues: Function,
 }
 
-function ModuleBtn({
+function ModuleBtns({
   actived,
-  module: {
-    id,
-    name,
-  },
+  modules,
+  allvalues,
+  setallvalues,
 }: Props) {
   const [selected, select] = useState(false);
 
@@ -81,7 +84,7 @@ function ModuleBtn({
     (selected ? styles.btnSelected : {}),
   ]), [selected]);
 
-  return (
+  const modulesBtns = useMemo(() => modules.map(({ id, name }) => (
     <div css={modulesStyle} key={id}>
       <button
         css={styles.closeBtn}
@@ -95,12 +98,15 @@ function ModuleBtn({
         css={btnStyle}>
         {name}
       </button>
-      <Field
-        actived={actived}
-        name={`${id}-range-slider`}
-        component={RangeSlider} />
+      <RangeSlider
+        index={id - 1}
+        allvalues={allvalues}
+        setallvalues={setallvalues}
+        actived={actived} />
     </div>
-  );
+  )), [allvalues, modules, modulesStyle, onClick, btnStyle, actived, setallvalues]);
+
+  return modulesBtns;
 }
 
-export default ModuleBtn;
+export default ModuleBtns;
