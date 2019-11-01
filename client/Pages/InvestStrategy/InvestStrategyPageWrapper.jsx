@@ -63,7 +63,7 @@ function InvestStrategyPageWrapper({
     return () => {
       canceled = true;
     };
-  }, [storeUserModules, localState]);
+  }, [storeUserModules, localState, stockData]);
 
   return (
     <InvestStrategyPage />
