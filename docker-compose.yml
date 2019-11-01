@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    image: frontend
+    container_name: frontend
+    environment:
+      - API_HOST=http://3.219.220.166:5000/
+    restart: always
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 80:7000

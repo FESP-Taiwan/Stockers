@@ -54,7 +54,7 @@ module.exports = {
     contentBase: [path.resolve(__dirname, "static")],
     publicPath: "/",
     compress: true,
-    port: 80,
+    port: 7000,
     filename: "bundle.js",
     historyApiFallback: true,
     host: "0.0.0.0",
