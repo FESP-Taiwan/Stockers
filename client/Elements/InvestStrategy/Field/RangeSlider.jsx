@@ -14,6 +14,7 @@ const styles = {
     left: -107,
     transform: 'rotate(-90deg)',
     transition: 'opacity 0.5s',
+    zIndex: 0,
   },
   actived: {
     opacity: 1,
