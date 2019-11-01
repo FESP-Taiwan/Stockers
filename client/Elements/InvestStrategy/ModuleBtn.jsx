@@ -2,7 +2,9 @@
 /** @jsx jsx */
 
 import { useState, useCallback, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { jsx, css } from '@emotion/core';
+import { NavLink } from 'react-router-dom';
 import closeIcon from '../../static/images/close-icon.png';
 import RangeSlider from './Field/RangeSlider';
 
@@ -69,7 +71,7 @@ function ModuleBtn({
 }: Props) {
   const [selected, select] = useState(false);
 
-  console.log('selected', selected);
+  const { industryId, stockId, moduleId } = useParams();
 
   const onClick = useCallback(() => select(!selected), [selected]);
   const modulesStyle = useMemo(() => ({
@@ -90,15 +92,20 @@ function ModuleBtn({
         onClick={() => console.log('click')}>
         <img src={closeIcon} alt="close" css={styles.icon} />
       </button>
+      <NavLink
+        activeStyle={styles.btnSelected}
+        css={btnStyle}
+        to={}>
+        {name}
+      </NavLink>
       <button
         type="button"
         onClick={onClick}
-        css={btnStyle}>
-        {name}
+        >
       </button>
-      <RangeSlider
+      {/* <RangeSlider
         index={id - 1}
-        actived={actived} />
+        actived={actived} /> */}
     </div>
   );
 }
