@@ -36,6 +36,20 @@ const styles = {
   },
 };
 
+async function simulation(stimulationData) {
+  const data = await fetch('http://172.20.10.2:3000/compute', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(stimulationData),
+  }).then(res => res.json());
+
+  if (data) {
+    console.log('data', JSON.stringify(data));
+  }
+}
+
 function InvestStrategyPage({
   modulesInfo,
   stockData,
@@ -53,7 +67,9 @@ function InvestStrategyPage({
 
     const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInfo, stockData);
 
-    console.log('stimulationData', JSON.stringify(stimulationData));
+    simulation(stimulationData);
+
+    console.log('stimulationData', stimulationData);
   }, [modulesInfo, stockData, stockId]);
 
   return (

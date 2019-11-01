@@ -21,8 +21,6 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
     ];
   }, []);
 
-  console.log('timeList', timeList);
-
   const chipList = Object.values(stockData).reduce((list, el) => {
     if (!el.chipInfos) return list;
 
@@ -47,6 +45,7 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
             type: chipInfo.chipData.type,
             timeStamp: chipInfo.chipData.date,
             chipName: chipInfo.chipData.name,
+            rowId: chipInfo.chipData.rowId,
           },
         })),
       },
