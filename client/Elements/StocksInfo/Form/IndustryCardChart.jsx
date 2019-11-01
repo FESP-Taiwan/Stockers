@@ -29,7 +29,7 @@ function IndustryCardChart({
   data,
 }: Props) {
   const area = useMemo(() => {
-    if (average > 0) {
+    if (average < 0) {
       return (
         <Area type="monotone" dataKey="percent" stakeId="1" stroke="#5EF28F" fill="#5EF28F" />
       );

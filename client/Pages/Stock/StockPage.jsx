@@ -437,7 +437,13 @@ function StockPage({
       default:
         return null;
     }
-  }, [table, dividendTableData, cashFlowTableData]);
+  }, [
+    table,
+    comprehensiveIncomeTableData,
+    balanceSheetTableData,
+    cashFlowTableData,
+    dividendTableData,
+  ]);
 
   return (
     <div css={styles.wrapper}>
