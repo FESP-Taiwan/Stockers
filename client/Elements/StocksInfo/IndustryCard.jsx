@@ -73,7 +73,7 @@ function IndustryCard({
   }, [companies]);
 
   const percentStyle = useMemo(() => {
-    if (average > 0) return styles.goodPercent;
+    if (average < 0) return styles.goodPercent;
 
     return styles.badPercent;
   }, [average]);

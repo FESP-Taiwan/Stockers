@@ -10,9 +10,13 @@ import { jsx, css } from '@emotion/core';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import {
+  LineChart, Line, ResponsiveContainer,
+} from 'recharts';
 import IndustryCardChart from '../../Elements/StocksInfo/Form/IndustryCardChart';
 import { flex } from '../../Constant/emotion';
 import { industryStream } from '../../Constant/industryStream';
+import { industryNames } from '../../Constant/industryName';
 import * as IndustryCardActions from '../../actions/IndustryCard';
 import LoadingSpinner from '../../Elements/LoadingSpinner';
 
@@ -148,6 +152,36 @@ function IndustryPage({
 
   const { industryId } = useParams();
 
+  console.log('industryCardData', industryCardData);
+
+  const gainChartData = useMemo(() => {
+    if (!industryCardData.length) return null;
+
+    const comparedIndustry = industryCardData?.filter(card => industryNames
+      .some(industryName => industryName.name === card.industry_type));
+
+    const gainData = comparedIndustry[Number(industryId)].companies?.map(company => company.gain_diff);
+
+    const firstGain = gainData?.map(gain => gain[0].gain).reduce((prev, cur) => prev + cur);
+
+    const secondGain = gainData?.map(gain => gain[1].gain).reduce((prev, cur) => prev + cur);
+
+    const thirdGain = gainData?.map(gain => gain[2].gain).reduce((prev, cur) => prev + cur);
+
+    return [{
+      name: 'firstGain',
+      value: firstGain,
+    }, {
+      name: 'secondGain',
+      value: secondGain,
+    }, {
+      name: 'thirdGain',
+      value: thirdGain,
+    }];
+  }, [industryCardData, industryId]);
+
+  console.log('gainChartData', gainChartData);
+
   useEffect(() => {
     let canceled = false;
 
@@ -276,12 +310,16 @@ function IndustryPage({
             &nbsp;&nbsp;&nbsp;&nbsp;
             {industryStream[Number(industryId)].description}
           </span>
-          <div>
+          <div style={{ width: '100%' }}>
             <h4>
               漲跌幅走勢 單位%
             </h4>
-            <div>
-              圖表
+            <div style={{ width: '100%', height: 150 }}>
+              <ResponsiveContainer>
+                <LineChart data={gainChartData}>
+                  <Line type="monotone" dataKey="value" stroke="#FF9500" />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>

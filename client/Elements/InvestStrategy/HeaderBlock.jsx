@@ -1,13 +1,16 @@
 // @flow
 /** @jsx jsx */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
-import { reduxForm } from 'redux-form';
-import ModuleBtn from './ModuleBtn';
+import { reduxForm, formValueSelector, FieldArray } from 'redux-form';
+import { connect } from 'react-redux';
+import ModuleBtns from './ModuleBtns';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
 import strategyIcon from '../../static/images/icon-strategy.png';
 import addIcon from '../../static/images/icon-white-add.png';
+
+const selector = formValueSelector(FORM_STRATEGY_HEADER);
 
 const styles = {
   wrapper: {
@@ -78,19 +81,28 @@ const styles = {
 
 const mockModules = [{
   id: 1,
-  name: 'A',
+  name: 'F',
 }, {
   id: 2,
-  name: 'B',
+  name: 'E',
+}, {
+  id: 3,
+  name: 'S',
+}, {
+  id: 4,
+  name: 'P',
 }];
 
-function HeaderBlock() {
+function HeaderBlock({
+  moduleValue,
+}: Props) {
   const [actived, active] = useState(false);
+  const [allvalues, setallvalues] = useState(new Array(mockModules.length).fill(0));
 
   const onClick = useCallback(() => active(!actived), [actived]);
 
   return (
-    <div css={styles.wrapper}>
+    <form css={styles.wrapper}>
       <div css={styles.modules}>
         <span css={styles.title}>買</span>
         <button
@@ -107,7 +119,11 @@ function HeaderBlock() {
           測試績效
         </button>
       </div>
-      {mockModules.map(module => (<ModuleBtn key={module.id} module={module} actived={actived} />))}
+      <ModuleBtns
+        allvalues={allvalues}
+        setallvalues={setallvalues}
+        modules={mockModules}
+        actived={actived} />
       <span css={styles.line} />
       <button
         onClick={() => console.log('add modules')}
@@ -115,12 +131,18 @@ function HeaderBlock() {
         css={styles.circleBtn}>
         <img src={addIcon} css={styles.icon} alt="Add" />
       </button>
-    </div>
+    </form>
   );
 }
 
-const reduxHook = reduxForm({
+const formHook = reduxForm({
   form: FORM_STRATEGY_HEADER,
 });
 
-export default reduxHook(HeaderBlock);
+const reduxHook = connect(
+  state => ({
+    moduleValue: selector(state, 'range-slider-1'),
+  })
+);
+
+export default reduxHook(formHook(HeaderBlock));
