@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { ModuleDataContext } from '../../../Constant/context';
 import ModuleTableColumnBoard from './ModuleTableColumnBoard';
-import addIcon from '../../../static/images/icon-white-add.png';
+import editIcon from '../../../static/images/icon-edit.png';
 import ChipHeaderUpdateBlock from './ChipHeaderUpdateBlock';
 
 const styles = {
@@ -42,7 +42,7 @@ const styles = {
     alignItems: 'center',
     flexShrink: 0,
   },
-  addBtnImg: {
+  editBtnImg: {
     width: 18,
   },
   dateBlockHeader: {
@@ -71,8 +71,6 @@ const styles = {
 function ModuleTable() {
   const [isHeaderUpdateBlockOpen, setHeaderUpdateBlockOpen] = useState(false);
   const moduleData = useContext(ModuleDataContext);
-
-  console.log('moduleData', moduleData);
 
   const dateSideHeader = useMemo(() => {
     if (!moduleData.length) return null;
@@ -116,12 +114,11 @@ function ModuleTable() {
           <ModuleTableColumnBoard
             key={elem.id}
             columnId={id}
-            setHeaderUpdateBlockOpen={setHeaderUpdateBlockOpen}
             elem={elem} />
         ))}
       </>
     );
-  }, [moduleData, setHeaderUpdateBlockOpen]);
+  }, [moduleData]);
 
   return (
     <div style={styles.wrapper}>
@@ -131,7 +128,7 @@ function ModuleTable() {
         onClick={() => setHeaderUpdateBlockOpen(true)}
         style={styles.addBtn}
         type="button">
-        <img src={addIcon} alt="add" style={styles.addBtnImg} />
+        <img src={editIcon} alt="add" style={styles.editBtnImg} />
       </button>
       <ChipHeaderUpdateBlock
         isOpen={isHeaderUpdateBlockOpen}

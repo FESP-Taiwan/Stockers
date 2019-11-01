@@ -14,7 +14,6 @@ type Props = {
     chipData: Array,
   },
   columnId: number,
-  setHeaderUpdateBlockOpen: Function,
 }
 
 const styles = {
@@ -30,7 +29,6 @@ function ModuleTableColumnBoard({
     name,
   },
   columnId,
-  setHeaderUpdateBlockOpen,
 }: Props) {
   const [sortedData, setSortedData] = useState([]);
 
@@ -66,7 +64,6 @@ function ModuleTableColumnBoard({
     <div style={styles.wrapper}>
       <ModuleGridUnit
         rowId="header"
-        setHeaderUpdateBlockOpen={setHeaderUpdateBlockOpen}
         columnId={columnId}
         label={name} />
       {moduleMainBoard}

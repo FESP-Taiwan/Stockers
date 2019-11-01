@@ -156,8 +156,6 @@ function LoginPage({
         },
       });
 
-      console.log('resData', resData);
-
       if (resData) {
         localStorage.setItem('token', resData.logIn.token);
         localStorage.setItem('userId', resData.logIn.userID);

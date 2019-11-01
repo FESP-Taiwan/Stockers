@@ -139,8 +139,6 @@ function Text({
 
       const newHeight = `${current.scrollHeight}px`;
 
-      console.log('newHeight', newHeight);
-
       current.style.setProperty('height', newHeight);
       current.parentNode.style.setProperty('height', newHeight);
     }

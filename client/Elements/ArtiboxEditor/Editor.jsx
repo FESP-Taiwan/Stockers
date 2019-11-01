@@ -102,14 +102,10 @@ function Editor({
 
   const [state, dispatch] = useReducer(reducer, fromJSON(initData), initializer);
 
-  console.log('state', state);
-
   const prevState = usePreviosState(state);
 
   const submit = useCallback(() => {
     const storedObject = toJSON(state);
-
-    console.log('storedObject', storedObject);
 
     submitAction(storedObject);
   }, [submitAction, state]);

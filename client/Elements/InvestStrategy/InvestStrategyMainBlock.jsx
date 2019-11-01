@@ -2,7 +2,6 @@
 
 import React, {
   Fragment,
-  useMemo,
 } from 'react';
 import { connect } from 'react-redux';
 import ModuleTableWrapper from './Module/ModuleTableWrapper';
@@ -12,22 +11,26 @@ import MathModuleBlockWrapper from './Math/MathModuleBlockWrapper';
 type Props = {
   moduleInfo: {
     comment: {},
+    mathModule: {},
+    headers: Array,
   },
 };
 
 function InvestStrategyMainBlock({
   moduleInfo,
 }: Props) {
-  console.log('moduleInfo', moduleInfo);
-
   const {
     comment,
+    mathModule,
+    headers,
   } = moduleInfo;
 
   return (
     <Fragment>
-      <MathModuleBlockWrapper />
-      <ModuleTableWrapper />
+      <MathModuleBlockWrapper
+        mathModule={mathModule || {}} />
+      <ModuleTableWrapper
+        headers={headers || []} />
       <CommentBlockWrapper
         comment={comment || {}} />
     </Fragment>

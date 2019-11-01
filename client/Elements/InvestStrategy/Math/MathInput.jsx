@@ -9,6 +9,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
+import { useParams } from 'react-router-dom';
 import { MathInitDataContext } from '../../../Constant/context';
 import {
   investStrategySharedEmitter,
@@ -16,8 +17,9 @@ import {
   END_EDITTING,
   INIT_MODULE,
   CLICK_EVENT,
+  MATH_META_NAMES,
 } from '../../../Constant/investStrategy';
-import { useGlobalErrorMessage } from '../../../helper/useGlobalMessage';
+import { useGlobalErrorMessage, useGlobalMessage } from '../../../helper/useGlobalMessage';
 import MathInputBlockButton from './MathInputBlockButton';
 
 const styles = {
@@ -54,14 +56,48 @@ const styles = {
   },
 };
 
+async function submit(inputState, moduleId, showMessage) {
+  const userToken = localStorage.getItem('token');
+
+  const storedObject = {
+    ...inputState,
+    chipInfos: inputState.chipInfos.map(chipInfo => ({
+      ...chipInfo,
+      chipData: {
+        ...chipInfo.chipData,
+        type: MATH_META_NAMES[chipInfo.chipData.type],
+      },
+    })),
+  };
+
+  const resStatus = await fetch(`${API_HOST}/modules/updateMathModuleInfo`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: userToken,
+    },
+    body: JSON.stringify({
+      moduleId,
+      mathModuleInfo: storedObject,
+    }),
+  }).then(res => res.status);
+
+  if (resStatus === 200) {
+    showMessage('成功儲存編輯');
+  }
+}
+
 function MathInput() {
   const inputRef = useRef();
+
+  const { moduleId } = useParams();
 
   const mathInitData = useContext(MathInitDataContext);
 
   const showErrorMessage = useGlobalErrorMessage();
+  const showMessage = useGlobalMessage();
 
-  const [firstLoadedOrModuleInited, setFirstLoadedOrModuleInited] = useState(false);
+  const [moduleInited, setModuleInited] = useState(false);
   const [isEditting, setIsEditting] = useState(false);
   const [caretPositionTriggersRender, setCaretPositionTriggersRender] = useState(0);
   const [caretPosition, setCaretPosition] = useState(0);
@@ -69,6 +105,13 @@ function MathInput() {
     content: '',
     chipInfos: [],
   });
+
+  console.log('inputState', inputState);
+
+  // InitData
+  useEffect(() => {
+    setInputState(mathInitData);
+  }, [mathInitData]);
 
   const addSpanToTags = useCallback((tags, subContent, from) => {
     Array.from(Array(subContent.length)).forEach((n, index) => {
@@ -84,12 +127,12 @@ function MathInput() {
   }, []);
 
   useEffect(() => {
-    if (!firstLoadedOrModuleInited) {
+    if (!moduleInited) {
       setInputState(mathInitData);
 
-      setFirstLoadedOrModuleInited(true);
+      setModuleInited(true);
     }
-  }, [firstLoadedOrModuleInited, mathInitData]);
+  }, [moduleInited, mathInitData]);
 
   // clear when !isEditting
   useEffect(() => {
@@ -122,11 +165,12 @@ function MathInput() {
 
     function endEditHandler() {
       setIsEditting(false);
+      submit(inputState, moduleId, showMessage);
     }
 
     function initModuleHandler() {
       setIsEditting(false);
-      setFirstLoadedOrModuleInited(false);
+      setModuleInited(false);
     }
 
     investStrategySharedEmitter.on(START_EDITTING, startEditHandler);
@@ -138,7 +182,7 @@ function MathInput() {
       investStrategySharedEmitter.removeListener(END_EDITTING, endEditHandler);
       investStrategySharedEmitter.removeListener(INIT_MODULE, initModuleHandler);
     };
-  }, []);
+  }, [inputState, moduleId, showMessage]);
 
   // selectionchange range determination
   useEffect(() => {

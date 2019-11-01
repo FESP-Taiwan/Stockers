@@ -9,8 +9,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-import editIcon from '../../../static/images/icon-edit.png';
-import cancelIcon from '../../../static/images/icon-cancel.png';
 import {
   investStrategySharedEmitter,
   START_EDITTING,
@@ -96,7 +94,6 @@ type Props = {
   rowId: string | number,
   columnId: string | number,
   headerName?: string,
-  setHeaderUpdateBlockOpen?: Function,
   timeStamp?: MomentType,
 }
 
@@ -106,7 +103,6 @@ function ModuleGridUnit({
   columnId,
   headerName,
   timeStamp,
-  setHeaderUpdateBlockOpen,
 }: Props) {
   const moduleGridUnit = useRef();
   const mathEmitHandler = useRef();
@@ -212,26 +208,13 @@ function ModuleGridUnit({
         mathHandlerCurrent.classList.remove('hovered');
       }
 
-      // hover feature
-      if (rowId === 'header') {
-        const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
-
-        childrenNodes.forEach((child) => {
-          if (child.className !== 'module-grid-unit' && child.className !== 'module-math-edit-handler') {
-            child.style.setProperty('top', '43px');
-
-            child.style.setProperty('opacity', 1);
-          }
-        });
-      }
-
       current.classList.add('hovered');
 
       if (isMathModuleEditting && mathHandlerCurrent) {
         mathHandlerCurrent.classList.add('hovered');
       }
     }
-  }, [isMathModuleEditting, rowId]);
+  }, [isMathModuleEditting]);
 
   const onMouseLeave = useCallback(() => {
     const { current } = moduleGridUnit;
@@ -245,26 +228,8 @@ function ModuleGridUnit({
       if (isMathModuleEditting && mathHandlerCurrent && mathHandlerCurrent.classList.contains('hovered')) {
         mathHandlerCurrent.classList.remove('hovered');
       }
-
-      if (rowId === 'header') {
-        const childrenNodes = Object.values(moduleGridUnit.current.parentNode.children);
-
-        childrenNodes.forEach((child) => {
-          if (child.className !== 'module-grid-unit' && child.className !== 'module-math-edit-handler') {
-            child.style.setProperty('top', '50px');
-
-            child.style.setProperty('opacity', 0);
-          }
-        });
-      }
     }
-  }, [rowId, isMathModuleEditting]);
-
-  const setHeaderUpdateBlock = useCallback(() => {
-    if (typeof (setHeaderUpdateBlockOpen) === 'function') {
-      setHeaderUpdateBlockOpen(true);
-    }
-  }, [setHeaderUpdateBlockOpen]);
+  }, [isMathModuleEditting]);
 
   const headerBtnStyles = useMemo(() => ({
     ...styles.headerBtn,
@@ -284,20 +249,6 @@ function ModuleGridUnit({
           onClick={() => onClick()}
           type="button">
           {label}
-        </button>
-        <button
-          style={styles.editBtn}
-          onClick={setHeaderUpdateBlock}
-          disabled={isMathModuleEditting}
-          type="button">
-          <img src={editIcon} alt="edit" style={styles.icon} />
-        </button>
-        <button
-          style={styles.cancelBtn}
-          onClick={() => console.log('CANCEL ACTION')}
-          disabled={isMathModuleEditting}
-          type="button">
-          <img src={cancelIcon} alt="cancel" style={styles.icon} />
         </button>
         {mathEmitHandlerBlock}
       </div>
@@ -323,7 +274,6 @@ function ModuleGridUnit({
 }
 
 ModuleGridUnit.defaultProps = {
-  setHeaderUpdateBlockOpen: null,
   headerName: null,
   timeStamp: null,
 };
