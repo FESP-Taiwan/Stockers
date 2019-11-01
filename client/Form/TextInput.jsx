@@ -1,14 +1,9 @@
 // @flow
+/** @jsx jsx */
 /* eslint no-nested-ternary: 0 */
 
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useContext,
-} from 'react';
-import compact from 'lodash/compact';
-import isNil from 'lodash/isNil';
+import { useMemo, useCallback } from 'react';
+import { jsx } from '@emotion/core';
 import type { FieldProps } from 'redux-form';
 
 type Props = {
@@ -30,6 +25,7 @@ const styles = {
     margin: '9px 0',
     fontWeight: 400,
     backgroundColor: '#262626',
+    width: '100%',
   },
   inputWrapper: {
     position: 'relative',
@@ -65,21 +61,12 @@ function TextInput({
     name,
     value,
     onChange,
-    onFocus,
-    onBlur,
   } = input || {};
 
   const {
     error,
-    dirty,
-    visited,
-    submitFailed,
     form: formName,
   } = meta || {};
-
-  const wrapperStyles = useMemo(() => ({
-    ...styles.inputWrapper,
-  }), []);
 
   const labelStyles = useMemo(() => ({
     ...styles.label,
@@ -117,7 +104,7 @@ function TextInput({
   }, [error]);
 
   return (
-    <div css={wrapperStyles}>
+    <div css={styles.inputWrapper}>
       {labelTag}
       <input
         disabled={disabled}

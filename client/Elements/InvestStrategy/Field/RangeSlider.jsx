@@ -55,9 +55,6 @@ function RangeSlider({
     backgroundColor: '#FF9500',
   }), [allvalues, index]);
 
-  console.log('index', index);
-  console.log('value', value);
-
   return (
     <div css={[styles.wrapper, actived && styles.actived]}>
       <input
@@ -76,9 +73,6 @@ function RangeSlider({
             ...allvalues.slice(index + 1),
           ].reduce((accum, curr) => accum + curr, 0);
 
-          console.log('allvalues', allvalues);
-          console.log('accumValue', accumValue);
-
           if (accumValue < 100) {
             setallvalues([
               ...allvalues.slice(0, index),
@@ -88,8 +82,6 @@ function RangeSlider({
           }
 
           const hasValueIndex = allvalues.findIndex((allvalue, i) => allvalue > 0 && i !== index);
-
-          console.log('hasValueIndex', hasValueIndex);
 
           if (accumValue > 100) {
             if (index === 0) {
