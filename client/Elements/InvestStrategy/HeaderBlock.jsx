@@ -18,6 +18,7 @@ import { HeaderBlockAllValuesContext } from '../../Constant/context';
 import strategyIcon from '../../static/images/icon-strategy.png';
 import addIcon from '../../static/images/icon-white-add.png';
 import { storeUserModules as storeUserModulesAction } from '../../actions/InvestStrategy';
+import { useGlobalMessage } from '../../helper/useGlobalMessage';
 
 const styles = {
   wrapper: {
@@ -113,7 +114,9 @@ const styles = {
   },
 };
 
-async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, storeUserModules) {
+async function submit(
+  allvalues, stockId, modulesInUsed, modulesNotInUsed, storeUserModules, showMessage
+) {
   const updatedUsingModulesInfo = modulesInUsed.map((module, index) => {
     const moduleUsingStockIndex = module.usingStock.findIndex(use => use.companyNumber === stockId);
 
@@ -170,6 +173,8 @@ async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, store
     }));
 
     storeUserModules(storeResData);
+
+    showMessage('儲存編輯成功');
   }
 }
 
@@ -184,6 +189,8 @@ function HeaderBlock({
   const [allvalues, setallvalues] = useState([]);
   const [userModules, setUserModules] = useState([]);
   const [modulesInUsed, setModulesInUsed] = useState([]);
+
+  const showMessage = useGlobalMessage();
 
   const { stockId, industryId } = useParams();
 
@@ -354,7 +361,14 @@ function HeaderBlock({
         </button>
         <button
           style={styles.submitBtn}
-          onClick={() => submit(allvalues, parseInt(stockId, 10), modulesInUsed, modulesNotInUsed, storeUserModules)}
+          onClick={() => submit(
+            allvalues,
+            parseInt(stockId, 10),
+            modulesInUsed,
+            modulesNotInUsed,
+            storeUserModules,
+            showMessage
+          )}
           type="button">
           儲存編輯
         </button>
