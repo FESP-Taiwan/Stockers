@@ -185,10 +185,6 @@ function StockPage({
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
 
-  console.log('convertNumber', convertNumber);
-
-  console.log('stockData', stockData);
-
   const comprehensiveIncomeTableData = useMemo(() => {
     if (!stockData) return null;
 
@@ -214,8 +210,6 @@ function StockPage({
 
     return comparedCashFlows;
   }, [stockData]);
-
-  console.log('cashFlowTableData', cashFlowTableData);
 
   const dividendTableData = useMemo(() => {
     if (!stockData) return null;

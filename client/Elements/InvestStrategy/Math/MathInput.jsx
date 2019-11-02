@@ -106,8 +106,6 @@ function MathInput() {
     chipInfos: [],
   });
 
-  console.log('inputState', inputState);
-
   // InitData
   useEffect(() => {
     setInputState(mathInitData);

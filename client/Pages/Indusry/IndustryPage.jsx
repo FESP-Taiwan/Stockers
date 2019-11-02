@@ -152,8 +152,6 @@ function IndustryPage({
 
   const { industryId } = useParams();
 
-  console.log('industryCardData', industryCardData);
-
   const gainChartData = useMemo(() => {
     if (!industryCardData.length) return null;
 
@@ -161,8 +159,6 @@ function IndustryPage({
       .some(industryName => industryName.name === card.industry_type));
 
     const gainData = comparedIndustry[Number(industryId)].companies?.map(company => company.gain_diff);
-
-    console.log('gainData', gainData);
 
     const firstGain = gainData?.map(gain => gain[0].gain).reduce((prev, cur) => prev + cur);
 
@@ -181,8 +177,6 @@ function IndustryPage({
       value: thirdGain,
     }];
   }, [industryCardData, industryId]);
-
-  console.log('gainChartData', gainChartData);
 
   useEffect(() => {
     let canceled = false;

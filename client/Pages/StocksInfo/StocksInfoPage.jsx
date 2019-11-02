@@ -83,8 +83,6 @@ function StockersInfoPage({
 }: Props) {
   const [isLoading, setLoading] = useState(true);
 
-  console.log('industryCardData', industryCardData);
-
   useEffect(() => {
     let canceled = false;
 
@@ -114,14 +112,22 @@ function StockersInfoPage({
 
     if (!industryCardData) return null;
 
-    console.log('2', isLoading);
-
     const comparedIndustry = industryCardData?.filter(card => industryNames
       .some(industry => industry.name === card.industry_type));
 
     if (!searchTerm) return comparedIndustry;
 
-    return comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
+    const filterByName = comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
+
+    const filteredByStock = comparedIndustry.filter(industry => industry.companies
+      .map(c => c.stockNo)
+      .some(num => num.includes(searchTerm)));
+
+    if (!filterByName.length) {
+      return filteredByStock;
+    }
+
+    return filterByName;
   }, [searchTerm, industryCardData, isLoading]);
 
   const industryCard = useMemo(() => {
@@ -129,24 +135,24 @@ function StockersInfoPage({
 
     if (!industryCardData) return null;
 
-    console.log('3', isLoading);
-
     return (
       <div css={styles.industryCardWrapper}>
-        {filteredIndustryCards.map((industry, index) => (
-          <IndustryCard
-            key={industry.industry_type}
-            name={industry.industry_type}
-            companies={industry.companies}
-            industryId={index} />
-        ))}
+        {filteredIndustryCards.map((industry, index) => {
+          if (!industry) return null;
+
+          return (
+            <IndustryCard
+              key={industry.industry_type}
+              name={industry.industry_type}
+              companies={industry.companies}
+              industryId={index} />
+          );
+        })}
       </div>
     );
   }, [industryCardData, filteredIndustryCards, isLoading]);
 
   if (isLoading) return <LoadingSpinner />;
-
-  console.log('4', isLoading);
 
   return (
     <div css={styles.wrapper}>
