@@ -46,7 +46,7 @@ async function simulation(stimulationData) {
   }).then(res => res.json());
 
   if (data) {
-    console.log('data', JSON.stringify(data));
+    // console.log('data', JSON.stringify(data));
   }
 }
 

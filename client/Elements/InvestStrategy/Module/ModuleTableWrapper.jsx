@@ -23,7 +23,7 @@ function ModuleTableWrapper({
   const [moduleData, setModuleData] = useState([]);
 
   const updateModuleData = useCallback((updateData) => {
-    if (updateData.length) {
+    if (Array.isArray(updateData)) {
       const sheets = Object.values(stockData).filter(el => el.name);
 
       if (sheets.length) {

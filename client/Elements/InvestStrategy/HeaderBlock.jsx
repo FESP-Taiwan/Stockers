@@ -207,8 +207,6 @@ function HeaderBlock({
   const [userModules, setUserModules] = useState([]);
   const [modulesInUsed, setModulesInUsed] = useState([]);
 
-  console.log('userModules', userModules);
-
   const { stockId } = useParams();
 
   const onClick = useCallback(() => active(!actived), [actived]);
@@ -304,8 +302,6 @@ function HeaderBlock({
 
     setModulesInUsed(initModulesInUsed);
   }, [userModules, stockId]);
-
-  console.log('userModules', userModules);
 
   const modulesNotInUsed = useMemo(() => {
     const modulesInUsedSet = new Set(modulesInUsed.map(useModule => useModule.id));

@@ -17,6 +17,11 @@ type Props = {
 };
 
 function InvestStrategyMainBlock({
+  match: {
+    params: {
+      moduleId,
+    },
+  },
   moduleInfo,
 }: Props) {
   const {
