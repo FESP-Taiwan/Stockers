@@ -5,6 +5,7 @@ import {
   useCallback,
   useState,
   useMemo,
+  useEffect,
 } from 'react';
 import { jsx, css } from '@emotion/core';
 import {
@@ -13,6 +14,8 @@ import {
   Link,
   useHistory,
 } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { reduxForm, Field } from 'redux-form';
 import logo from '../../static/images/logo_stockers.svg';
 import HeaderIndustry from './HeaderIndustry';
@@ -20,6 +23,7 @@ import HeaderStock from './HeaderStock';
 import SearchBar from '../../Form/SearchBar';
 import { FORM_SITE_HEADER } from '../../Constant/form';
 import { FOOTER_INDEX } from '../../Constant/zIndex';
+import { storeUserModules as storeUserModulesAction } from '../../actions/InvestStrategy';
 
 const styles = {
   wrapper: {
@@ -143,9 +147,46 @@ const filterModals = [{
   name: 'Ｄ基本面篩選',
 }];
 
-function SiteHeader() {
+function SiteHeader({
+  modulesInfo,
+  storeUserModules,
+}: Props) {
   const history = useHistory();
   const [isMenuOpened, setMenuOpened] = useState(false);
+
+  console.log('modulesInfo', modulesInfo);
+
+  const localState = {
+    userId: localStorage.getItem('userId'),
+    token: localStorage.getItem('token'),
+  };
+
+  useEffect(() => {
+    let canceled = false;
+
+    async function fetchUserModulesData() {
+      const resData = await fetch(`${API_HOST}/modules/userModules/${localState.userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: localStorage.token,
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        console.log('resData', resData);
+        storeUserModules(resData);
+      }
+    }
+
+    if (localState.userId && localState.token) {
+      fetchUserModulesData();
+    }
+
+    return () => {
+      canceled = true;
+    };
+  }, [storeUserModules, localState]);
 
   const onClick = useCallback(() => {
     setMenuOpened(!isMenuOpened);
@@ -203,7 +244,7 @@ function SiteHeader() {
         <div>
           你的模型
         </div>
-        {filterModals.map(filterModal => (
+        {modulesInfo.map(filterModal => (
           <button
             key={filterModal.id}
             onClick={() => console.log('切換模型')}
@@ -214,7 +255,7 @@ function SiteHeader() {
         ))}
       </div>
     );
-  }, [isMenuOpened, history]);
+  }, [modulesInfo, isMenuOpened, history]);
 
   return (
     <form>
@@ -256,4 +297,13 @@ const formHook = reduxForm({
   form: FORM_SITE_HEADER,
 });
 
-export default formHook(SiteHeader);
+const reduxHook = connect(
+  state => ({
+    modulesInfo: state.InvestStrategy.userModulesInfo || [],
+  }),
+  dispatch => bindActionCreators({
+    storeUserModules: storeUserModulesAction,
+  }, dispatch),
+);
+
+export default reduxHook(formHook(SiteHeader));
