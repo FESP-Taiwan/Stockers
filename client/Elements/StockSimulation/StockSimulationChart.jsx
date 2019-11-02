@@ -1,12 +1,39 @@
 // @flow
 /** @jsx jsx */
 
+import { useMemo } from 'react';
 import { jsx } from '@emotion/core';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
 
-const data = [
+const mockData = [{
+  id: 1,
+  name: '2019-03',
+}, {
+  id: 2,
+  name: '2019-06',
+}, {
+  id: 3,
+  name: '2019-09',
+}, {
+  id: 4,
+  name: '2019-12',
+}, {
+  id: 5,
+  name: '2019-03',
+}, {
+  id: 6,
+  name: '2019-06',
+}, {
+  id: 7,
+  name: '2019-09',
+}, {
+  id: 8,
+  name: '2019-12',
+}];
+
+const mockchartdata = [
   {
     name: 'Page A', share: 400,
   },
@@ -30,10 +57,24 @@ const styles = {
   },
 };
 
-function StockSimulationChart() {
+function StockSimulationChart({
+  from,
+  to,
+}: Props) {
+
+  const rangeData = useMemo(() => {
+    const fromIndex = mockData.findIndex(data => data.id === Number(from));
+    const toIndex = mockData.findIndex(data => data.id === Number(to)) + 1;
+    const range = mockData.slice(fromIndex, toIndex);
+
+    return range.map(q => ({ name: q.name, share: 600 }));
+  }, [from, to]);
+
+  console.log('rangeData', rangeData);
+
   return (
     <div css={styles.wrapper}>
-      <LineChart width={800} height={300} data={data}>
+      <LineChart width={800} height={300} data={rangeData}>
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
         <XAxis dataKey="name" />
