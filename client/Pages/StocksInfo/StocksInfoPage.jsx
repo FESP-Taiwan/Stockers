@@ -110,7 +110,11 @@ function StockersInfoPage({
   }, [fetchIndustryCardData]);
 
   const filteredIndustryCards = useMemo(() => {
+    if (isLoading) return <LoadingSpinner />;
+
     if (!industryCardData) return null;
+
+    console.log('2', isLoading);
 
     const comparedIndustry = industryCardData?.filter(card => industryNames
       .some(industry => industry.name === card.industry_type));
@@ -118,10 +122,14 @@ function StockersInfoPage({
     if (!searchTerm) return comparedIndustry;
 
     return comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
-  }, [searchTerm, industryCardData]);
+  }, [searchTerm, industryCardData, isLoading]);
 
   const industryCard = useMemo(() => {
+    if (isLoading) return <LoadingSpinner />;
+
     if (!industryCardData) return null;
+
+    console.log('3', isLoading);
 
     return (
       <div css={styles.industryCardWrapper}>
@@ -134,9 +142,11 @@ function StockersInfoPage({
         ))}
       </div>
     );
-  }, [industryCardData, filteredIndustryCards]);
+  }, [industryCardData, filteredIndustryCards, isLoading]);
 
   if (isLoading) return <LoadingSpinner />;
+
+  console.log('4', isLoading);
 
   return (
     <div css={styles.wrapper}>

@@ -19,7 +19,7 @@ import HeaderStock from './HeaderStock';
 import { userInfo } from '../../Mocks/Queries/User';
 import SearchBar from '../../Form/SearchBar';
 import { FORM_SITE_HEADER } from '../../Constant/form';
-import { FOOTER_INDEX } from '../../Constant/zIndex';
+import { SITE_TITLE_INDEX, FIXED_BACKGROUND_INDEX } from '../../Constant/zIndex';
 
 const styles = {
   wrapper: {
@@ -75,7 +75,7 @@ const styles = {
   },
   userInfoBtn: {
     padding: '5px 20px 0 0',
-    zIndex: FOOTER_INDEX,
+    zIndex: SITE_TITLE_INDEX,
   },
   userOptionsWrapper: {
     width: 150,
@@ -86,6 +86,7 @@ const styles = {
     position: 'absolute',
     top: 80,
     right: 20,
+    zIndex: SITE_TITLE_INDEX,
   },
   logOutBtn: {
     width: 90,
@@ -96,6 +97,7 @@ const styles = {
     textAlign: 'center',
     lineHeight: '80px',
     margin: '10px 0',
+    border: 'solid 1px',
   },
   filterBtn: {
     width: 140,
@@ -106,6 +108,7 @@ const styles = {
     textAlign: 'center',
     lineHeight: '80px',
     margin: '10px 0',
+    border: 'solid 1px',
   },
   mask: {
     width: '100vw',
@@ -113,8 +116,10 @@ const styles = {
     position: 'fixed',
     left: 0,
     top: 0,
-    opacity: 0.7,
+    opacity: 0.9,
     backgroundColor: Colors.LAYER_SECOND,
+    filter: 'blur(20px)',
+    zIndex: FIXED_BACKGROUND_INDEX,
   },
 };
 

@@ -16,6 +16,7 @@ import StockStrategyHeader from './StockStrategyHeader';
 import {
   comprehensiveIncomes, balanceSheets, cashFlows, dividends, dividendYears, months,
 } from '../../Constant/stockTable';
+import convertNumber from '../../helper/convertNumber';
 
 const styles = {
   wrapper: css`
@@ -184,6 +185,10 @@ function StockPage({
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
 
+  console.log('convertNumber', convertNumber);
+
+  console.log('stockData', stockData);
+
   const comprehensiveIncomeTableData = useMemo(() => {
     if (!stockData) return null;
 
@@ -210,6 +215,8 @@ function StockPage({
     return comparedCashFlows;
   }, [stockData]);
 
+  console.log('cashFlowTableData', cashFlowTableData);
+
   const dividendTableData = useMemo(() => {
     if (!stockData) return null;
 
@@ -225,7 +232,6 @@ function StockPage({
             <div css={styles.blockWrapper}>
               <div css={styles.block}>
                 <button
-                  onClick={() => { console.log('換季'); }}
                   css={styles.tableBtn}
                   type="button">
                   2019
@@ -267,7 +273,7 @@ function StockPage({
                       key={chip.date}
                       css={styles.block}>
                       <span css={styles.word}>
-                        {chip.value}
+                        {convertNumber(chip.value)}
                       </span>
                     </div>
                   );
@@ -304,7 +310,7 @@ function StockPage({
                 key={balanceSheet.chipName}
                 css={styles.blockWrapper}>
                 <div css={styles.block}>
-                  {balanceSheet.chipName}
+                  {convertNumber(balanceSheet.chipName)}
                 </div>
                 {balanceSheet?.chipData.map((chip) => {
                   if (!chip.value) {
@@ -364,15 +370,29 @@ function StockPage({
                 <div css={styles.block}>
                   {cashFlow.chipName}
                 </div>
-                {cashFlow?.chipData.map(chip => (
-                  <div
-                    key={chip.date}
-                    css={styles.block}>
-                    <span css={styles.word}>
-                      {chip.value}
-                    </span>
-                  </div>
-                ))}
+                {cashFlow?.chipData.map((chip) => {
+                  if (!chip.value) {
+                    return (
+                      <div
+                        key={chip.date}
+                        css={styles.block}>
+                        <span css={styles.lostWord}>
+                          無
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={chip.date}
+                      css={styles.block}>
+                      <span css={styles.word}>
+                        {convertNumber(chip.value)}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -424,7 +444,7 @@ function StockPage({
                       key={chip.date}
                       css={styles.dividendBlock}>
                       <span css={styles.word}>
-                        {chip.value}
+                        {convertNumber(chip.value)}
                       </span>
                     </div>
                   );
