@@ -34,6 +34,10 @@ const styles = {
 };
 
 function MainBoard() {
+  console.log('API_HOST', API_HOST);
+
+  console.log('host', process.env.NODE_ENV);
+
   return (
     <div style={styles.wrapper}>
       <SiteHeader />
