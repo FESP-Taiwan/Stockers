@@ -3,11 +3,14 @@
 
 import { jsx, css } from '@emotion/core';
 import styled from '@emotion/styled';
+import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import { useParams } from 'react-router-dom';
 import { FORM_STOCK_SIMULATION } from '../../Constant/form';
 import Modal from '../Modal/Modal';
 import TextInput from '../../Form/TextInput';
 import Selector from '../../Form/Selector';
+import stimulationCalculate from '../../helper/stimulation';
 
 const FieldWrapper = styled.div`
   margin: 12px 0;
@@ -41,41 +44,65 @@ const styles = {
 };
 
 const mockData = [{
-  id: 1,
+  id: '2018-03',
+  name: '2018-03',
+}, {
+  id: '2018-06',
+  name: '2018-06',
+}, {
+  id: '2018-09',
+  name: '2018-09',
+}, {
+  id: '2018-12',
+  name: '2018-12',
+}, {
+  id: '2019-03',
   name: '2019-03',
 }, {
-  id: 2,
+  id: '2019-06',
   name: '2019-06',
-}, {
-  id: 3,
-  name: '2019-09',
-}, {
-  id: 4,
-  name: '2019-12',
-}, {
-  id: 5,
-  name: '2019-03',
-}, {
-  id: 6,
-  name: '2019-06',
-}, {
-  id: 7,
-  name: '2019-09',
-}, {
-  id: 8,
-  name: '2019-12',
 }];
 
 type Props = {
   close: Function,
+  stockData: {},
+  modulesInfo: Array,
+}
+
+async function submit(d, stockId, stockData, modulesInfo) {
+  const datePeriod = {
+    startFrom: d.from,
+    endAt: d.to,
+  };
+
+  const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInfo, stockData, d.principle);
+
+  console.log('stimulationData', stimulationData);
+
+  const data = await fetch('http://3.219.220.166:3001/compute', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(stimulationData),
+  }).then(res => res.json());
+
+  if (data) {
+    console.log('data', data);
+  }
 }
 
 function StockSimulationModal({
+  handleSubmit,
   close,
+  stockData,
+  modulesInfo,
 }: Props) {
+  const { stockId } = useParams();
+
   return (
     <Modal onClose={close}>
-      <form css={styles.wrapper}>
+      <form onSubmit={handleSubmit(d => submit(d, stockId, stockData, modulesInfo))} css={styles.wrapper}>
         <h2>測試績效</h2>
         <FieldWrapper>
           <Field
@@ -107,8 +134,7 @@ function StockSimulationModal({
           </div>
         </FieldWrapper>
         <button
-          type="button"
-          onClick={close}
+          type="submit"
           css={styles.submit}>
           確認
         </button>
@@ -117,8 +143,15 @@ function StockSimulationModal({
   );
 }
 
-const reduxHook = reduxForm({
+const reduxHook = connect(
+  state => ({
+    stockData: state.Stocks.stockData,
+    modulesInfo: state.InvestStrategy.userModulesInfo || [],
+  }),
+);
+
+const formHook = reduxForm({
   form: FORM_STOCK_SIMULATION,
 });
 
-export default reduxHook(StockSimulationModal);
+export default reduxHook(formHook(StockSimulationModal));

@@ -2,7 +2,7 @@
 
 import moment from 'moment';
 
-export default function stimulationCalculate(stockId, datePeriod, modulesInfo, stockData) {
+export default function stimulationCalculate(stockId, datePeriod, modulesInfo, stockData, initialPrice) {
   const {
     startFrom,
     endAt,
@@ -31,11 +31,11 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
   }, []);
 
   return {
-    initialPrice: 100000,
+    initialPrice,
     modules: modulesInfo.map(module => ({
       moduleId: module.id,
-      moduleRate: module.usingStock
-        .find(stock => stock.companyNumber === parseInt(stockId, 10)).rate,
+      moduleRate: `${module.usingStock
+        .find(stock => stock.companyNumber === parseInt(stockId, 10)).rate}%`,
       moduleMath: {
         content: module.mathModule.content,
         metaList: module.mathModule.chipInfos.map(chipInfo => ({

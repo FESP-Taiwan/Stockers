@@ -11,7 +11,7 @@ import { jsx, css } from '@emotion/core';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import ModuleBtn from './ModuleBtn';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
 import { HeaderBlockAllValuesContext } from '../../Constant/context';
@@ -114,10 +114,6 @@ const styles = {
 };
 
 async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, storeUserModules) {
-  console.log('allvalues', allvalues);
-  console.log('modulesInUsed', modulesInUsed);
-  console.log('stockId', stockId);
-
   const updatedUsingModulesInfo = modulesInUsed.map((module, index) => {
     const moduleUsingStockIndex = module.usingStock.findIndex(use => use.companyNumber === stockId);
 
@@ -138,23 +134,6 @@ async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, store
     ...updatedUsingModulesInfo,
     ...modulesNotInUsed,
   ].sort((cursorA, cursorB) => cursorA.id - cursorB.id);
-
-  console.log('userModulesUpdatedData', userModulesUpdatedData);
-
-  console.log('data', JSON.stringify({
-    stockNumber: stockId,
-    stockAlertion: '買',
-    userModulesUpdated: userModulesUpdatedData.map(module => ({
-      comment: module.comment,
-      headers: module.headers,
-      moduleId: module.id,
-      mathModule: module.mathModule,
-      name: module.name,
-      subName: module.subName,
-      userId: module.userId,
-      usingStock: module.usingStock,
-    })),
-  }));
 
   const resData = await fetch(`${API_HOST}/modules/updateUserModules`, {
     method: 'PUT',
@@ -179,12 +158,11 @@ async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, store
   }).then(res => res.json());
 
   if (resData) {
-    console.log('resData', resData);
     const storeResData = resData.map(el => ({
       comment: el.comment,
       headers: el.headers,
       mathModule: el.mathModule,
-      id: el.moduleId,
+      id: el.id,
       name: el.name,
       subName: el.subName,
       userId: el.userId,
@@ -207,7 +185,7 @@ function HeaderBlock({
   const [userModules, setUserModules] = useState([]);
   const [modulesInUsed, setModulesInUsed] = useState([]);
 
-  const { stockId } = useParams();
+  const { stockId, industryId } = useParams();
 
   const onClick = useCallback(() => active(!actived), [actived]);
 
@@ -359,12 +337,11 @@ function HeaderBlock({
             <img src={strategyIcon} css={[styles.icon, css`margin: 0 20px 0 0;`]} alt="strategy" />
             <span>{actived ? '完成調整' : '調整比重'}</span>
           </button>
-          <button
-            onClick={onClick}
-            type="button"
+          <Link
+            to={`/industry/${industryId}/stocks/${stockId}/modules/simulation`}
             css={[styles.btn, css`background-color: #464646;`]}>
             測試績效
-          </button>
+          </Link>
         </div>
         {modulesBtns}
         <span css={styles.line} />

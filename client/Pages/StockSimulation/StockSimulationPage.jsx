@@ -7,6 +7,10 @@ import StockSimulationModal from '../../Elements/StockSimulation/StockSimulation
 import StockSimulationMainBlock from '../../Elements/StockSimulation/StockSimulationMainBlock';
 
 const styles = {
+  wrapper: {
+    width: '100%',
+    padding: '40px 0',
+  },
   btn: {
     width: 132,
     height: 80,
@@ -22,7 +26,7 @@ function StockSimulationPage() {
   const [shownModal, showModal] = useState(false);
 
   return (
-    <div>
+    <div style={styles.wrapper}>
       <button
         css={styles.btn}
         onClick={() => showModal(true)}

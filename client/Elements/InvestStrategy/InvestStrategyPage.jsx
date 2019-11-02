@@ -1,13 +1,10 @@
 // @flow
 
-import React, {
-  useCallback,
-} from 'react';
-import { Route, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import HeaderBlock from './HeaderBlock';
 import InvestStrategyMainBlock from './InvestStrategyMainBlock';
-import stimulationCalculate from '../../helper/stimulation';
+import StockSimulationPage from '../../Pages/StockSimulation/StockSimulationPage';
 
 const styles = {
   wrapper: {
@@ -36,59 +33,16 @@ const styles = {
   },
 };
 
-async function simulation(stimulationData) {
-  const data = await fetch('http://172.20.10.2:3000/compute', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(stimulationData),
-  }).then(res => res.json());
-
-  if (data) {
-    // console.log('data', JSON.stringify(data));
-  }
-}
-
-function InvestStrategyPage({
-  modulesInfo,
-  stockData,
-}: {
-  modulesInfo: Array,
-  stockData: {},
-}) {
-  const { stockId } = useParams();
-
-  const onClick = useCallback(() => {
-    const datePeriod = {
-      startFrom: '2018-09',
-      endAt: '2019-06',
-    };
-
-    const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInfo, stockData);
-
-    simulation(stimulationData);
-  }, [modulesInfo, stockData, stockId]);
-
+function InvestStrategyPage() {
   return (
     <div style={styles.wrapper}>
-      {/* <button
-        style={styles.btn}
-        onClick={onClick}
-        type="button">
-        模擬倉
-      </button> */}
       <HeaderBlock />
-      <Route path="/industry/:industryId/stocks/:stockId/modules/:moduleId" component={InvestStrategyMainBlock} />
+      <Switch>
+        <Route path="/industry/:industryId/stocks/:stockId/modules/simulation" component={StockSimulationPage} />
+        <Route path="/industry/:industryId/stocks/:stockId/modules/:moduleId" component={InvestStrategyMainBlock} />
+      </Switch>
     </div>
   );
 }
 
-const reduxHook = connect(
-  state => ({
-    modulesInfo: state.InvestStrategy.userModulesInfo || [],
-    stockData: state.Stocks.stockData,
-  }),
-);
-
-export default reduxHook(InvestStrategyPage);
+export default InvestStrategyPage;
