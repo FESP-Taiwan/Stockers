@@ -11,6 +11,7 @@ import Modal from '../Modal/Modal';
 import TextInput from '../../Form/TextInput';
 import Selector from '../../Form/Selector';
 import stimulationCalculate from '../../helper/stimulation';
+import { useGlobalErrorMessage } from '../../helper/useGlobalMessage';
 
 const FieldWrapper = styled.div`
   margin: 12px 0;
@@ -67,9 +68,11 @@ type Props = {
   close: Function,
   stockData: {},
   modulesInfo: Array,
+  handleSubmit: Function,
+  setSimulationData: Function,
 }
 
-async function submit(d, stockId, stockData, modulesInfo) {
+async function submit(d, stockId, stockData, modulesInfo, showErrorMessage, setSimulationData) {
   const datePeriod = {
     startFrom: d.from,
     endAt: d.to,
@@ -81,8 +84,6 @@ async function submit(d, stockId, stockData, modulesInfo) {
 
   const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInUsed, stockData, d.principle);
 
-  console.log('stimulationData', stimulationData);
-
   const data = await fetch('http://3.219.220.166:3001/compute', {
     method: 'POST',
     headers: {
@@ -92,7 +93,12 @@ async function submit(d, stockId, stockData, modulesInfo) {
   }).then(res => res.json());
 
   if (data) {
-    console.log('data', data);
+    if (data.statusCode !== 200) {
+      showErrorMessage('模擬倉計算內容不得含有空值');
+      console.log('error content', data.error);
+    } else {
+      setSimulationData(data.modules);
+    }
   }
 }
 
@@ -101,12 +107,19 @@ function StockSimulationModal({
   close,
   stockData,
   modulesInfo,
+  setSimulationData,
 }: Props) {
   const { stockId } = useParams();
 
+  const showErrorMessage = useGlobalErrorMessage();
+
   return (
     <Modal onClose={close}>
-      <form onSubmit={handleSubmit(d => submit(d, stockId, stockData, modulesInfo))} css={styles.wrapper}>
+      <form
+        onSubmit={handleSubmit(d => submit(
+          d, stockId, stockData, modulesInfo, showErrorMessage, setSimulationData
+        ))}
+        css={styles.wrapper}>
         <h2>測試績效</h2>
         <FieldWrapper>
           <Field

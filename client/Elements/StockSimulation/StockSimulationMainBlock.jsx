@@ -58,7 +58,7 @@ function StockSimulationMainBlock({
     <div css={styles.wrapper}>
       <h4>用迴歸分析測試績效</h4>
       <StockSimulationChart from={from} to={to} />
-      <div css={styles.block}>
+      {/* <div css={styles.block}>
         <button
           css={styles.btn}
           type="button"
@@ -71,7 +71,7 @@ function StockSimulationMainBlock({
           onClick={() => console.log('click2')}>
           2019
         </button>
-      </div>
+      </div> */}
       <div css={styles.block}>
         <div css={styles.investBlock}>{`投入金額：${principle}`}</div>
         <div css={styles.revenuBlock}>結餘金額 $350.000</div>

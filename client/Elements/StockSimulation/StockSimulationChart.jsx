@@ -1,11 +1,12 @@
 // @flow
 /** @jsx jsx */
 
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 import { jsx } from '@emotion/core';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
 } from 'recharts';
+import { SimulationDataContext } from '../../Constant/context';
 
 const mockData = [{
   id: 1,
@@ -61,6 +62,10 @@ function StockSimulationChart({
   from,
   to,
 }: Props) {
+  const simulationData = useContext(SimulationDataContext);
+
+  console.log('simulationData', simulationData);
+
   const rangeData = useMemo(() => {
     const fromIndex = mockData.findIndex(data => data.id === Number(from));
     const toIndex = mockData.findIndex(data => data.id === Number(to)) + 1;
@@ -68,6 +73,8 @@ function StockSimulationChart({
 
     return range.map(q => ({ name: q.name, share: 600 }));
   }, [from, to]);
+
+  console.log('rangeData', rangeData);
 
   return (
     <div css={styles.wrapper}>

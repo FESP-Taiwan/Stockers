@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { jsx } from '@emotion/core';
 import StockSimulationModal from '../../Elements/StockSimulation/StockSimulationModal';
 import StockSimulationMainBlock from '../../Elements/StockSimulation/StockSimulationMainBlock';
+import { SimulationDataContext } from '../../Constant/context';
 
 const styles = {
   wrapper: {
@@ -24,18 +25,25 @@ const styles = {
 
 function StockSimulationPage() {
   const [shownModal, showModal] = useState(false);
+  const [simulationData, setSimulationData] = useState([]);
 
   return (
-    <div style={styles.wrapper}>
-      <button
-        css={styles.btn}
-        onClick={() => showModal(true)}
-        type="button">
-        測試績效
-      </button>
-      {shownModal ? <StockSimulationModal close={() => showModal(false)} /> : null}
-      <StockSimulationMainBlock />
-    </div>
+    <SimulationDataContext.Provider value={simulationData}>
+      <div style={styles.wrapper}>
+        <button
+          css={styles.btn}
+          onClick={() => showModal(true)}
+          type="button">
+          測試績效
+        </button>
+        {shownModal ? (
+          <StockSimulationModal
+            setSimulationData={setSimulationData}
+            close={() => showModal(false)} />
+        ) : null}
+        <StockSimulationMainBlock />
+      </div>
+    </SimulationDataContext.Provider>
   );
 }
 

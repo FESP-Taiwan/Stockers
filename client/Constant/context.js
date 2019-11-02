@@ -26,4 +26,6 @@ export const CommentInitDataContext = React.createContext({});
 
 export const HeaderBlockAllValuesContext = React.createContext([[], () => {}]);
 
+export const SimulationDataContext = React.createContext([]);
+
 export default null;
