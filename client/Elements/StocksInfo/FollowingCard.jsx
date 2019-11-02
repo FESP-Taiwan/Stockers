@@ -37,10 +37,7 @@ const styles = {
     font-size: 13px;
   `,
   title: css`
-    display: grid;
-    grid-column-gap: 10px;
     font-size: 13px;
-    fo
   `,
   status: css`
     font-size: 13px;
@@ -69,12 +66,12 @@ function FollowingCard({
         css={styles.fakeBtn}
         onClick={() => showModal(true)} />
       <div css={styles.title}>
-        <span>
+        <div>
           {number}
-        </span>
-        <span>
+        </div>
+        <div>
           台積電
-        </span>
+        </div>
       </div>
       <div css={styles.followingWrapper}>
         <span css={styles.status}>
