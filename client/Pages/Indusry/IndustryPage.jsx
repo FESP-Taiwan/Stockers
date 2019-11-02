@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import {
-  LineChart, Line, ResponsiveContainer,
+  LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
 } from 'recharts';
 import IndustryCardChart from '../../Elements/StocksInfo/Form/IndustryCardChart';
 import { flex } from '../../Constant/emotion';
@@ -152,8 +152,6 @@ function IndustryPage({
 
   const { industryId } = useParams();
 
-  console.log('industryCardData', industryCardData);
-
   const gainChartData = useMemo(() => {
     if (!industryCardData.length) return null;
 
@@ -179,8 +177,6 @@ function IndustryPage({
       value: thirdGain,
     }];
   }, [industryCardData, industryId]);
-
-  console.log('gainChartData', gainChartData);
 
   useEffect(() => {
     let canceled = false;
@@ -312,11 +308,12 @@ function IndustryPage({
           </span>
           <div style={{ width: '100%' }}>
             <h4>
-              漲跌幅走勢 單位%
+              漲跌幅走勢(單位%)
             </h4>
             <div style={{ width: '100%', height: 150 }}>
               <ResponsiveContainer>
                 <LineChart data={gainChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
                   <Line type="monotone" dataKey="value" stroke="#FF9500" />
                 </LineChart>
               </ResponsiveContainer>

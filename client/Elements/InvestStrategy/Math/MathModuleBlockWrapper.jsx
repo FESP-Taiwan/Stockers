@@ -35,8 +35,6 @@ function MathModuleBlockWrapper({
     };
   }, [mathModule]);
 
-  console.log('transformedMathInfo', transformedMathInfo);
-
   return (
     <MathInitDataContext.Provider value={transformedMathInfo}>
       <MathModuleBlock />

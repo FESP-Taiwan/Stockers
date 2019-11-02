@@ -108,6 +108,8 @@ function StockersInfoPage({
   }, [fetchIndustryCardData]);
 
   const filteredIndustryCards = useMemo(() => {
+    if (isLoading) return <LoadingSpinner />;
+
     if (!industryCardData) return null;
 
     const comparedIndustry = industryCardData?.filter(card => industryNames
@@ -115,24 +117,40 @@ function StockersInfoPage({
 
     if (!searchTerm) return comparedIndustry;
 
-    return comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
-  }, [searchTerm, industryCardData]);
+    const filterByName = comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
+
+    const filteredByStock = comparedIndustry.filter(industry => industry.companies
+      .map(c => c.stockNo)
+      .some(num => num.includes(searchTerm)));
+
+    if (!filterByName.length) {
+      return filteredByStock;
+    }
+
+    return filterByName;
+  }, [searchTerm, industryCardData, isLoading]);
 
   const industryCard = useMemo(() => {
+    if (isLoading) return <LoadingSpinner />;
+
     if (!industryCardData) return null;
 
     return (
       <div css={styles.industryCardWrapper}>
-        {filteredIndustryCards.map((industry, index) => (
-          <IndustryCard
-            key={industry.industry_type}
-            name={industry.industry_type}
-            companies={industry.companies}
-            industryId={index} />
-        ))}
+        {filteredIndustryCards.map((industry, index) => {
+          if (!industry) return null;
+
+          return (
+            <IndustryCard
+              key={industry.industry_type}
+              name={industry.industry_type}
+              companies={industry.companies}
+              industryId={index} />
+          );
+        })}
       </div>
     );
-  }, [industryCardData, filteredIndustryCards]);
+  }, [industryCardData, filteredIndustryCards, isLoading]);
 
   if (isLoading) return <LoadingSpinner />;
 
