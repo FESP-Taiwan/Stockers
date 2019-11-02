@@ -161,32 +161,32 @@ function SiteHeader({
     token: localStorage.getItem('token'),
   };
 
-  useEffect(() => {
-    let canceled = false;
+  // useEffect(() => {
+  //   let canceled = false;
 
-    async function fetchUserModulesData() {
-      const resData = await fetch(`${API_HOST}/modules/userModules/${localState.userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: localStorage.token,
-        },
-      }).then(res => (!canceled ? res.json() : null));
+  //   async function fetchUserModulesData() {
+  //     const resData = await fetch(`${API_HOST}/modules/userModules/${localState.userId}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         authorization: localStorage.token,
+  //       },
+  //     }).then(res => (!canceled ? res.json() : null));
 
-      if (resData) {
-        console.log('resData', resData);
-        storeUserModules(resData);
-      }
-    }
+  //     if (resData) {
+  //       console.log('resData', resData);
+  //       storeUserModules(resData);
+  //     }
+  //   }
 
-    if (localState.userId && localState.token) {
-      fetchUserModulesData();
-    }
+  //   if (localState.userId && localState.token) {
+  //     fetchUserModulesData();
+  //   }
 
-    return () => {
-      canceled = true;
-    };
-  }, [storeUserModules, localState]);
+  //   return () => {
+  //     canceled = true;
+  //   };
+  // }, [storeUserModules, localState]);
 
   const onClick = useCallback(() => {
     setMenuOpened(!isMenuOpened);

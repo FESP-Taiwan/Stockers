@@ -5,7 +5,7 @@ import {
   Switch,
   Route,
   Redirect,
-  useParams,
+  useHistory,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
@@ -33,9 +33,9 @@ const styles = {
   },
 };
 
-function MainBoard({
-  history,
-}: Props) {
+function MainBoard() {
+  const history = useHistory();
+
   useEffect(() => {
     if (!localStorage.getItem('token')) history.replace('/');
   }, [history]);

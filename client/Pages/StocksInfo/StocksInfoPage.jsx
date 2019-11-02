@@ -76,7 +76,7 @@ type Props = {
   industryCardData: Array,
 };
 
-function StockersInfoPage({
+function StocksInfoPage({
   searchTerm,
   fetchIndustryCardData,
   industryCardData,
@@ -163,21 +163,23 @@ function StockersInfoPage({
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.following}>
-        <h3 css={styles.title}>
-          已追蹤
-        </h3>
-        <div css={styles.cardWrapper}>
-          {companyData.map(stock => (
-            <FollowingCard
-              key={stock.companyId}
-              id={stock.companyId}
-              name={stock.companyId}
-              number={stock.companyId}
-              modules={stock.modules} />
-          ))}
+      {localStorage.getItem('token') ? (
+        <div css={styles.following}>
+          <h3 css={styles.title}>
+            已追蹤
+          </h3>
+          <div css={styles.cardWrapper}>
+            {companyData.map(stock => (
+              <FollowingCard
+                key={stock.companyId}
+                id={stock.companyId}
+                name={stock.companyId}
+                number={stock.companyId}
+                modules={stock.modules} />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
       <div css={styles.industry}>
         <h3 css={styles.title}>
           大盤產業
@@ -201,4 +203,4 @@ const reduxHook = connect(
   }, dispatch),
 );
 
-export default reduxHook(StockersInfoPage);
+export default reduxHook(StocksInfoPage);
