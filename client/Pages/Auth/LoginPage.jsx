@@ -10,8 +10,7 @@ import {
   Form,
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
-import { withRouter } from 'react-router';
-import type { ContextRouter } from 'react-router';
+import { useHistory, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useGlobalMessage, useGlobalErrorMessage } from '../../helper/useGlobalMessage';
@@ -118,6 +117,14 @@ const styles = {
     width: 80,
     height: 78,
   },
+  noAccountLink: {
+    color: Colors.PRIMARY,
+    fontSize: 12,
+    display: 'block',
+    width: '100%',
+    textAlign: 'center',
+    margin: '10px auto 0 auto',
+  },
 };
 
 const LOGIN = gql`
@@ -137,8 +144,9 @@ const LOGIN = gql`
 
 function LoginPage({
   handleSubmit,
-  history,
-}: FormProps & ContextRouter) {
+}: FormProps) {
+  const history = useHistory();
+
   const showMessage = useGlobalMessage();
   const showErrorMessage = useGlobalErrorMessage();
 
@@ -159,6 +167,7 @@ function LoginPage({
       if (resData) {
         localStorage.setItem('token', resData.logIn.token);
         localStorage.setItem('userId', resData.logIn.userID);
+        localStorage.setItem('email', email);
 
         showMessage('登入成功');
         history.push('/');
@@ -215,6 +224,9 @@ function LoginPage({
           </div>
           使用 Google 帳號登入
         </button>
+        <Link css={styles.noAccountLink} to="/register">
+          沒有帳號？點此註冊
+        </Link>
       </div>
     </Form>
   );
@@ -261,4 +273,4 @@ const formHook = reduxForm({
   },
 });
 
-export default withRouter(formHook(LoginPage));
+export default formHook(LoginPage);

@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Switch,
   Route,
   Redirect,
-  useParams,
+  useHistory,
 } from 'react-router-dom';
 import SiteHeader from '../Elements/Sites/SiteHeader';
 import StocksInfoPage from './StocksInfo/StocksInfoPage';
@@ -33,6 +33,12 @@ const styles = {
 };
 
 function MainBoard() {
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!localStorage.getItem('token')) history.replace('/');
+  }, [history]);
+
   return (
     <div style={styles.wrapper}>
       <SiteHeader />
