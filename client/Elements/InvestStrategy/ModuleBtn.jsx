@@ -47,7 +47,7 @@ const styles = {
     position: 'absolute',
     right: 4,
     top: 4,
-    zIndex: 1000,
+    zIndex: 2,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -55,7 +55,7 @@ const styles = {
   icon: {
     width: 8,
     height: 8,
-    zIndex: 1000,
+    zIndex: 2,
   },
   btnDisabled: {
     backgroundColor: Colors.DISABLED,
