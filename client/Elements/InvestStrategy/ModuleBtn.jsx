@@ -17,20 +17,20 @@ const styles = {
     transition: '0.5s ease-out',
     margin: '0 20px 0 0',
   },
-  btn: css`
-    position: absolute;
-    z-index: 1;
-    height: 80px;
-    width: 100%;
-    border-radius: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: ${Colors.PRIMARY_THIRD};
-    text-decoration: none;
-    color: #FFF;
-    font-size: 13px;
-  `,
+  btn: {
+    position: 'absolute',
+    zIndex: 1,
+    height: 80,
+    width: '100%',
+    borderRadius: 40,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.PRIMARY_THIRD,
+    textDecoration: 'none',
+    color: '#FFF',
+    fontSize: 13,
+  },
   btnSelected: {
     backgroundColor: Colors.PRIMARY,
   },
@@ -55,6 +55,9 @@ const styles = {
     height: 8,
     zIndex: 1000,
   },
+  btnDisabled: {
+    backgroundColor: Colors.DISABLED,
+  },
 };
 
 type Props = {
@@ -73,12 +76,19 @@ function ModuleBtn({
   disabled,
   removeUserUsingModules,
 }: Props) {
+  console.log('disabled', disabled);
   const { industryId, stockId } = useParams();
 
   const modulesStyle = useMemo(() => ({
     ...styles.modules,
     ...(actived ? styles.btnActived : {}),
-  }), [actived]);
+    ...(disabled ? styles.btnDisabled : {}),
+  }), [actived, disabled]);
+
+  const btnStyles = useMemo(() => ({
+    ...styles.btn,
+    ...(disabled ? styles.btnDisabled : {}),
+  }), [disabled]);
 
   return (
     <div css={modulesStyle} key={id}>
@@ -90,7 +100,12 @@ function ModuleBtn({
       </button>
       <NavLink
         activeStyle={styles.btnSelected}
-        css={styles.btn}
+        css={btnStyles}
+        onClick={(e) => {
+          if (disabled) {
+            e.preventDefault();
+          }
+        }}
         to={`/industry/${industryId}/stocks/${stockId}/modules/${id}`}>
         {name}
       </NavLink>
