@@ -70,7 +70,7 @@ function FollowingCard({
           {number}
         </div>
         <div>
-          台積電
+          台積電--
         </div>
       </div>
       <div css={styles.followingWrapper}>
