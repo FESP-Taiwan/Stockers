@@ -10,8 +10,7 @@ import {
   Form,
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
-import { withRouter } from 'react-router';
-import type { ContextRouter } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useGlobalMessage, useGlobalErrorMessage } from '../../helper/useGlobalMessage';
@@ -137,8 +136,9 @@ const LOGIN = gql`
 
 function LoginPage({
   handleSubmit,
-  history,
-}: FormProps & ContextRouter) {
+}: FormProps) {
+  const history = useHistory();
+
   const showMessage = useGlobalMessage();
   const showErrorMessage = useGlobalErrorMessage();
 
@@ -159,6 +159,7 @@ function LoginPage({
       if (resData) {
         localStorage.setItem('token', resData.logIn.token);
         localStorage.setItem('userId', resData.logIn.userID);
+        localStorage.setItem('email', email);
 
         showMessage('登入成功');
         history.push('/');
@@ -261,4 +262,4 @@ const formHook = reduxForm({
   },
 });
 
-export default withRouter(formHook(LoginPage));
+export default formHook(LoginPage);

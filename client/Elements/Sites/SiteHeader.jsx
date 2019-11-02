@@ -6,17 +6,17 @@ import {
   useState,
   useMemo,
 } from 'react';
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 import {
   Switch,
   Route,
   Link,
+  useHistory,
 } from 'react-router-dom';
 import { reduxForm, Field } from 'redux-form';
 import logo from '../../static/images/logo_stockers.svg';
 import HeaderIndustry from './HeaderIndustry';
 import HeaderStock from './HeaderStock';
-import { userInfo } from '../../Mocks/Queries/User';
 import SearchBar from '../../Form/SearchBar';
 import { FORM_SITE_HEADER } from '../../Constant/form';
 import { FOOTER_INDEX } from '../../Constant/zIndex';
@@ -53,6 +53,7 @@ const styles = {
     justifyContent: 'center',
   },
   email: {
+    textAlign: 'right',
     width: '100%',
     maxWidth: '100%',
     overflow: 'hidden',
@@ -116,6 +117,16 @@ const styles = {
     opacity: 0.7,
     backgroundColor: Colors.LAYER_SECOND,
   },
+  loginBtn: css`
+    min-width: 40px;
+    font-size: 13px;
+    color: orange;
+    border: solid 1px;
+    display: block;
+    border-radius: 10px;
+    text-align: center;
+    margin: 0 10px;
+  `,
 };
 
 const filterModals = [{
@@ -133,6 +144,7 @@ const filterModals = [{
 }];
 
 function SiteHeader() {
+  const history = useHistory();
   const [isMenuOpened, setMenuOpened] = useState(false);
 
   const onClick = useCallback(() => {
@@ -143,18 +155,51 @@ function SiteHeader() {
     if (!isMenuOpened) return null;
 
     return (
-      <div style={styles.mask} />
+      <div css={styles.mask} />
     );
   }, [isMenuOpened]);
+
+  const loginDOM = useMemo(() => {
+    if (!localStorage.getItem('token')) {
+      return (
+        <button
+          onClick={() => history.push('/login')}
+          type="button"
+          css={styles.loginBtn}>
+          登入
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={onClick}
+        css={styles.userInfoBtn}
+        type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path fill="white" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+        </svg>
+      </button>
+    );
+  }, [onClick, history]);
 
   const userOptions = useMemo(() => {
     if (!isMenuOpened) return null;
 
     return (
-      <div style={styles.userOptionsWrapper}>
-        <div style={styles.logOutBtn}>
+      <div css={styles.userOptionsWrapper}>
+        <button
+          type="button"
+          css={styles.logOutBtn}
+          onClick={() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            localStorage.removeItem('userId');
+            setMenuOpened(false);
+            history.push('/');
+          }}>
           登出
-        </div>
+        </button>
         <div>
           你的模型
         </div>
@@ -163,22 +208,22 @@ function SiteHeader() {
             key={filterModal.id}
             onClick={() => console.log('切換模型')}
             type="button"
-            style={styles.filterBtn}>
+            css={styles.filterBtn}>
             {filterModal.name}
           </button>
         ))}
       </div>
     );
-  }, [isMenuOpened]);
+  }, [isMenuOpened, history]);
 
   return (
     <form>
-      <header style={styles.wrapper}>
+      <header css={styles.wrapper}>
         <Link
           to="/">
-          <img alt="stockers" src={logo} style={styles.logo} />
+          <img alt="stockers" src={logo} css={styles.logo} />
         </Link>
-        <div style={styles.middle}>
+        <div css={styles.middle}>
           <Switch>
             <Route path="/industry/:industryId/stocks/:stockId">
               <HeaderStock />
@@ -188,24 +233,17 @@ function SiteHeader() {
             </Route>
           </Switch>
         </div>
-        <div style={styles.searchBar}>
+        <div css={styles.searchBar}>
           <Field
             name="searchTerm"
             placeholder="以股號/股名查詢"
             component={SearchBar} />
         </div>
-        <div style={styles.userInfoWrapper}>
-          <span style={styles.email}>
-            {userInfo[0].email}
+        <div css={styles.userInfoWrapper}>
+          <span css={styles.email}>
+            {localStorage.getItem('email') || '訪客模式'}
           </span>
-          <button
-            onClick={onClick}
-            style={styles.userInfoBtn}
-            type="button">
-            <svg width="24" height="24" viewBox="0 0 24 24">
-              <path fill="white" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-            </svg>
-          </button>
+          {loginDOM}
           {mask}
           {userOptions}
         </div>

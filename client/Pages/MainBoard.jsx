@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Switch,
   Route,
@@ -33,7 +33,13 @@ const styles = {
   },
 };
 
-function MainBoard() {
+function MainBoard({
+  history,
+}: Props) {
+  useEffect(() => {
+    if (!localStorage.getItem('token')) history.replace('/');
+  }, [history]);
+
   return (
     <div style={styles.wrapper}>
       <SiteHeader />
