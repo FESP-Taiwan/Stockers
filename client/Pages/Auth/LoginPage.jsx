@@ -10,7 +10,7 @@ import {
   Form,
 } from 'redux-form';
 import type { FormProps } from 'redux-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useGlobalMessage, useGlobalErrorMessage } from '../../helper/useGlobalMessage';
@@ -117,6 +117,14 @@ const styles = {
     width: 80,
     height: 78,
   },
+  noAccountLink: {
+    color: Colors.PRIMARY,
+    fontSize: 12,
+    display: 'block',
+    width: '100%',
+    textAlign: 'center',
+    margin: '10px auto 0 auto',
+  },
 };
 
 const LOGIN = gql`
@@ -216,6 +224,9 @@ function LoginPage({
           </div>
           使用 Google 帳號登入
         </button>
+        <Link css={styles.noAccountLink} to="/register">
+          沒有帳號？點此註冊
+        </Link>
       </div>
     </Form>
   );
