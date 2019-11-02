@@ -8,16 +8,16 @@ import {
   useEffect,
 } from 'react';
 import { jsx, css } from '@emotion/core';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { useParams } from 'react-router-dom';
 import ModuleBtn from './ModuleBtn';
 import { FORM_STRATEGY_HEADER } from '../../Constant/form';
 import { HeaderBlockAllValuesContext } from '../../Constant/context';
 import strategyIcon from '../../static/images/icon-strategy.png';
 import addIcon from '../../static/images/icon-white-add.png';
-
-const selector = formValueSelector(FORM_STRATEGY_HEADER);
+import { storeUserModules as storeUserModulesAction } from '../../actions/InvestStrategy';
 
 const styles = {
   wrapper: {
@@ -101,12 +101,91 @@ const styles = {
     textAlign: 'center',
     lineHeight: '32px',
   },
+  submitBtn: {
+    position: 'absolute',
+    borderRadius: 4,
+    width: 100,
+    height: 40,
+    top: 20,
+    right: 20,
+    fontSize: 14,
+    backgroundColor: Colors.PRIMARY,
+  },
 };
+
+async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, storeUserModules) {
+  console.log('allvalues', allvalues);
+  console.log('modulesInUsed', modulesInUsed);
+  console.log('stockId', stockId);
+
+  const updatedUsingModulesInfo = modulesInUsed.map((module, index) => {
+    const moduleUsingStockIndex = module.usingStock.findIndex(use => use.companyNumber === stockId);
+
+    return {
+      ...module,
+      usingStock: [
+        ...module.usingStock.slice(0, moduleUsingStockIndex),
+        {
+          ...module.usingStock[moduleUsingStockIndex],
+          rate: allvalues[index],
+        },
+        ...module.usingStock.slice(moduleUsingStockIndex + 1),
+      ],
+    };
+  });
+
+  const userModulesUpdatedData = [
+    ...updatedUsingModulesInfo,
+    ...modulesNotInUsed,
+  ].sort((cursorA, cursorB) => cursorA.id - cursorB.id);
+
+  console.log('userModulesUpdatedData', userModulesUpdatedData);
+
+  const resData = await fetch(`${API_HOST}/modules/updateUserModules`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: localStorage.getItem('token'),
+    },
+    body: JSON.stringify({
+      stockNumber: stockId,
+      stockAlertion: '買',
+      userModulesUpdated: userModulesUpdatedData.map(module => ({
+        comment: module.comment,
+        headers: module.headers,
+        moduleId: module.id,
+        mathModule: module.mathModule,
+        name: module.name,
+        subName: module.subName,
+        userId: module.userId,
+        usingStock: module.usingStock,
+      })),
+    }),
+  }).then(res => res.json());
+
+  if (resData) {
+    console.log('resData', resData);
+    const storeResData = resData.map(el => ({
+      comment: el.comment,
+      headers: el.headers,
+      mathModule: el.mathModule,
+      id: el.moduleId,
+      name: el.name,
+      subName: el.subName,
+      userId: el.userId,
+      usingStock: el.usingStock,
+    }));
+
+    storeUserModules(storeResData);
+  }
+}
 
 function HeaderBlock({
   modulesInfo,
+  storeUserModules,
 }: {
   modulesInfo: Array,
+  storeUserModules: Function,
 }) {
   const [actived, active] = useState(false);
   const [allvalues, setallvalues] = useState([]);
@@ -189,8 +268,15 @@ function HeaderBlock({
     if (modulesInfo.length) {
       setUserModules(modulesInfo);
 
-      const initValues = modulesInfo.map(el => el.usingStock
-        .find(use => use.companyNumber === parseInt(stockId, 10)).rate);
+      const initValues = modulesInfo.map((el) => {
+        const initData = el.usingStock.find(use => use.companyNumber === parseInt(stockId, 10));
+
+        if (initData && initData.rate) {
+          return initData.rate;
+        }
+
+        return '0';
+      });
 
       setallvalues(initValues);
     }
@@ -278,6 +364,12 @@ function HeaderBlock({
           css={styles.circleBtn}>
           <img src={addIcon} css={styles.icon} alt="Add" />
         </button>
+        <button
+          style={styles.submitBtn}
+          onClick={() => submit(allvalues, parseInt(stockId, 10), modulesInUsed, modulesNotInUsed, storeUserModules)}
+          type="button">
+          儲存編輯
+        </button>
       </form>
     </HeaderBlockAllValuesContext.Provider>
   );
@@ -290,7 +382,10 @@ const formHook = reduxForm({
 const reduxHook = connect(
   state => ({
     modulesInfo: state.InvestStrategy.userModulesInfo || [],
-  })
+  }),
+  dispatch => bindActionCreators({
+    storeUserModules: storeUserModulesAction,
+  }, dispatch),
 );
 
 export default reduxHook(formHook(HeaderBlock));

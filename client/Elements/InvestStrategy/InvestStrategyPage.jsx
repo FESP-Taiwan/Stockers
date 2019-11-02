@@ -72,12 +72,12 @@ function InvestStrategyPage({
 
   return (
     <div style={styles.wrapper}>
-      <button
+      {/* <button
         style={styles.btn}
         onClick={onClick}
         type="button">
         模擬倉
-      </button>
+      </button> */}
       <HeaderBlock />
       <Route path="/industry/:industryId/stocks/:stockId/modules/:moduleId" component={InvestStrategyMainBlock} />
     </div>
