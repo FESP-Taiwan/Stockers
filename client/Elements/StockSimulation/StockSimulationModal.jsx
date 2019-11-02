@@ -75,7 +75,11 @@ async function submit(d, stockId, stockData, modulesInfo) {
     endAt: d.to,
   };
 
-  const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInfo, stockData, d.principle);
+  const modulesInUsed = modulesInfo.filter(
+    module => module.usingStock.some(use => use.companyNumber === parseInt(stockId, 10))
+  );
+
+  const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInUsed, stockData, d.principle);
 
   console.log('stimulationData', stimulationData);
 

@@ -8,7 +8,12 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
     endAt,
   } = datePeriod;
 
-  const timeListNumber = (moment(endAt).year() - moment(startFrom).year() - 1) * 4 + (4 - moment(startFrom).quarter()) + moment(startFrom).quarter();
+  console.log('startFrom', startFrom);
+  console.log('endAt', endAt);
+
+  const timeListNumber = (moment(endAt).year() - moment(startFrom).year() - 1) * 4 + (4 - moment(startFrom).quarter()) + moment(endAt).quarter();
+
+  console.log('timeListNumber', timeListNumber);
 
   const timeList = Array.from(Array(timeListNumber)).reduce((list, n, index) => {
     if (index === 0) {
@@ -29,6 +34,10 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
       ...el.chipInfos,
     ];
   }, []);
+
+  console.log('modulesInfo', modulesInfo);
+
+  console.log('timeList', timeList);
 
   return {
     initialPrice,

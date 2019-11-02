@@ -4,7 +4,7 @@
 import { useMemo } from 'react';
 import { jsx } from '@emotion/core';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
 } from 'recharts';
 
 const mockData = [{
