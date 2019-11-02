@@ -16,15 +16,12 @@ import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
 import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
 import { followingStocks } from '../../Mocks/Queries/StockInfo';
-import { FOLLOWING_STATE } from '../../Constant/stockNumber';
 import * as IndustryCardActions from '../../actions/IndustryCard';
 import { FORM_SITE_HEADER } from '../../Constant/form';
 import LoadingSpinner from '../../Elements/LoadingSpinner';
 import { industryNames } from '../../Constant/industryName';
 
 const selector = formValueSelector(FORM_SITE_HEADER);
-
-console.log('followingStocks', followingStocks);
 
 const styles = {
   wrapper: css`
@@ -85,8 +82,6 @@ function StockersInfoPage({
   industryCardData,
 }: Props) {
   const [isLoading, setLoading] = useState(true);
-
-  console.log('industryCardData', industryCardData);
 
   useEffect(() => {
     let canceled = false;

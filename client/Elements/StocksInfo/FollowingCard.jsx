@@ -40,7 +40,7 @@ const styles = {
     display: grid;
     grid-column-gap: 10px;
     font-size: 13px;
-    grid-template-columns: 1fr 1fr;
+    fo
   `,
   status: css`
     font-size: 13px;
@@ -52,21 +52,15 @@ const styles = {
 };
 
 type Props = {
-  name: string,
   number: number,
-  status: string,
   modules: Array,
 };
 
 function FollowingCard({
-  name,
   number,
-  status,
   modules,
 }: Props) {
   const [shownModal, showModal] = useState(false);
-
-  console.log('modules', modules);
 
   return (
     <div css={styles.wrapper}>
