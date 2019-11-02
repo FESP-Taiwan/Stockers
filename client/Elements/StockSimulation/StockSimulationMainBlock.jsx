@@ -54,11 +54,6 @@ function StockSimulationMainBlock({
   to,
   principle,
 }: Props) {
-
-  console.log("from", from);
-  console.log("to", to);
-  console.log("principle", principle);
-
   return (
     <div css={styles.wrapper}>
       <h4>用迴歸分析測試績效</h4>

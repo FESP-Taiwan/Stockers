@@ -15,12 +15,16 @@ import StockPage from './StockPage';
 import InvestStrategyPageWrapper from '../InvestStrategy/InvestStrategyPageWrapper';
 import { prettifyStockData } from '../../helper/stocks';
 import * as StockActions from '../../actions/Stocks';
+import * as StockPricesActions from '../../actions/StockPrices';
 import LoadingSpinner from '../../Elements/LoadingSpinner';
 
 function StockPageWrapper({
   storeStockData,
+  storeStockPriceData,
+
 }: {
   storeStockData: Function,
+  storeStockPriceData: Function,
 }) {
   const { stockId } = useParams();
   const [isLoading, setLoading] = useState(true);
@@ -51,6 +55,30 @@ function StockPageWrapper({
     };
   }, [storeStockData, stockId]);
 
+  useEffect(() => {
+    let canceled = false;
+
+    async function fetchStockPricesData() {
+      const resData = await fetch(`${API_HOST}/stocker/seasonPrice/${stockId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        storeStockPriceData(resData);
+      }
+    }
+
+    fetchStockPricesData();
+    setLoading(false);
+
+    return () => {
+      canceled = true;
+    };
+  }, [isLoading, stockId, storeStockPriceData]);
+
   if (isLoading) return <LoadingSpinner />;
 
   return (
@@ -65,6 +93,7 @@ const reduxHook = connect(
   () => ({}),
   dispatch => bindActionCreators({
     ...StockActions,
+    ...StockPricesActions,
   }, dispatch),
 );
 

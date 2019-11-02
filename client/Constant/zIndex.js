@@ -21,3 +21,5 @@ export const SITE_HEADER_INDEX = 2;
 export const FOOTER_INDEX = 2;
 
 export const BASE_CONTAINER_INDEX = 1;
+
+export const FIXED_BACKGROUND_INDEX = 2;

@@ -5,17 +5,17 @@ import {
   useState,
   useMemo,
 } from 'react';
-import {
-} from 'react-router-dom';
 import { jsx, css } from '@emotion/core';
 import { connect } from 'react-redux';
 import {
-  LineChart, Line,
+  LineChart, Line, ResponsiveContainer, XAxis, YAxis, Legend,
 } from 'recharts';
+import sortBy from 'lodash/sortBy';
 import StockStrategyHeader from './StockStrategyHeader';
 import {
   comprehensiveIncomes, balanceSheets, cashFlows, dividends, dividendYears, months,
 } from '../../Constant/stockTable';
+import convertNumber from '../../helper/convertNumber';
 
 const styles = {
   wrapper: css`
@@ -41,8 +41,8 @@ const styles = {
   `,
   lineChartWrapper: css`
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
+    padding: 15px;
     height: 225px;
     border-radius: 40px;
     background-color: ${Colors.LAYER_FIRST};
@@ -150,24 +150,6 @@ const styles = {
   `,
 };
 
-const data = [
-  {
-    name: 'Page A', share: 400,
-  },
-  {
-    name: 'Page B', share: 200,
-  },
-  {
-    name: 'Page C', share: 1000,
-  },
-  {
-    name: 'Page A', share: 400,
-  },
-  {
-    name: 'Page B', share: 800,
-  },
-];
-
 const TABLE_TYPES = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   BALANCE_SHEET: 'BALANCE_SHEET',
@@ -177,12 +159,73 @@ const TABLE_TYPES = {
 
 type Props = {
   stockData: Object,
+  stockPriceData: Object,
 };
 
 function StockPage({
   stockData,
+  stockPriceData,
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
+  const [isLoading, setLoading] = useState(true);
+
+  const stockPriceChartData = useMemo(() => {
+    if (!stockPriceData) return null;
+
+    if (!Array.isArray(stockPriceData)) return null;
+
+    const sortedData = sortBy(stockPriceData, 'year');
+
+    const qFirst = sortedData?.map(eachYear => eachYear?.q1.map(q => q.close)
+    .reduce((prev, cur) => prev + cur));
+
+    const qSecond = sortedData?.map(eachYear => eachYear?.q2.map(q => q.close)
+    .reduce((prev, cur) => prev + cur));
+
+    const qThird = sortedData?.map(eachYear => eachYear?.q3.map(q => q.close)
+    .reduce((prev, cur) => prev + cur));
+
+    const qFourth = sortedData?.map((eachYear) => {
+      if (!eachYear?.q4.length) return 0;
+
+      return eachYear?.q4.map(q => q.close).reduce((prev, cur) => prev + cur);
+    });
+
+    const priceAmount = sortedData
+      .map((s, index) => qFirst[index] + qSecond[index] + qThird[index] + qFourth[index]);
+
+    return [{
+      name: 2010,
+      股價: priceAmount[0],
+    }, {
+      name: 2011,
+      股價: priceAmount[1],
+    }, {
+      name: 2012,
+      股價: priceAmount[2],
+    }, {
+      name: 2013,
+      股價: priceAmount[3],
+    }, {
+      name: 2014,
+      股價: priceAmount[4],
+    }, {
+      name: 2015,
+      股價: priceAmount[5],
+    }, {
+      name: 2016,
+      股價: priceAmount[6],
+    }, {
+      name: 2017,
+      股價: priceAmount[7],
+    }, {
+      name: 2018,
+      股價: priceAmount[8],
+    }, {
+      name: 2019,
+      股價: priceAmount[9],
+    }];
+  }, [stockPriceData]);
 
   const comprehensiveIncomeTableData = useMemo(() => {
     if (!stockData) return null;
@@ -225,7 +268,6 @@ function StockPage({
             <div css={styles.blockWrapper}>
               <div css={styles.block}>
                 <button
-                  onClick={() => { console.log('換季'); }}
                   css={styles.tableBtn}
                   type="button">
                   2019
@@ -267,7 +309,7 @@ function StockPage({
                       key={chip.date}
                       css={styles.block}>
                       <span css={styles.word}>
-                        {chip.value}
+                        {convertNumber(chip.value)}
                       </span>
                     </div>
                   );
@@ -304,7 +346,7 @@ function StockPage({
                 key={balanceSheet.chipName}
                 css={styles.blockWrapper}>
                 <div css={styles.block}>
-                  {balanceSheet.chipName}
+                  {convertNumber(balanceSheet.chipName)}
                 </div>
                 {balanceSheet?.chipData.map((chip) => {
                   if (!chip.value) {
@@ -341,7 +383,6 @@ function StockPage({
             <div css={styles.blockWrapper}>
               <div css={styles.block}>
                 <button
-                  onClick={() => { console.log('換年'); }}
                   css={styles.tableBtn}
                   type="button">
                   季
@@ -364,15 +405,29 @@ function StockPage({
                 <div css={styles.block}>
                   {cashFlow.chipName}
                 </div>
-                {cashFlow?.chipData.map(chip => (
-                  <div
-                    key={chip.date}
-                    css={styles.block}>
-                    <span css={styles.word}>
-                      {chip.value}
-                    </span>
-                  </div>
-                ))}
+                {cashFlow?.chipData.map((chip) => {
+                  if (!chip.value) {
+                    return (
+                      <div
+                        key={chip.date}
+                        css={styles.block}>
+                        <span css={styles.lostWord}>
+                          無
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={chip.date}
+                      css={styles.block}>
+                      <span css={styles.word}>
+                        {convertNumber(chip.value)}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -424,7 +479,7 @@ function StockPage({
                       key={chip.date}
                       css={styles.dividendBlock}>
                       <span css={styles.word}>
-                        {chip.value}
+                        {convertNumber(chip.value)}
                       </span>
                     </div>
                   );
@@ -453,9 +508,14 @@ function StockPage({
           股價
         </span>
         <div css={styles.lineChartWrapper}>
-          <LineChart width={800} height={180} data={data}>
-            <Line type="monotone" dataKey="share" stroke="#8884d8" />
-          </LineChart>
+          <ResponsiveContainer>
+            <LineChart data={stockPriceChartData}>
+              <Legend verticalAlign="top" height={36} />
+              <XAxis dataKey="name" />
+              <YAxis type="number" dataKey="股價" />
+              <Line type="monotone" dataKey="股價" stroke="#FF9500" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
       <div css={styles.infoTableWrapper}>
@@ -514,6 +574,7 @@ function StockPage({
 const reduxHook = connect(
   state => ({
     stockData: state.Stocks.stockData,
+    stockPriceData: state.StockPrices.stockPriceData,
   }),
 );
 

@@ -125,8 +125,6 @@ function Grid({
       GRIDS: grids,
     } = meta;
 
-    console.log('grids', grids);
-
     grids.forEach((grid, index) => {
       buttonList.push(
         <button
