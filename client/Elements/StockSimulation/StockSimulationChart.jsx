@@ -1,60 +1,28 @@
 // @flow
 /** @jsx jsx */
 
-import { useMemo, useContext } from 'react';
+import {
+  useMemo,
+  useContext,
+  useState,
+  useEffect,
+} from 'react';
+import moment from 'moment';
 import { jsx } from '@emotion/core';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
 } from 'recharts';
 import { SimulationDataContext } from '../../Constant/context';
 
-const mockData = [{
-  id: 1,
-  name: '2019-03',
-}, {
-  id: 2,
-  name: '2019-06',
-}, {
-  id: 3,
-  name: '2019-09',
-}, {
-  id: 4,
-  name: '2019-12',
-}, {
-  id: 5,
-  name: '2019-03',
-}, {
-  id: 6,
-  name: '2019-06',
-}, {
-  id: 7,
-  name: '2019-09',
-}, {
-  id: 8,
-  name: '2019-12',
-}];
-
-const mockchartdata = [
-  {
-    name: 'Page A', share: 400,
-  },
-  {
-    name: 'Page B', share: 200,
-  },
-  {
-    name: 'Page C', share: 1000,
-  },
-  {
-    name: 'Page A', share: 400,
-  },
-  {
-    name: 'Page B', share: 800,
-  },
-];
-
 const styles = {
   wrapper: {
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'auto',
+  },
+  header: {
+    fontSize: 18,
   },
 };
 
@@ -64,26 +32,86 @@ function StockSimulationChart({
 }: Props) {
   const simulationData = useContext(SimulationDataContext);
 
+  const [dataLength, setDataLength] = useState(0);
+  const [lineNames, setLineNames] = useState([]);
+
+  useEffect(() => {
+    if (simulationData.length) {
+      setDataLength(simulationData[0].funds.length);
+
+      setLineNames(simulationData.map(el => el.id));
+    }
+  }, [simulationData]);
+
+  const fundsData = useMemo(() => {
+    if (!simulationData.length) return [];
+
+    return Array.from(Array(dataLength)).map((n, index) => {
+      const lineDatas = lineNames.map(name => ([
+        `${name}`, simulationData.find(data => data.id === name).funds[index],
+      ]));
+
+      const lineDataObjects = Object.fromEntries(lineDatas);
+
+      return {
+        name: moment(from).add((index + 1), 'quarters').format('YYYY-MM'),
+        ...lineDataObjects,
+      };
+    });
+  }, [simulationData, dataLength, lineNames, from]);
+
+  const fundsWithProfitData = useMemo(() => {
+    if (!simulationData.length) return [];
+
+    return Array.from(Array(dataLength)).map((n, index) => {
+      const lineDatas = lineNames.map(name => ([
+        `${name}`, simulationData.find(data => data.id === name).fundsWithProfit[index],
+      ]));
+
+      const lineDataObjects = Object.fromEntries(lineDatas);
+
+      return {
+        name: moment(from).add((index + 1), 'quarters').format('YYYY-MM'),
+        ...lineDataObjects,
+      };
+    });
+  }, [simulationData, dataLength, lineNames, from]);
+
+  const lines = useMemo(() => {
+    if (!lineNames.length) return null;
+
+    return lineNames.map(el => (
+      <Line type="monotone" dataKey={el} stroke="#8884d8" />
+    ));
+  }, [lineNames]);
+
+  console.log('from', from);
+
+  console.log('fundsData', fundsData);
+
   console.log('simulationData', simulationData);
-
-  const rangeData = useMemo(() => {
-    const fromIndex = mockData.findIndex(data => data.id === Number(from));
-    const toIndex = mockData.findIndex(data => data.id === Number(to)) + 1;
-    const range = mockData.slice(fromIndex, toIndex);
-
-    return range.map(q => ({ name: q.name, share: 600 }));
-  }, [from, to]);
-
-  console.log('rangeData', rangeData);
 
   return (
     <div css={styles.wrapper}>
-      <LineChart width={800} height={300} data={rangeData}>
+      <h2 style={styles.header}>資金</h2>
+      <LineChart width={800} height={300} data={fundsData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
+        <Tooltip
+          labelStyle={{ color: '#000' }}
+          contentStyle={{ color: '#000' }} />
         <XAxis dataKey="name" />
-        <YAxis dataKey="share" />
-        <Line type="monotone" dataKey="share" stroke="#8884d8" />
+        <YAxis />
+        {lines}
+      </LineChart>
+      <h2 style={styles.header}>資本</h2>
+      <LineChart width={800} height={300} data={fundsWithProfitData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip
+          labelStyle={{ color: '#000' }}
+          contentStyle={{ color: '#000' }} />
+        <XAxis dataKey="name" />
+        <YAxis />
+        {lines}
       </LineChart>
     </div>
   );

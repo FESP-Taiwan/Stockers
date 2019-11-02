@@ -3,9 +3,11 @@
 
 import { useState } from 'react';
 import { jsx } from '@emotion/core';
+import { reduxForm } from 'redux-form';
 import StockSimulationModal from '../../Elements/StockSimulation/StockSimulationModal';
 import StockSimulationMainBlock from '../../Elements/StockSimulation/StockSimulationMainBlock';
 import { SimulationDataContext } from '../../Constant/context';
+import { FORM_STOCK_SIMULATION } from '../../Constant/form';
 
 const styles = {
   wrapper: {
@@ -23,7 +25,11 @@ const styles = {
   },
 };
 
-function StockSimulationPage() {
+function StockSimulationPage({
+  handleSubmit,
+}: {
+  handleSubmit: Function,
+}) {
   const [shownModal, showModal] = useState(false);
   const [simulationData, setSimulationData] = useState([]);
 
@@ -38,6 +44,7 @@ function StockSimulationPage() {
         </button>
         {shownModal ? (
           <StockSimulationModal
+            handleSubmit={handleSubmit}
             setSimulationData={setSimulationData}
             close={() => showModal(false)} />
         ) : null}
@@ -47,4 +54,8 @@ function StockSimulationPage() {
   );
 }
 
-export default StockSimulationPage;
+const formHook = reduxForm({
+  form: FORM_STOCK_SIMULATION,
+});
+
+export default formHook(StockSimulationPage);

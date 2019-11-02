@@ -4,9 +4,8 @@
 import { jsx, css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field } from 'redux-form';
 import { useParams } from 'react-router-dom';
-import { FORM_STOCK_SIMULATION } from '../../Constant/form';
 import Modal from '../Modal/Modal';
 import TextInput from '../../Form/TextInput';
 import Selector from '../../Form/Selector';
@@ -72,7 +71,9 @@ type Props = {
   setSimulationData: Function,
 }
 
-async function submit(d, stockId, stockData, modulesInfo, showErrorMessage, setSimulationData) {
+async function submit(
+  d, stockId, stockData, modulesInfo, showErrorMessage, setSimulationData, close
+) {
   const datePeriod = {
     startFrom: d.from,
     endAt: d.to,
@@ -98,6 +99,7 @@ async function submit(d, stockId, stockData, modulesInfo, showErrorMessage, setS
       console.log('error content', data.error);
     } else {
       setSimulationData(data.modules);
+      close();
     }
   }
 }
@@ -117,7 +119,7 @@ function StockSimulationModal({
     <Modal onClose={close}>
       <form
         onSubmit={handleSubmit(d => submit(
-          d, stockId, stockData, modulesInfo, showErrorMessage, setSimulationData
+          d, stockId, stockData, modulesInfo, showErrorMessage, setSimulationData, close
         ))}
         css={styles.wrapper}>
         <h2>測試績效</h2>
@@ -167,8 +169,4 @@ const reduxHook = connect(
   }),
 );
 
-const formHook = reduxForm({
-  form: FORM_STOCK_SIMULATION,
-});
-
-export default reduxHook(formHook(StockSimulationModal));
+export default reduxHook(StockSimulationModal);
