@@ -11,9 +11,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import {
-  LineChart, Line, ResponsiveContainer,
+  LineChart, Line, ResponsiveContainer, Legend, YAxis, XAxis,
 } from 'recharts';
-import IndustryCardChart from '../../Elements/StocksInfo/Form/IndustryCardChart';
 import { flex } from '../../Constant/emotion';
 import { industryStream } from '../../Constant/industryStream';
 import { industryNames } from '../../Constant/industryName';
@@ -152,8 +151,6 @@ function IndustryPage({
 
   const { industryId } = useParams();
 
-  console.log('industryCardData', industryCardData);
-
   const gainChartData = useMemo(() => {
     if (!industryCardData.length) return null;
 
@@ -169,18 +166,16 @@ function IndustryPage({
     const thirdGain = gainData?.map(gain => gain[2].gain).reduce((prev, cur) => prev + cur);
 
     return [{
-      name: 'firstGain',
-      value: firstGain,
+      月份: '9月',
+      漲跌幅: firstGain * 100,
     }, {
-      name: 'secondGain',
-      value: secondGain,
+      月份: '10月',
+      漲跌幅: secondGain * 100,
     }, {
-      name: 'thirdGain',
-      value: thirdGain,
+      月份: '11月',
+      漲跌幅: thirdGain * 100,
     }];
   }, [industryCardData, industryId]);
-
-  console.log('gainChartData', gainChartData);
 
   useEffect(() => {
     let canceled = false;
@@ -312,12 +307,15 @@ function IndustryPage({
           </span>
           <div style={{ width: '100%' }}>
             <h4>
-              漲跌幅走勢 單位%
+              漲跌幅走勢(單位%)
             </h4>
             <div style={{ width: '100%', height: 150 }}>
               <ResponsiveContainer>
                 <LineChart data={gainChartData}>
-                  <Line type="monotone" dataKey="value" stroke="#FF9500" />
+                  <Legend verticalAlign="top" height={36} />
+                  <XAxis dataKey="月份" />
+                  <YAxis dataKey="漲跌幅" />
+                  <Line type="monotone" dataKey="漲跌幅" stroke="#FF9500" />
                 </LineChart>
               </ResponsiveContainer>
             </div>

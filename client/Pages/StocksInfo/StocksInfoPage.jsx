@@ -11,9 +11,11 @@ import { jsx, css } from '@emotion/core';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
+import {
+  LineChart, Line, ResponsiveContainer, XAxis, YAxis, Legend,
+} from 'recharts';
 import { flex } from '../../Constant/emotion';
 import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
-import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
 import { followingStocks } from '../../Mocks/Queries/StockInfo';
 import * as IndustryCardActions from '../../actions/IndustryCard';
@@ -66,6 +68,7 @@ const styles = {
     height: 225px;
     border-radius: 40px;
     background-color: ${Colors.LAYER_FIRST};
+    padding: 10px;
     margin: 0 0 20px 0;
   `,
 };
@@ -108,6 +111,8 @@ function StockersInfoPage({
   }, [fetchIndustryCardData]);
 
   const filteredIndustryCards = useMemo(() => {
+    if (isLoading) return <LoadingSpinner />;
+
     if (!industryCardData) return null;
 
     const comparedIndustry = industryCardData?.filter(card => industryNames
@@ -115,24 +120,73 @@ function StockersInfoPage({
 
     if (!searchTerm) return comparedIndustry;
 
-    return comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
-  }, [searchTerm, industryCardData]);
+    const filterByName = comparedIndustry.filter(card => card.industry_type.includes(searchTerm));
+
+    const filteredByStock = comparedIndustry.filter(industry => industry.companies
+      .map(c => c.stockNo)
+      .some(num => num.includes(searchTerm)));
+
+    if (!filterByName.length) {
+      return filteredByStock;
+    }
+
+    return filterByName;
+  }, [searchTerm, industryCardData, isLoading]);
 
   const industryCard = useMemo(() => {
+    if (isLoading) return <LoadingSpinner />;
+
     if (!industryCardData) return null;
 
     return (
       <div css={styles.industryCardWrapper}>
-        {filteredIndustryCards.map((industry, index) => (
-          <IndustryCard
-            key={industry.industry_type}
-            name={industry.industry_type}
-            companies={industry.companies}
-            industryId={index} />
-        ))}
+        {filteredIndustryCards.map((industry, index) => {
+          if (!industry) return null;
+
+          return (
+            <IndustryCard
+              key={industry.industry_type}
+              name={industry.industry_type}
+              companies={industry.companies}
+              industryId={index} />
+          );
+        })}
       </div>
     );
-  }, [industryCardData, filteredIndustryCards]);
+  }, [industryCardData, filteredIndustryCards, isLoading]);
+
+  const gainChartData = useMemo(() => {
+    if (!industryCardData.length) return null;
+
+    const comparedIndustry = industryCardData?.filter(card => industryNames
+      .some(industryName => industryName.name === card.industry_type));
+
+    const gainData = comparedIndustry?.map(industry => industry?.companies
+      .map(company => company.gain_diff.map(g => g.gain * 10000)));
+
+    const eachIndustryAvg = gainData.map(gain => gain.reduce((accum, curr, index) => {
+      if (index === 0) return accum;
+
+      return accum.map((a, i) => a + gain[index][i]);
+    }), []);
+
+    const amountAvg = eachIndustryAvg.reduce((each, next, index) => {
+      if (index === 0) return next;
+
+      return each.map((e, i) => e + eachIndustryAvg[index][i]);
+    });
+
+    return [{
+      月份: 9,
+      大盤指數: amountAvg[0],
+    }, {
+      月份: 10,
+      大盤指數: amountAvg[1],
+    }, {
+      月份: 11,
+      大盤指數: amountAvg[2],
+    }];
+  }, [industryCardData]);
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -183,7 +237,14 @@ function StockersInfoPage({
           大盤產業
         </h3>
         <div css={styles.kLine}>
-          <LineChartWrapper />
+          <ResponsiveContainer>
+            <LineChart data={gainChartData}>
+              <Legend verticalAlign="top" />
+              <XAxis dataKey="月份" />
+              <YAxis type="number" dataKey="大盤指數" />
+              <Line type="monotone" dataKey="大盤指數" stroke="#FF9500" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
       {industryCard}

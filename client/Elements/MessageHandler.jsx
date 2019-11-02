@@ -138,9 +138,6 @@ class MessageHandler extends PureComponent<Props> {
       MESSAGE,
     } = this.state;
 
-    console.log('MESSAGE', MESSAGE);
-    console.log('messageStack', messageStack);
-
     return (
       <Fragment>
         <div style={styles.wrapper}>
