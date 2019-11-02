@@ -11,9 +11,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import {
-  LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
+  LineChart, Line, ResponsiveContainer, Legend, YAxis, XAxis,
 } from 'recharts';
-import IndustryCardChart from '../../Elements/StocksInfo/Form/IndustryCardChart';
 import { flex } from '../../Constant/emotion';
 import { industryStream } from '../../Constant/industryStream';
 import { industryNames } from '../../Constant/industryName';
@@ -167,14 +166,14 @@ function IndustryPage({
     const thirdGain = gainData?.map(gain => gain[2].gain).reduce((prev, cur) => prev + cur);
 
     return [{
-      name: 'firstGain',
-      value: firstGain,
+      月份: '9月',
+      漲跌幅: firstGain * 100,
     }, {
-      name: 'secondGain',
-      value: secondGain,
+      月份: '10月',
+      漲跌幅: secondGain * 100,
     }, {
-      name: 'thirdGain',
-      value: thirdGain,
+      月份: '11月',
+      漲跌幅: thirdGain * 100,
     }];
   }, [industryCardData, industryId]);
 
@@ -313,8 +312,10 @@ function IndustryPage({
             <div style={{ width: '100%', height: 150 }}>
               <ResponsiveContainer>
                 <LineChart data={gainChartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <Line type="monotone" dataKey="value" stroke="#FF9500" />
+                  <Legend verticalAlign="top" height={36} />
+                  <XAxis dataKey="月份" />
+                  <YAxis dataKey="漲跌幅" />
+                  <Line type="monotone" dataKey="漲跌幅" stroke="#FF9500" />
                 </LineChart>
               </ResponsiveContainer>
             </div>

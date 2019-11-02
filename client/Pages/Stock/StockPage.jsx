@@ -13,7 +13,7 @@ import { jsx, css } from '@emotion/core';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-  LineChart, Line, ResponsiveContainer,
+  LineChart, Line, ResponsiveContainer, XAxis, YAxis, Legend,
 } from 'recharts';
 import sortBy from 'lodash/sortBy';
 import StockStrategyHeader from './StockStrategyHeader';
@@ -48,6 +48,7 @@ const styles = {
   lineChartWrapper: css`
     width: 100%;
     margin: 0 auto;
+    padding: 15px;
     height: 225px;
     border-radius: 40px;
     background-color: ${Colors.LAYER_FIRST};
@@ -229,34 +230,34 @@ function StockPage({
 
     return [{
       name: 2010,
-      price: priceAmount[0],
+      股價: priceAmount[0],
     }, {
       name: 2011,
-      price: priceAmount[1],
+      股價: priceAmount[1],
     }, {
       name: 2012,
-      price: priceAmount[2],
+      股價: priceAmount[2],
     }, {
       name: 2013,
-      price: priceAmount[3],
+      股價: priceAmount[3],
     }, {
       name: 2014,
-      price: priceAmount[4],
+      股價: priceAmount[4],
     }, {
       name: 2015,
-      price: priceAmount[5],
+      股價: priceAmount[5],
     }, {
       name: 2016,
-      price: priceAmount[6],
+      股價: priceAmount[6],
     }, {
       name: 2017,
-      price: priceAmount[7],
+      股價: priceAmount[7],
     }, {
       name: 2018,
-      price: priceAmount[8],
+      股價: priceAmount[8],
     }, {
       name: 2019,
-      price: priceAmount[9],
+      股價: priceAmount[9],
     }];
   }, [stockPriceData]);
 
@@ -542,7 +543,10 @@ function StockPage({
     return (
       <ResponsiveContainer>
         <LineChart data={stockPriceChartData}>
-          <Line type="monotone" dataKey="price" stroke="#FF9500" />
+          <Legend verticalAlign="top" height={36} />
+          <XAxis dataKey="name" />
+          <YAxis type="number" dataKey="股價" />
+          <Line type="monotone" dataKey="股價" stroke="#FF9500" />
         </LineChart>
       </ResponsiveContainer>
     );
