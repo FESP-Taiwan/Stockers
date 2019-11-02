@@ -21,7 +21,7 @@ declare var module: {
 moment.locale('zh-tw');
 
 const client = new ApolloClient({
-  uri: 'http://localhost:5000/graphql', // gql server
+  uri: `${API_HOST}/graphql`, // gql server
 });
 
 function renderPage() {

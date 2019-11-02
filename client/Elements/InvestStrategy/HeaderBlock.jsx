@@ -141,6 +141,21 @@ async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, store
 
   console.log('userModulesUpdatedData', userModulesUpdatedData);
 
+  console.log('data', JSON.stringify({
+    stockNumber: stockId,
+    stockAlertion: '買',
+    userModulesUpdated: userModulesUpdatedData.map(module => ({
+      comment: module.comment,
+      headers: module.headers,
+      moduleId: module.id,
+      mathModule: module.mathModule,
+      name: module.name,
+      subName: module.subName,
+      userId: module.userId,
+      usingStock: module.usingStock,
+    })),
+  }));
+
   const resData = await fetch(`${API_HOST}/modules/updateUserModules`, {
     method: 'PUT',
     headers: {
