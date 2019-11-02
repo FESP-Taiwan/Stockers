@@ -2,16 +2,11 @@
 /** @jsx jsx */
 
 import {
-  useEffect,
   useState,
   useMemo,
 } from 'react';
-import {
-  useParams,
-} from 'react-router-dom';
 import { jsx, css } from '@emotion/core';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import {
   LineChart, Line, ResponsiveContainer, XAxis, YAxis, Legend,
 } from 'recharts';
@@ -21,7 +16,6 @@ import {
   comprehensiveIncomes, balanceSheets, cashFlows, dividends, dividendYears, months,
 } from '../../Constant/stockTable';
 import convertNumber from '../../helper/convertNumber';
-import * as StockPricesActions from '../../actions/StockPrices';
 
 const styles = {
   wrapper: css`
@@ -166,42 +160,14 @@ const TABLE_TYPES = {
 type Props = {
   stockData: Object,
   stockPriceData: Object,
-  storeStockPriceData: Function,
 };
 
 function StockPage({
   stockData,
   stockPriceData,
-  storeStockPriceData,
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
   const [isLoading, setLoading] = useState(true);
-
-  const { stockId } = useParams();
-
-  useEffect(() => {
-    let canceled = false;
-
-    async function fetchStockPricesData() {
-      const resData = await fetch(`${API_HOST}/stocker/seasonPrice/${stockId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(res => (!canceled ? res.json() : null));
-
-      if (resData) {
-        storeStockPriceData(resData);
-      }
-    }
-
-    fetchStockPricesData();
-    setLoading(false);
-
-    return () => {
-      canceled = true;
-    };
-  }, [isLoading, stockId, storeStockPriceData]);
 
   const stockPriceChartData = useMemo(() => {
     if (!stockPriceData) return null;
@@ -534,21 +500,6 @@ function StockPage({
     dividendTableData,
   ]);
 
-  const stockPriceChart = useMemo(() => {
-    if (isLoading) return null;
-
-    return (
-      <ResponsiveContainer>
-        <LineChart data={stockPriceChartData}>
-          <Legend verticalAlign="top" height={36} />
-          <XAxis dataKey="name" />
-          <YAxis type="number" dataKey="股價" />
-          <Line type="monotone" dataKey="股價" stroke="#FF9500" />
-        </LineChart>
-      </ResponsiveContainer>
-    );
-  }, [isLoading, stockPriceChartData]);
-
   return (
     <div css={styles.wrapper}>
       <StockStrategyHeader />
@@ -557,7 +508,14 @@ function StockPage({
           股價
         </span>
         <div css={styles.lineChartWrapper}>
-          {stockPriceChart}
+          <ResponsiveContainer>
+            <LineChart data={stockPriceChartData}>
+              <Legend verticalAlign="top" height={36} />
+              <XAxis dataKey="name" />
+              <YAxis type="number" dataKey="股價" />
+              <Line type="monotone" dataKey="股價" stroke="#FF9500" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
       <div css={styles.infoTableWrapper}>
@@ -618,9 +576,6 @@ const reduxHook = connect(
     stockData: state.Stocks.stockData,
     stockPriceData: state.StockPrices.stockPriceData,
   }),
-  dispatch => bindActionCreators({
-    ...StockPricesActions,
-  }, dispatch),
 );
 
 export default reduxHook(StockPage);
