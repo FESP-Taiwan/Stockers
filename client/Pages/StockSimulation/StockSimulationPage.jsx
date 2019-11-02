@@ -8,7 +8,8 @@ import StockSimulationMainBlock from '../../Elements/StockSimulation/StockSimula
 function StockSimulationPage() {
   return (
     <div>
-      <StockSimulationMainBlock />
+      <StockSimulationModal />
+      {/* <StockSimulationMainBlock /> */}
     </div>
   );
 }
