@@ -85,8 +85,6 @@ async function submit(chipsData, moduleId, showMessage, setOpen, showErrorMessag
     }),
   }).then(res => res.json());
 
-  console.log('resData', resData);
-
   if (resData) {
     showMessage('儲存成功');
 
