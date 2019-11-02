@@ -11,5 +11,5 @@ ENV NODE_ENV $NODE_ENV
 
 ADD . /app
 
-CMD npm run client
+CMD ["npm", "run", "client"]
 EXPOSE 7000
