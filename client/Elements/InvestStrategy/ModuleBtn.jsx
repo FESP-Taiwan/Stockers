@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { useState, useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import closeIcon from '../../static/images/close-icon.png';
 import RangeSlider from './Field/RangeSlider';
@@ -62,19 +62,18 @@ type Props = {
   id: number,
   name: string,
   subName: number,
+  disabled: boolean,
+  removeUserUsingModules: Function,
 }
 
 function ModuleBtn({
   actived,
   id,
   name,
-  subName,
+  disabled,
+  removeUserUsingModules,
 }: Props) {
-  const [selected, select] = useState(false);
-
   const { industryId, stockId } = useParams();
-
-  const onClick = useCallback(() => select(!selected), [selected]);
 
   const modulesStyle = useMemo(() => ({
     ...styles.modules,
@@ -86,7 +85,7 @@ function ModuleBtn({
       <button
         css={styles.closeBtn}
         type="button"
-        onClick={() => console.log('click')}>
+        onClick={() => removeUserUsingModules(id)}>
         <img src={closeIcon} alt="close" css={styles.icon} />
       </button>
       <NavLink

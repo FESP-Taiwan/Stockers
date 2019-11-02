@@ -2,7 +2,6 @@
 /** @jsx jsx */
 
 import {
-  Fragment,
   useState,
   useMemo,
   useCallback,
@@ -59,7 +58,7 @@ const styles = {
     width: 1,
     height: 80,
     backgroundColor: '#707070',
-    margin: '0 20px',
+    margin: '0 32px 0 14px',
   },
   icon: {
     height: 24,
@@ -84,7 +83,24 @@ const styles = {
     background-color: ${Colors.LAYER_FIRST};
     color: #FFF;
     font-size: 13px;
+    margin: 0 32px 0 0;
   `,
+  moduleWrapper: {
+    display: 'flex',
+    position: 'relative',
+  },
+  deleteBtn: {
+    width: 32,
+    height: 32,
+    position: 'absolute',
+    top: 50,
+    right: 24,
+    backgroundColor: Colors.ERROR,
+    borderRadius: 50,
+    fontSize: 12,
+    textAlign: 'center',
+    lineHeight: '32px',
+  },
 };
 
 function HeaderBlock({
@@ -94,13 +110,85 @@ function HeaderBlock({
 }) {
   const [actived, active] = useState(false);
   const [allvalues, setallvalues] = useState([]);
+  const [userModules, setUserModules] = useState([]);
+  const [modulesInUsed, setModulesInUsed] = useState([]);
+
+  console.log('userModules', userModules);
 
   const { stockId } = useParams();
 
   const onClick = useCallback(() => active(!actived), [actived]);
 
+  const deleteModule = useCallback((id) => {
+    const deleteModuleIndex = userModules.findIndex(module => module.id === id);
+
+    setUserModules([
+      ...userModules.slice(0, deleteModuleIndex),
+      ...userModules.slice(deleteModuleIndex + 1),
+    ]);
+  }, [userModules]);
+
+  const addUserModules = useCallback(() => {
+    const newUserModules = [
+      ...userModules,
+      {
+        id: userModules.length + 1,
+        name: '',
+        subName: '',
+        userId: localStorage.getItem('userId'),
+        comment: {
+          blocks: [],
+        },
+        usingStock: [],
+        mathModule: {
+          content: '',
+          chipInfos: [],
+        },
+        headers: [],
+      },
+    ];
+
+    setUserModules(newUserModules);
+  }, [userModules]);
+
+  const addUserUsingModules = useCallback((id) => {
+    const updateModuleIndex = userModules.findIndex(module => module.id === id);
+
+    setUserModules([
+      ...userModules.slice(0, updateModuleIndex),
+      {
+        ...userModules[updateModuleIndex],
+        usingStock: [
+          ...userModules[updateModuleIndex].usingStock,
+          {
+            rate: '0',
+            companyNumber: parseInt(stockId, 10),
+          },
+        ],
+      },
+      ...userModules.slice(updateModuleIndex + 1),
+    ]);
+  }, [userModules, stockId]);
+
+  const removeUserUsingModules = useCallback((id) => {
+    const updateModuleIndex = userModules.findIndex(module => module.id === id);
+
+    setUserModules([
+      ...userModules.slice(0, updateModuleIndex),
+      {
+        ...userModules[updateModuleIndex],
+        usingStock: userModules[updateModuleIndex].usingStock
+          .filter(el => el.companyNumber !== parseInt(stockId, 10)),
+      },
+      ...userModules.slice(updateModuleIndex + 1),
+    ]);
+  }, [userModules, stockId]);
+
+  // InitialValues
   useEffect(() => {
     if (modulesInfo.length) {
+      setUserModules(modulesInfo);
+
       const initValues = modulesInfo.map(el => el.usingStock
         .find(use => use.companyNumber === parseInt(stockId, 10)).rate);
 
@@ -108,35 +196,59 @@ function HeaderBlock({
     }
   }, [modulesInfo, stockId]);
 
-  const modulesInUsed = useMemo(() => modulesInfo.filter(
-    module => module.usingStock.some(use => use.companyNumber === parseInt(stockId, 10))
-  ), [modulesInfo, stockId]);
+  useEffect(() => {
+    const initModulesInUsed = userModules.filter(
+      module => module.usingStock.some(use => use.companyNumber === parseInt(stockId, 10))
+    );
+
+    setModulesInUsed(initModulesInUsed);
+  }, [userModules, stockId]);
+
+  console.log('userModules', userModules);
+
+  const modulesNotInUsed = useMemo(() => {
+    const modulesInUsedSet = new Set(modulesInUsed.map(useModule => useModule.id));
+
+    return userModules.filter(module => !modulesInUsedSet.has(module.id));
+  }, [modulesInUsed, userModules]);
+
+  const modulesNotUsingButtons = useMemo(() => {
+    if (!modulesNotInUsed.length) return null;
+
+    return modulesNotInUsed.map(module => (
+      <div
+        key={module.id}
+        style={styles.moduleWrapper}>
+        <button
+          onClick={() => deleteModule(module.id)}
+          style={styles.deleteBtn}
+          type="button">
+          刪除
+        </button>
+        <button
+          css={styles.circleBtn}
+          onClick={() => addUserUsingModules(module.id)}
+          type="button">
+          {module.name}
+        </button>
+      </div>
+    ));
+  }, [modulesNotInUsed, addUserUsingModules, deleteModule]);
 
   const modulesBtns = useMemo(() => {
     if (!modulesInUsed) return null;
 
-    const modulesList = [];
-
-    modulesInUsed.forEach((module) => {
-      modulesList.push(
-        <ModuleBtn
-          name={module.name}
-          subName={module.subName}
-          id={module.id}
-          actived={actived} />
-      );
-    });
-
-    return (
-      <Fragment>
-        {modulesList}
-      </Fragment>
-    );
-  }, [modulesInUsed, actived]);
-
-  console.log('allvalues', allvalues);
-
-  console.log('modulesInfo', modulesInfo);
+    return modulesInUsed.map(module => (
+      <ModuleBtn
+        key={module.id}
+        disabled={!~modulesInfo.findIndex(el => el.id === module.id)}
+        name={module.name}
+        subName={module.subName}
+        id={module.id}
+        removeUserUsingModules={removeUserUsingModules}
+        actived={actived} />
+    ));
+  }, [modulesInUsed, actived, removeUserUsingModules, modulesInfo]);
 
   return (
     <HeaderBlockAllValuesContext.Provider value={[allvalues, setallvalues]}>
@@ -159,8 +271,9 @@ function HeaderBlock({
         </div>
         {modulesBtns}
         <span css={styles.line} />
+        {modulesNotUsingButtons}
         <button
-          onClick={() => console.log('add modules')}
+          onClick={addUserModules}
           type="button"
           css={styles.circleBtn}>
           <img src={addIcon} css={styles.icon} alt="Add" />
