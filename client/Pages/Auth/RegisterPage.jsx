@@ -10,7 +10,7 @@ import {
   Field,
   Form,
 } from 'redux-form';
-import { withRouter } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import type { FormProps } from 'redux-form';
 import { useMutation } from '@apollo/react-hooks';
 import { useGlobalMessage, useGlobalErrorMessage } from '../../helper/useGlobalMessage';
@@ -102,9 +102,9 @@ const SIGNUP = gql`
 
 function RegisterPage({
   handleSubmit,
-  history,
-}: FormProps & ContextRouter) {
-  const [register, { data }] = useMutation(SIGNUP);
+}: FormProps) {
+  const history = useHistory();
+  const [register] = useMutation(SIGNUP);
 
   const showMessage = useGlobalMessage();
   const showErrorMessage = useGlobalErrorMessage();
@@ -239,4 +239,4 @@ const formHook = reduxForm({
   },
 });
 
-export default withRouter(formHook(RegisterPage));
+export default formHook(RegisterPage);
