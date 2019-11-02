@@ -155,32 +155,20 @@ function StockersInfoPage({
     );
   }, [industryCardData, filteredIndustryCards, isLoading]);
 
-  console.log('industryCardData', industryCardData);
-
   const gainChartData = useMemo(() => {
     if (!industryCardData.length) return null;
 
     const comparedIndustry = industryCardData?.filter(card => industryNames
       .some(industryName => industryName.name === card.industry_type));
 
-    console.log('comparedIndustry', comparedIndustry);
-
     const gainData = comparedIndustry?.map(industry => industry?.companies
       .map(company => company.gain_diff.map(g => g.gain * 10000)));
-
-    console.log('gainData', gainData);
 
     const eachIndustryAvg = gainData.map(gain => gain.reduce((accum, curr, index) => {
       if (index === 0) return accum;
 
       return accum.map((a, i) => a + gain[index][i]);
     }), []);
-
-    // const firstGain = gainData?.map(gain => gain[0].gain).reduce((prev, cur) => prev + cur);
-    // console.log('firstGain', firstGain);
-    // const secondGain = gainData?.map(gain => gain[1].gain).reduce((prev, cur) => prev + cur);
-    //
-    // const thirdGain = gainData?.map(gain => gain[2].gain).reduce((prev, cur) => prev + cur);
 
     const amountAvg = eachIndustryAvg.reduce((each, next, index) => {
       if (index === 0) return next;
@@ -199,8 +187,6 @@ function StockersInfoPage({
       大盤指數: amountAvg[2],
     }];
   }, [industryCardData]);
-
-  console.log('gainChartData', gainChartData);
 
   if (isLoading) return <LoadingSpinner />;
 

@@ -261,8 +261,6 @@ function StockPage({
     }];
   }, [stockPriceData]);
 
-  console.log('stockPriceChartData', stockPriceChartData);
-
   const comprehensiveIncomeTableData = useMemo(() => {
     if (!stockData) return null;
 
@@ -419,7 +417,6 @@ function StockPage({
             <div css={styles.blockWrapper}>
               <div css={styles.block}>
                 <button
-                  onClick={() => { console.log('換年'); }}
                   css={styles.tableBtn}
                   type="button">
                   季

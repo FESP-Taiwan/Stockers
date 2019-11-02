@@ -46,7 +46,6 @@ function InvestStrategyPageWrapper({
       }).then(res => (!canceled ? res.json() : null));
 
       if (resData) {
-        console.log('resData', resData);
         storeUserModules(resData);
 
         resData.forEach((el) => {

@@ -114,10 +114,6 @@ const styles = {
 };
 
 async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, storeUserModules) {
-  console.log('allvalues', allvalues);
-  console.log('modulesInUsed', modulesInUsed);
-  console.log('stockId', stockId);
-
   const updatedUsingModulesInfo = modulesInUsed.map((module, index) => {
     const moduleUsingStockIndex = module.usingStock.findIndex(use => use.companyNumber === stockId);
 
@@ -138,23 +134,6 @@ async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, store
     ...updatedUsingModulesInfo,
     ...modulesNotInUsed,
   ].sort((cursorA, cursorB) => cursorA.id - cursorB.id);
-
-  console.log('userModulesUpdatedData', userModulesUpdatedData);
-
-  console.log('data', JSON.stringify({
-    stockNumber: stockId,
-    stockAlertion: '買',
-    userModulesUpdated: userModulesUpdatedData.map(module => ({
-      comment: module.comment,
-      headers: module.headers,
-      moduleId: module.id,
-      mathModule: module.mathModule,
-      name: module.name,
-      subName: module.subName,
-      userId: module.userId,
-      usingStock: module.usingStock,
-    })),
-  }));
 
   const resData = await fetch(`${API_HOST}/modules/updateUserModules`, {
     method: 'PUT',
@@ -179,7 +158,6 @@ async function submit(allvalues, stockId, modulesInUsed, modulesNotInUsed, store
   }).then(res => res.json());
 
   if (resData) {
-    console.log('resData', resData);
     const storeResData = resData.map(el => ({
       comment: el.comment,
       headers: el.headers,
