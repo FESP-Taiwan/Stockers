@@ -2,20 +2,25 @@
 /** @jsx jsx */
 
 import {
+  useEffect,
   useState,
   useMemo,
 } from 'react';
 import {
+  useParams,
 } from 'react-router-dom';
 import { jsx, css } from '@emotion/core';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
-  LineChart, Line,
+  LineChart, Line, ResponsiveContainer,
 } from 'recharts';
+import sortBy from 'lodash/sortBy';
 import StockStrategyHeader from './StockStrategyHeader';
 import {
   comprehensiveIncomes, balanceSheets, cashFlows, dividends, dividendYears, months,
 } from '../../Constant/stockTable';
+import * as StockPricesActions from '../../actions/StockPrices';
 
 const styles = {
   wrapper: css`
@@ -41,7 +46,6 @@ const styles = {
   `,
   lineChartWrapper: css`
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
     height: 225px;
     border-radius: 40px;
@@ -150,24 +154,6 @@ const styles = {
   `,
 };
 
-const data = [
-  {
-    name: 'Page A', share: 400,
-  },
-  {
-    name: 'Page B', share: 200,
-  },
-  {
-    name: 'Page C', share: 1000,
-  },
-  {
-    name: 'Page A', share: 400,
-  },
-  {
-    name: 'Page B', share: 800,
-  },
-];
-
 const TABLE_TYPES = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   BALANCE_SHEET: 'BALANCE_SHEET',
@@ -177,12 +163,103 @@ const TABLE_TYPES = {
 
 type Props = {
   stockData: Object,
+  stockPriceData: Object,
+  storeStockPriceData: Function,
 };
 
 function StockPage({
   stockData,
+  stockPriceData,
+  storeStockPriceData,
 }: Props) {
   const [table, setTable] = useState('INCOME_STATEMENT');
+  const [isLoading, setLoading] = useState(true);
+
+  const { stockId } = useParams();
+
+  useEffect(() => {
+    let canceled = false;
+
+    async function fetchStockPricesData() {
+      const resData = await fetch(`${API_HOST}/stocker/seasonPrice/${stockId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(res => (!canceled ? res.json() : null));
+
+      if (resData) {
+        storeStockPriceData(resData);
+      }
+    }
+
+    fetchStockPricesData();
+    setLoading(false);
+
+    return () => {
+      canceled = true;
+    };
+  }, [isLoading, stockId, storeStockPriceData]);
+
+  const stockPriceChartData = useMemo(() => {
+    if (!stockPriceData) return null;
+
+    if (!Array.isArray(stockPriceData)) return null;
+
+    const sortedData = sortBy(stockPriceData, 'year');
+
+    const qFirst = sortedData?.map(eachYear => eachYear?.q1.map(q => q.close)
+    .reduce((prev, cur) => prev + cur));
+
+    const qSecond = sortedData?.map(eachYear => eachYear?.q2.map(q => q.close)
+    .reduce((prev, cur) => prev + cur));
+
+    const qThird = sortedData?.map(eachYear => eachYear?.q3.map(q => q.close)
+    .reduce((prev, cur) => prev + cur));
+
+    const qFourth = sortedData?.map((eachYear) => {
+      if (!eachYear?.q4.length) return 0;
+
+      return eachYear?.q4.map(q => q.close).reduce((prev, cur) => prev + cur);
+    });
+
+    const priceAmount = sortedData
+      .map((s, index) => qFirst[index] + qSecond[index] + qThird[index] + qFourth[index]);
+
+    return [{
+      name: 2010,
+      price: priceAmount[0],
+    }, {
+      name: 2011,
+      price: priceAmount[1],
+    }, {
+      name: 2012,
+      price: priceAmount[2],
+    }, {
+      name: 2013,
+      price: priceAmount[3],
+    }, {
+      name: 2014,
+      price: priceAmount[4],
+    }, {
+      name: 2015,
+      price: priceAmount[5],
+    }, {
+      name: 2016,
+      price: priceAmount[6],
+    }, {
+      name: 2017,
+      price: priceAmount[7],
+    }, {
+      name: 2018,
+      price: priceAmount[8],
+    }, {
+      name: 2019,
+      price: priceAmount[9],
+    }];
+  }, [stockPriceData]);
+
+  console.log('stockPriceChartData', stockPriceChartData);
 
   const comprehensiveIncomeTableData = useMemo(() => {
     if (!stockData) return null;
@@ -445,6 +522,18 @@ function StockPage({
     dividendTableData,
   ]);
 
+  const stockPriceChart = useMemo(() => {
+    if (isLoading) return null;
+
+    return (
+      <ResponsiveContainer>
+        <LineChart data={stockPriceChartData}>
+          <Line type="monotone" dataKey="price" stroke="#FF9500" />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  }, [isLoading, stockPriceChartData]);
+
   return (
     <div css={styles.wrapper}>
       <StockStrategyHeader />
@@ -453,9 +542,7 @@ function StockPage({
           股價
         </span>
         <div css={styles.lineChartWrapper}>
-          <LineChart width={800} height={180} data={data}>
-            <Line type="monotone" dataKey="share" stroke="#8884d8" />
-          </LineChart>
+          {stockPriceChart}
         </div>
       </div>
       <div css={styles.infoTableWrapper}>
@@ -514,7 +601,11 @@ function StockPage({
 const reduxHook = connect(
   state => ({
     stockData: state.Stocks.stockData,
+    stockPriceData: state.StockPrices.stockPriceData,
   }),
+  dispatch => bindActionCreators({
+    ...StockPricesActions,
+  }, dispatch),
 );
 
 export default reduxHook(StockPage);
