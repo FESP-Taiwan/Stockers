@@ -42,15 +42,39 @@ const styles = {
 
 const mockData = [{
   id: 1,
-  name: '2019-Q1',
+  name: '2019-03',
 }, {
   id: 2,
-  name: '2019-Q2',
+  name: '2019-06',
+}, {
+  id: 3,
+  name: '2019-09',
+}, {
+  id: 4,
+  name: '2019-12',
+}, {
+  id: 5,
+  name: '2019-03',
+}, {
+  id: 6,
+  name: '2019-06',
+}, {
+  id: 7,
+  name: '2019-09',
+}, {
+  id: 8,
+  name: '2019-12',
 }];
 
-function StockSimulationModal() {
+type Props = {
+  close: Function,
+}
+
+function StockSimulationModal({
+  close,
+}: Props) {
   return (
-    <Modal>
+    <Modal onClose={close}>
       <form css={styles.wrapper}>
         <h2>測試績效</h2>
         <FieldWrapper>
@@ -83,7 +107,8 @@ function StockSimulationModal() {
           </div>
         </FieldWrapper>
         <button
-          type="submit"
+          type="button"
+          onClick={close}
           css={styles.submit}>
           確認
         </button>

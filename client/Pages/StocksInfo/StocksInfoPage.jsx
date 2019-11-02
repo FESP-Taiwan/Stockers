@@ -6,6 +6,7 @@ import {
   useMemo,
   useEffect,
 } from 'react';
+import uniq from 'lodash/uniq';
 import { jsx, css } from '@emotion/core';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -15,7 +16,6 @@ import FollowingCard from '../../Elements/StocksInfo/FollowingCard';
 import LineChartWrapper from '../../Elements/Form/Chart/LineChartWrapper';
 import IndustryCard from '../../Elements/StocksInfo/IndustryCard';
 import { followingStocks } from '../../Mocks/Queries/StockInfo';
-import { FOLLOWING_STATE } from '../../Constant/stockNumber';
 import * as IndustryCardActions from '../../actions/IndustryCard';
 import { FORM_SITE_HEADER } from '../../Constant/form';
 import LoadingSpinner from '../../Elements/LoadingSpinner';
@@ -83,8 +83,6 @@ function StockersInfoPage({
 }: Props) {
   const [isLoading, setLoading] = useState(true);
 
-  console.log('industryCardData', industryCardData);
-
   useEffect(() => {
     let canceled = false;
 
@@ -138,6 +136,31 @@ function StockersInfoPage({
 
   if (isLoading) return <LoadingSpinner />;
 
+  const filteredData = followingStocks.userModulesUpdated
+    .map(u => u.usingStock.map(c => ({
+      module: {
+        id: u.moduleId,
+        name: u.name,
+        content: u.mathModule.content,
+      },
+      companyId: c.companyNumber,
+    }))).flat();
+
+  const companyIds = uniq(
+    followingStocks.userModulesUpdated
+      .map(u => u.usingStock.map(c => c.companyNumber))
+      .flat()
+  );
+
+  const companyData = companyIds.map(companyId => ({
+    companyId,
+    modules: filteredData.reduce((accum, curr) => {
+      if (curr.companyId === companyId) return [...accum, curr.module];
+
+      return accum;
+    }, []),
+  }));
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.following}>
@@ -145,14 +168,13 @@ function StockersInfoPage({
           已追蹤
         </h3>
         <div css={styles.cardWrapper}>
-          {followingStocks.map(stock => (
+          {companyData.map(stock => (
             <FollowingCard
-              key={stock.id}
-              id={stock.id}
-              name={stock.name}
-              number={stock.number}
-              status={FOLLOWING_STATE.find(s => s.status === stock.status).name}
-              following={stock.following} />
+              key={stock.companyId}
+              id={stock.companyId}
+              name={stock.companyId}
+              number={stock.companyId}
+              modules={stock.modules} />
           ))}
         </div>
       </div>
