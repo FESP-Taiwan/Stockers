@@ -20,7 +20,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      API_HOST: `'${process.env.API_HOST || 'http://localhost:5000'}'`,
+      API_HOST: `'${process.env.API_HOST || 'http://3.219.220.166:5000'}'`,
       NODE_ENV: `'${NODE_ENV || 'development'}'`,
       Colors: JSON.stringify({
         LAYER_FIRST: '#262626',
