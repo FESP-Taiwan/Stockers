@@ -12,6 +12,7 @@ type Props = {
   placeholder?: string,
   inline?: boolean,
   numberOnly?: boolean,
+  small?: boolean,
 } & FieldProps
 
 const styles = {
@@ -26,6 +27,11 @@ const styles = {
     fontWeight: 400,
     backgroundColor: '#262626',
     width: '100%',
+    padding: '0 0 0 12px',
+  },
+  smallInput: {
+    height: 24,
+    fontSize: 12,
   },
   inputWrapper: {
     position: 'relative',
@@ -56,6 +62,7 @@ function TextInput({
   meta,
   inline,
   numberOnly,
+  small,
 }: Props) {
   const {
     name,
@@ -81,7 +88,8 @@ function TextInput({
 
   const inputStyles = useMemo(() => ({
     ...styles.input,
-  }), []);
+    ...(small ? styles.smallInput : {}),
+  }), [small]);
 
   const formattedValue = useMemo(() => value, [value]);
 
@@ -124,6 +132,7 @@ TextInput.defaultProps = {
   disabled: false,
   inline: false,
   numberOnly: false,
+  small: false,
 };
 
 export default TextInput;

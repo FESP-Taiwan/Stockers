@@ -3,7 +3,9 @@
 
 import { jsx, css } from '@emotion/core';
 import { useMemo } from 'react';
+import { Field } from 'redux-form';
 import { useParams, NavLink } from 'react-router-dom';
+import TextInput from '../../Form/TextInput';
 import closeIcon from '../../static/images/close-icon.png';
 import RangeSlider from './Field/RangeSlider';
 
@@ -58,6 +60,12 @@ const styles = {
   btnDisabled: {
     backgroundColor: Colors.DISABLED,
   },
+  inputWrapper: {
+    position: 'absolute',
+    bottom: -40,
+    left: -6,
+    width: 94,
+  },
 };
 
 type Props = {
@@ -76,7 +84,6 @@ function ModuleBtn({
   disabled,
   removeUserUsingModules,
 }: Props) {
-  console.log('disabled', disabled);
   const { industryId, stockId } = useParams();
 
   const modulesStyle = useMemo(() => ({
@@ -92,6 +99,13 @@ function ModuleBtn({
 
   return (
     <div css={modulesStyle} key={id}>
+      <div style={styles.inputWrapper}>
+        <Field
+          small
+          placeholder="模型名稱"
+          name={`${id}`}
+          component={TextInput} />
+      </div>
       <button
         css={styles.closeBtn}
         type="button"

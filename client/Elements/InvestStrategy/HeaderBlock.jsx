@@ -22,8 +22,10 @@ import { useGlobalMessage } from '../../helper/useGlobalMessage';
 
 const styles = {
   wrapper: {
+    position: 'relative',
     display: 'flex',
     width: '100%',
+    margin: '0 0 26px 0',
   },
   title: {
     width: 80,
@@ -107,15 +109,15 @@ const styles = {
     borderRadius: 4,
     width: 100,
     height: 40,
-    top: 20,
-    right: 20,
+    top: 16,
+    right: 8,
     fontSize: 14,
     backgroundColor: Colors.PRIMARY,
   },
 };
 
 async function submit(
-  allvalues, stockId, modulesInUsed, modulesNotInUsed, storeUserModules, showMessage
+  d, allvalues, stockId, modulesInUsed, modulesNotInUsed, storeUserModules, showMessage
 ) {
   const updatedUsingModulesInfo = modulesInUsed.map((module, index) => {
     const moduleUsingStockIndex = module.usingStock.findIndex(use => use.companyNumber === stockId);
@@ -138,6 +140,24 @@ async function submit(
     ...modulesNotInUsed,
   ].sort((cursorA, cursorB) => cursorA.id - cursorB.id);
 
+  // update modules names
+  const userModulesUpdatedNames = userModulesUpdatedData.map((module) => {
+    const updateNames = Object.entries(d);
+
+    const updateModuleNameIndex = updateNames.findIndex(
+      ([id, name]) => module.id === parseInt(id, 10) && name
+    );
+
+    if (~updateModuleNameIndex) {
+      return {
+        ...module,
+        name: updateNames[updateModuleNameIndex][1],
+      };
+    }
+
+    return module;
+  });
+
   const resData = await fetch(`${API_HOST}/modules/updateUserModules`, {
     method: 'PUT',
     headers: {
@@ -147,7 +167,7 @@ async function submit(
     body: JSON.stringify({
       stockNumber: stockId,
       stockAlertion: '買',
-      userModulesUpdated: userModulesUpdatedData.map(module => ({
+      userModulesUpdated: userModulesUpdatedNames.map(module => ({
         comment: module.comment,
         headers: module.headers,
         moduleId: module.id,
@@ -181,9 +201,11 @@ async function submit(
 function HeaderBlock({
   modulesInfo,
   storeUserModules,
+  handleSubmit,
 }: {
   modulesInfo: Array,
   storeUserModules: Function,
+  handleSubmit: Function,
 }) {
   const [actived, active] = useState(false);
   const [allvalues, setallvalues] = useState([]);
@@ -361,14 +383,15 @@ function HeaderBlock({
         </button>
         <button
           style={styles.submitBtn}
-          onClick={() => submit(
+          onClick={handleSubmit(d => submit(
+            d,
             allvalues,
             parseInt(stockId, 10),
             modulesInUsed,
             modulesNotInUsed,
             storeUserModules,
             showMessage
-          )}
+          ))}
           type="button">
           儲存編輯
         </button>
