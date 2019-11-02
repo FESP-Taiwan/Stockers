@@ -8,7 +8,7 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
     endAt,
   } = datePeriod;
 
-  const timeListNumber = (moment(endAt).year() - moment(startFrom).year() - 1) * 4 + (5 - moment(startFrom).quarter()) + moment(startFrom).quarter();
+  const timeListNumber = (moment(endAt).year() - moment(startFrom).year() - 1) * 4 + (4 - moment(startFrom).quarter()) + moment(startFrom).quarter();
 
   const timeList = Array.from(Array(timeListNumber)).reduce((list, n, index) => {
     if (index === 0) {
@@ -45,6 +45,7 @@ export default function stimulationCalculate(stockId, datePeriod, modulesInfo, s
             type: chipInfo.chipData.type,
             timeStamp: chipInfo.chipData.date,
             chipName: chipInfo.chipData.name,
+            rowId: chipInfo.chipData.rowId,
           },
         })),
       },

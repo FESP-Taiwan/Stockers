@@ -36,6 +36,20 @@ const styles = {
   },
 };
 
+async function simulation(stimulationData) {
+  const data = await fetch('http://172.20.10.2:3000/compute', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(stimulationData),
+  }).then(res => res.json());
+
+  if (data) {
+    console.log('data', JSON.stringify(data));
+  }
+}
+
 function InvestStrategyPage({
   modulesInfo,
   stockData,
@@ -47,13 +61,13 @@ function InvestStrategyPage({
 
   const onClick = useCallback(() => {
     const datePeriod = {
-      startFrom: '2018-06',
+      startFrom: '2018-09',
       endAt: '2019-06',
     };
 
     const stimulationData = stimulationCalculate(stockId, datePeriod, modulesInfo, stockData);
 
-    console.log('stimulationData', stimulationData);
+    simulation(stimulationData);
   }, [modulesInfo, stockData, stockId]);
 
   return (

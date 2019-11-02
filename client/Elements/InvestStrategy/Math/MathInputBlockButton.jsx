@@ -200,7 +200,7 @@ function MathInputBlockButton({
       case MATH_META_TYPES.LARGE:
       case MATH_META_TYPES.AVERAGE:
         return (
-          <span style={styles.text}>計算量：10筆</span>
+          <span style={styles.text}>計算量：3筆</span>
         );
 
       case MATH_META_TYPES.DATE:

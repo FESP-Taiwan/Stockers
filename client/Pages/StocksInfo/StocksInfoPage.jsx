@@ -83,6 +83,8 @@ function StockersInfoPage({
 }: Props) {
   const [isLoading, setLoading] = useState(true);
 
+  console.log('industryCardData', industryCardData);
+
   useEffect(() => {
     let canceled = false;
 

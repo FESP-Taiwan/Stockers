@@ -6,10 +6,12 @@ import { bindActionCreators } from 'redux';
 import type { ContextRouter } from 'react-router';
 import { storeUserModules as storeUserModulesAction } from '../../actions/InvestStrategy';
 import InvestStrategyPage from '../../Elements/InvestStrategy/InvestStrategyPage';
+import getModuleAlertion from '../../helper/getModuleAlertion';
 
 function InvestStrategyPageWrapper({
   storeUserModules,
   history,
+  stockData,
   match: {
     params: {
       industryId,
@@ -17,6 +19,7 @@ function InvestStrategyPageWrapper({
     },
   },
 }: {
+  stockData: {},
   storeUserModules: Function,
 } & ContextRouter) {
   const localState = {
@@ -42,10 +45,12 @@ function InvestStrategyPageWrapper({
         },
       }).then(res => (!canceled ? res.json() : null));
 
-      console.log('resData', resData);
-
       if (resData) {
         storeUserModules(resData);
+
+        resData.forEach((el) => {
+          const moduleAlertion = getModuleAlertion(el.mathModule, stockData);
+        });
       }
     }
 
@@ -56,7 +61,7 @@ function InvestStrategyPageWrapper({
     return () => {
       canceled = true;
     };
-  }, [storeUserModules, localState]);
+  }, [storeUserModules, localState, stockData]);
 
   return (
     <InvestStrategyPage />
@@ -64,7 +69,9 @@ function InvestStrategyPageWrapper({
 }
 
 const reduxHook = connect(
-  () => ({}),
+  state => ({
+    stockData: state.Stocks.stockData,
+  }),
   dispatch => bindActionCreators({
     storeUserModules: storeUserModulesAction,
   }, dispatch),

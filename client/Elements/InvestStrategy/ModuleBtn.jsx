@@ -1,9 +1,9 @@
 // @flow
 /** @jsx jsx */
 
-import { useState, useCallback, useMemo } from 'react';
 import { jsx, css } from '@emotion/core';
-import { Field } from 'redux-form';
+import { useState, useCallback, useMemo } from 'react';
+import { useParams, NavLink } from 'react-router-dom';
 import closeIcon from '../../static/images/close-icon.png';
 import RangeSlider from './Field/RangeSlider';
 
@@ -13,73 +13,73 @@ const styles = {
     height: 80,
     width: 80,
     borderRadius: 40,
-    backgroundColor: Colors.LAYER_FIRST,
+    backgroundColor: Colors.PRIMARY_THIRD,
     transition: '0.5s ease-out',
     margin: '0 20px 0 0',
   },
   btn: css`
     position: absolute;
+    z-index: 1;
     height: 80px;
     width: 100%;
     border-radius: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${Colors.LAYER_FIRST};
+    background-color: ${Colors.PRIMARY_THIRD};
+    text-decoration: none;
     color: #FFF;
     font-size: 13px;
   `,
-  btnSelected: css`
-    background-color: #004d2d;
-    color: ${Colors.PRIMARY};
-  `,
+  btnSelected: {
+    backgroundColor: Colors.PRIMARY,
+  },
   btnActived: {
     height: 360,
   },
   closeBtn: {
-    width: 24,
-    height: 24,
+    width: 16,
+    height: 16,
     borderRadius: 12,
     backgroundColor: '#FFF',
     position: 'absolute',
-    right: 0,
+    right: 4,
+    top: 4,
     zIndex: 1000,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
   icon: {
-    width: 14,
-    height: 14,
+    width: 8,
+    height: 8,
     zIndex: 1000,
   },
 };
 
 type Props = {
   actived: boolean,
-  module: Object,
+  id: number,
   name: string,
+  subName: number,
 }
 
 function ModuleBtn({
   actived,
-  module: {
-    id,
-    name,
-  },
+  id,
+  name,
+  subName,
 }: Props) {
   const [selected, select] = useState(false);
 
+  const { industryId, stockId } = useParams();
+
   const onClick = useCallback(() => select(!selected), [selected]);
+
   const modulesStyle = useMemo(() => ({
     ...styles.modules,
     ...(actived ? styles.btnActived : {}),
   }), [actived]);
-
-  const btnStyle = useMemo(() => ([
-    styles.btn,
-    (selected ? styles.btnSelected : {}),
-  ]), [selected]);
 
   return (
     <div css={modulesStyle} key={id}>
@@ -89,16 +89,15 @@ function ModuleBtn({
         onClick={() => console.log('click')}>
         <img src={closeIcon} alt="close" css={styles.icon} />
       </button>
-      <button
-        type="button"
-        onClick={onClick}
-        css={btnStyle}>
+      <NavLink
+        activeStyle={styles.btnSelected}
+        css={styles.btn}
+        to={`/industry/${industryId}/stocks/${stockId}/modules/${id}`}>
         {name}
-      </button>
-      <Field
-        actived={actived}
-        name={`${id}-range-slider`}
-        component={RangeSlider} />
+      </NavLink>
+      <RangeSlider
+        index={id - 1}
+        actived={actived} />
     </div>
   );
 }
