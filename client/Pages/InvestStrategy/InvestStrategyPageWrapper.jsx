@@ -46,11 +46,16 @@ function InvestStrategyPageWrapper({
       }).then(res => (!canceled ? res.json() : null));
 
       if (resData) {
-        storeUserModules(resData);
-
-        resData.forEach((el) => {
+        const dataWithAlertionValue = resData.map((el) => {
           const moduleAlertion = getModuleAlertion(el.mathModule, stockData);
+
+          return {
+            ...el,
+            alertion: moduleAlertion,
+          };
         });
+
+        storeUserModules(dataWithAlertionValue);
       }
     }
 

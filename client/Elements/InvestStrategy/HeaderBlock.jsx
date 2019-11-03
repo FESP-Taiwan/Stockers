@@ -345,6 +345,7 @@ function HeaderBlock({
     return modulesInUsed.map(module => (
       <ModuleBtn
         key={module.id}
+        alertion={module.alertion}
         disabled={!~modulesInfo.findIndex(el => el.id === module.id)}
         name={module.name}
         subName={module.subName}
@@ -358,7 +359,7 @@ function HeaderBlock({
     <HeaderBlockAllValuesContext.Provider value={[allvalues, setallvalues]}>
       <form css={styles.wrapper}>
         <div css={styles.modules}>
-          <span css={styles.title}>買</span>
+          <span css={styles.title}></span>
           <button
             onClick={onClick}
             type="button"

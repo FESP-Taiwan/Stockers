@@ -66,6 +66,13 @@ const styles = {
     left: -6,
     width: 94,
   },
+  alertion: {
+    fontSize: 14,
+    position: 'absolute',
+    top: -20,
+    right: 34,
+    color: Colors.PRIMARY,
+  },
 };
 
 type Props = {
@@ -75,6 +82,7 @@ type Props = {
   subName: number,
   disabled: boolean,
   removeUserUsingModules: Function,
+  alertion: boolean,
 }
 
 function ModuleBtn({
@@ -83,8 +91,22 @@ function ModuleBtn({
   name,
   disabled,
   removeUserUsingModules,
+  alertion,
 }: Props) {
   const { industryId, stockId } = useParams();
+
+  const alertionContent = useMemo(() => {
+    switch (alertion) {
+      case true:
+        return '買';
+
+      case false:
+        return '賣';
+
+      default:
+        return '缺';
+    }
+  }, [alertion]);
 
   const modulesStyle = useMemo(() => ({
     ...styles.modules,
@@ -99,6 +121,7 @@ function ModuleBtn({
 
   return (
     <div css={modulesStyle} key={id}>
+      <div style={styles.alertion}>{alertionContent}</div>
       <div style={styles.inputWrapper}>
         <Field
           small
